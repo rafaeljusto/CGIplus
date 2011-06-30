@@ -1,0 +1,4 @@
+import os
+Import("env", "localLibraryInstall")
+env.StaticLibrary(localLibraryInstall + "/" + os.getcwd().split("/")[-1], 
+                  Glob("*.cpp"))
