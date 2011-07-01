@@ -13,14 +13,22 @@ CGIPLUS_NS_BEGIN
 Cgi::Cgi() :
 	_metodo(Metodo::DESCONHECIDO)
 {
-	string metodo = getenv("REQUEST_METHOD");
-	if (metodo == "GET") {
-		_metodo = Metodo::GET;
-	} else if (metodo == "POST") {
-		_metodo = Metodo::POST;
+	const char *metodoPtr = getenv("REQUEST_METHOD");
+	if (metodoPtr != NULL) {
+		string metodo = metodoPtr;
+		if (metodo == "GET") {
+			_metodo = Metodo::GET;
+		} else if (metodo == "POST") {
+			_metodo = Metodo::POST;
+		}
 	}
 
-	string valores = getenv("QUERY_STRING");
+	const char *valoresPtr = getenv("QUERY_STRING");
+	if (valoresPtr == NULL) {
+		return;
+	}
+
+	string valores = valoresPtr;
 	boost::replace_all(valores, "+", " ");
 	
 	std::vector<string> chavesValores;
@@ -48,6 +56,11 @@ string Cgi::operator[](const string &chave)
 Cgi::Metodo::Valor Cgi::getMetodo() const
 {
 	return _metodo;
+}
+
+unsigned int Cgi::quantidadeEntradas() const
+{
+	return _valores.size();
 }
 
 void Cgi::exibir(const map<string, string> &valores,

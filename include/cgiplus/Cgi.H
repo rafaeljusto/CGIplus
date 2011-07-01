@@ -29,6 +29,7 @@ public:
 	string operator[](const string &chave);
 
 	Metodo::Valor getMetodo() const;
+	unsigned int quantidadeEntradas() const;
 
 	void exibir(const map<string, string> &valores,
 	            const string &modelo) const;

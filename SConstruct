@@ -69,7 +69,7 @@ if (verbose == "0"):
 # Libraries
 
 libraries = {
-    "cgiplus" : ["cgiplus"]
+    "CGIPLUS" : ["cgiplus"]
     }
 
 def getLibraries(names):
@@ -89,6 +89,18 @@ localBinInstall = "#bin"
 
 env.Clean(".", localLibraryInstall)
 env.Clean(".", localBinInstall)
+
+# Test
+# http://www.scons.org/wiki/UnitTests
+# ------------------------------------------------------
+def builder_unit_test(target, source, env):
+    app = str(source[0].abspath)
+    os.spawnl(os.P_WAIT, app, app)
+
+# Create a builder for tests
+bld = Builder(action = builder_unit_test)
+env.Append(BUILDERS = {'Test' :  bld})
+# ------------------------------------------------------
 
 # Export for modules
 
