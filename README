@@ -1,1 +1,8 @@
-C++ tiny web framework to parse apache requests
+Pequeno framework C++ web para iterpretar as requisições do
+Apache. Para utiliza-lo é necessário o g++ 4.6 e as bibliotecas do
+boost.
+
+-------------------------------------------------------------
+
+C++ tiny web framework to parse Apache requests. The software
+requirements are g++ 4.6 and boost libraries.
