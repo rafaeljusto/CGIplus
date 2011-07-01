@@ -1,15 +1,15 @@
-#ifndef __CPPGI_CGI_H__
-#define __CPPGI_CGI_H__
+#ifndef __CGIPLUS_CGI_H__
+#define __CGIPLUS_CGI_H__
 
 #include <map>
 #include <string>
 
-#include "Cppgi.H"
+#include "Cgiplus.H"
 
 using std::map;
 using std::string;
 
-CPPGI_NS_BEGIN
+CGIPLUS_NS_BEGIN
 
 class Cgi
 {
@@ -38,6 +38,6 @@ private:
 	map<string, string> _valores;
 };
 
-CPPGI_NS_END
+CGIPLUS_NS_END
 
-#endif // __CPPGI_CGI_H__
+#endif // __CGIPLUS_CGI_H__

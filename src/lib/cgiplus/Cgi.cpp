@@ -6,9 +6,9 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
 
-#include <c++gi/Cgi.H>
+#include <cgiplus/Cgi.H>
 
-CPPGI_NS_BEGIN
+CGIPLUS_NS_BEGIN
 
 Cgi::Cgi() :
 	_metodo(Metodo::DESCONHECIDO)
@@ -62,4 +62,4 @@ void Cgi::exibir(const map<string, string> &valores,
 	std::cout << conteudo << std::endl;
 }
 
-CPPGI_NS_END
+CGIPLUS_NS_END

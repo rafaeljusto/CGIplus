@@ -69,7 +69,7 @@ if (verbose == "0"):
 # Libraries
 
 libraries = {
-    "cppgi" : ["cppgi"]
+    "cgiplus" : ["cgiplus"]
     }
 
 def getLibraries(names):
