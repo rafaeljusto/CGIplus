@@ -4,9 +4,10 @@
 #include <map>
 #include <string>
 
+#include <boost/lexical_cast.hpp>
+
 #include "Cgiplus.H"
 
-using std::map;
 using std::string;
 
 CGIPLUS_NS_BEGIN
@@ -28,17 +29,29 @@ public:
 
 	string operator[](const string &chave);
 
+	void lerEntradas();
+
 	Metodo::Valor getMetodo() const;
 	unsigned int quantidadeEntradas() const;
 
-	void exibir(const map<string, string> &entradas,
+	void exibir(const std::map<string, string> &entradas,
 	            const string &modelo) const;
 
 private:
-	void interpretarEntradas(string entradas);
+	void lerMetodo();
+	void lerEntradasGet();
+	void lerEntradasPost();
+
+	void interpretar(string entradas);
+
+	void decodificar(string &entradas);
+	void decodificarSimbolosEspeciais(string &entradas);
+	void decodificarHexadecimal(string &entradas);
+	string hexadecimalParaTexto(const string &hexadecimal);
+	void removerCaracteresHtmlPerigosos(string &entradas);
 
 	Metodo::Valor _metodo;
-	map<string, string> _entradas;
+	std::map<string, string> _entradas;
 };
 
 CGIPLUS_NS_END

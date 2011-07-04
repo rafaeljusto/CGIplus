@@ -77,16 +77,25 @@ BOOST_AUTO_TEST_CASE(deveInterpretarDadosEnviadosViaPost)
 	setenv("CONTENT_LENGTH", tamanhoEntradaPost.c_str(), 1);
 	setenv("REQUEST_METHOD", "POST", 1);
 
-	std::stringstream entradaPostStream;
-	entradaPostStream << entradaPost;
-
-	std::streambuf *postStream = entradaPostStream.rdbuf();
-	std::cin.rdbuf(postStream);
+	std::cin.clear();
+	for (auto it = entradaPost.rbegin(); it != entradaPost.rend(); it++) {
+		std::cin.putback(*it);
+	}
 
 	Cgi cgi;
 	BOOST_CHECK_EQUAL(cgi.quantidadeEntradas(), 2);
 	BOOST_CHECK_EQUAL(cgi["teste1"], "valor1");
 	BOOST_CHECK_EQUAL(cgi["teste2"], "valor2");
+}
+
+BOOST_AUTO_TEST_CASE(deveDecodificarCorretamenteUmaUrl)
+{
+	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("QUERY_STRING", "teste1=valor1+valor2+%2B%3A", 1);
+
+	Cgi cgi;
+	BOOST_CHECK_EQUAL(cgi.quantidadeEntradas(), 1);
+	BOOST_CHECK_EQUAL(cgi["teste1"], "valor1 valor2 +:");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -69,7 +69,7 @@ if (verbose == "0"):
 # Libraries
 
 libraries = {
-    "CGIPLUS" : ["cgiplus"]
+    "CGIPLUS" : ["cgiplus", "boost_system", "boost_regex"]
     }
 
 def getLibraries(names):
