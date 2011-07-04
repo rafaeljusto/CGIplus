@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -15,7 +16,7 @@ Cgi::Cgi() :
 {
 	const char *metodoPtr = getenv("REQUEST_METHOD");
 	if (metodoPtr != NULL) {
-		string metodo = metodoPtr;
+		string metodo = boost::to_upper_copy((string) metodoPtr);
 		if (metodo == "GET") {
 			_metodo = Metodo::GET;
 		} else if (metodo == "POST") {
