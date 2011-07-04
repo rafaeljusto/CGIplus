@@ -5,4 +5,5 @@ boost.
 -------------------------------------------------------------
 
 C++ tiny web framework to parse Apache requests. The software
-requirements are g++ 4.6 and boost libraries.
+requirements are g++ 4.6 and boost libraries. The source code was
+written in portuguese (pt-BR).
