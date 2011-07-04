@@ -6,6 +6,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Cgi.H>
 
@@ -24,31 +25,35 @@ Cgi::Cgi() :
 		}
 	}
 
-	const char *valoresPtr = getenv("QUERY_STRING");
-	if (valoresPtr == NULL) {
-		return;
+	const char *entradasPtr;
+
+	entradasPtr = getenv("QUERY_STRING");
+	if (entradasPtr != NULL) {
+		string entradas = entradasPtr;
+		interpretarEntradas(entradas);
 	}
 
-	string valores = valoresPtr;
-	boost::replace_all(valores, "+", " ");
-	
-	std::vector<string> chavesValores;
-	boost::split(chavesValores, valores, boost::is_any_of("&"));
+	entradasPtr = getenv("CONTENT_LENGTH");
+	if (_metodo == Metodo::POST && entradasPtr != NULL) {
+		int tamanho = 0;
+		try {
+			tamanho = boost::lexical_cast<int>(entradasPtr);
+		} catch (const  boost::bad_lexical_cast &e) {}
 
-	for (auto chaveValor: chavesValores) {
-		std::vector<string> chaveValorSeparado;
-		boost::split(chaveValorSeparado, chaveValor, boost::is_any_of("="));
-		if (chaveValorSeparado.size() == 2) {
-			_valores[chaveValorSeparado[0]] = chaveValorSeparado[1];
+		if (tamanho > 0) {
+			char entradas[tamanho + 1];
+			memset(entradas, 0, tamanho + 1);
+			std::cin.read(entradas, tamanho);
+			interpretarEntradas((string) entradas);
 		}
 	}
 }
 
 string Cgi::operator[](const string &chave)
 {
-	auto valor = _valores.find(chave);
-	if (valor != _valores.end()) {
-		return valor->second;
+	auto entrada = _entradas.find(chave);
+	if (entrada != _entradas.end()) {
+		return entrada->second;
 	}
 
 	return "";
@@ -61,19 +66,36 @@ Cgi::Metodo::Valor Cgi::getMetodo() const
 
 unsigned int Cgi::quantidadeEntradas() const
 {
-	return _valores.size();
+	return _entradas.size();
 }
 
-void Cgi::exibir(const map<string, string> &valores,
+void Cgi::exibir(const map<string, string> &entradas,
                  const string &modelo) const
 {
 	string conteudo = modelo;
-	for (auto valor: valores) {
-		boost::replace_all(conteudo, valor.first, valor.second);
+	for (auto entrada: entradas) {
+		boost::replace_all(conteudo, entrada.first, entrada.second);
 	}
 	
 	std::cout << "Content-type: text/html\n\r\n\r" << std::endl;
 	std::cout << conteudo << std::endl;
+}
+
+void Cgi::interpretarEntradas(string entradas)
+{
+	boost::trim(entradas);
+	boost::replace_all(entradas, "+", " ");
+	
+	std::vector<string> chavesValores;
+	boost::split(chavesValores, entradas, boost::is_any_of("&"));
+
+	for (auto chaveValor: chavesValores) {
+		std::vector<string> chaveValorSeparado;
+		boost::split(chaveValorSeparado, chaveValor, boost::is_any_of("="));
+		if (chaveValorSeparado.size() == 2) {
+			_entradas[chaveValorSeparado[0]] = chaveValorSeparado[1];
+		}
+	}
 }
 
 CGIPLUS_NS_END

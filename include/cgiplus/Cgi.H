@@ -31,12 +31,14 @@ public:
 	Metodo::Valor getMetodo() const;
 	unsigned int quantidadeEntradas() const;
 
-	void exibir(const map<string, string> &valores,
+	void exibir(const map<string, string> &entradas,
 	            const string &modelo) const;
 
 private:
+	void interpretarEntradas(string entradas);
+
 	Metodo::Valor _metodo;
-	map<string, string> _valores;
+	map<string, string> _entradas;
 };
 
 CGIPLUS_NS_END

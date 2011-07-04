@@ -1,4 +1,9 @@
+#include <cstdio>
 #include <cstdlib>
+#include <iostream>
+#include <sstream>
+
+#include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Cgi.H>
 
@@ -60,6 +65,28 @@ BOOST_AUTO_TEST_CASE(deveDefinirOMetodoDeAcesso)
 
 	Cgi cgi3;
 	BOOST_CHECK_EQUAL(cgi3.getMetodo(), Cgi::Metodo::DESCONHECIDO);
+}
+
+BOOST_AUTO_TEST_CASE(deveInterpretarDadosEnviadosViaPost)
+{
+	string entradaPost = "teste2=valor2";
+	string tamanhoEntradaPost = 
+		boost::lexical_cast<string>(entradaPost.size());
+
+	setenv("QUERY_STRING", "teste1=valor1", 1);
+	setenv("CONTENT_LENGTH", tamanhoEntradaPost.c_str(), 1);
+	setenv("REQUEST_METHOD", "POST", 1);
+
+	std::stringstream entradaPostStream;
+	entradaPostStream << entradaPost;
+
+	std::streambuf *postStream = entradaPostStream.rdbuf();
+	std::cin.rdbuf(postStream);
+
+	Cgi cgi;
+	BOOST_CHECK_EQUAL(cgi.quantidadeEntradas(), 2);
+	BOOST_CHECK_EQUAL(cgi["teste1"], "valor1");
+	BOOST_CHECK_EQUAL(cgi["teste2"], "valor2");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
