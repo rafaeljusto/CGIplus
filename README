@@ -1,10 +1,64 @@
+.:: Português ::.
+
 Pequeno framework C++ web para iterpretar as requisições do
 Apache. Para utiliza-lo é necessário o g++ 4.6 e as bibliotecas do
 boost. O código-fonte foi escrito em inglês, com exceção dos testes
 que foram escritos em português.
 
+Segue um exemplo de utilização da biblioteca.
+
+#include <cstdlib>
+#include <iostream>
+
+#include <cgiplus/Builder.hpp>
+#include <cgiplus/Cgi.hpp>
+
+int main()
+{
+  setenv("QUERY_STRING", "teste=abc123", 1);
+	setenv("REQUEST_METHOD", "GET", 1);
+
+  string form = "O teste tem como conteudo: <!-- conteudo -->";
+
+  cgiplus::Cgi cgi;
+  cgiplus::Builder builder;
+
+  builder.setForm(form);
+  builder["conteudo"] = cgi["teste"]
+
+  std::cout << builder.build() << std::endl;
+  return 0;
+}
+
 -------------------------------------------------------------
+
+.:: English ::.
 
 C++ tiny web framework to parse Apache requests. The software
 requirements are g++ 4.6 and boost libraries. The source code was
 written in english, except for tests were written in Portuguese.
+
+An example of use of the library.
+
+#include <cstdlib>
+#include <iostream>
+
+#include <cgiplus/Builder.hpp>
+#include <cgiplus/Cgi.hpp>
+
+int main()
+{
+  setenv("QUERY_STRING", "test=abc123", 1);
+	setenv("REQUEST_METHOD", "GET", 1);
+
+  string form = "The test has as content: <!-- content -->";
+
+  cgiplus::Cgi cgi;
+  cgiplus::Builder builder;
+
+  builder.setForm(form);
+  builder["content"] = cgi["test"]
+
+  std::cout << builder.build() << std::endl;
+  return 0;
+}
