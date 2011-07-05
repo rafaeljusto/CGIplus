@@ -56,11 +56,6 @@ void Builder::setForm(const string &form)
 	_form = form;
 }
 
-void Builder::setTags(const std::pair<string, string> &tags)
-{
-	_tags = tags;
-}
-
 void Builder::setFormFile(const string &formFile)
 {
 	std::ifstream formFileStream(formFile.c_str());
@@ -69,6 +64,11 @@ void Builder::setFormFile(const string &formFile)
 		std::getline(formFileStream, line);
 		_form += line;
 	}
+}
+
+void Builder::setTags(const std::pair<string, string> &tags)
+{
+	_tags = tags;
 }
 
 void Builder::setMethod(const Builder::Method::Value method)

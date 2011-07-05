@@ -32,8 +32,8 @@ public:
 	void show() const;
 
 	void setForm(const string &form);
-	void setTags(const std::pair<string, string> &tags);
 	void setFormFile(const string &formFile);
+	void setTags(const std::pair<string, string> &tags);
 	void setMethod(const Method::Value method);
 
 private:
