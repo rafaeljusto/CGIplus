@@ -5,7 +5,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <cgiplus/Cgi.H>
+#include <cgiplus/Cgi.hpp>
 
 using cgiplus::Cgi;
 

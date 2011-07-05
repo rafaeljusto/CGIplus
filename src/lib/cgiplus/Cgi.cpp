@@ -10,7 +10,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 
-#include <cgiplus/Cgi.H>
+#include <cgiplus/Cgi.hpp>
 
 CGIPLUS_NS_BEGIN
 

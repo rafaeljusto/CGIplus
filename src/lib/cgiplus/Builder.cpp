@@ -3,7 +3,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include <cgiplus/Builder.H>
+#include <cgiplus/Builder.hpp>
 
 CGIPLUS_NS_BEGIN
 

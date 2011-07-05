@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "Cgiplus.H"
+#include "Cgiplus.hpp"
 
 using std::string;
 

@@ -6,7 +6,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "Cgiplus.H"
+#include "Cgiplus.hpp"
 
 using std::string;
 

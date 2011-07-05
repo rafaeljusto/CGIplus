@@ -1,4 +1,4 @@
-#include <cgiplus/Builder.H>
+#include <cgiplus/Builder.hpp>
 
 using cgiplus::Builder;
 
