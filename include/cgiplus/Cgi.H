@@ -27,7 +27,7 @@ public:
 
 	Cgi();
 
-	string operator[](const string &chave);
+	string operator[](const string &key);
 
 	void readInputs();
 

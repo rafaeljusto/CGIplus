@@ -20,9 +20,9 @@ Cgi::Cgi() :
 	readInputs();
 }
 
-string Cgi::operator[](const string &chave)
+string Cgi::operator[](const string &key)
 {
-	auto input = _inputs.find(chave);
+	auto input = _inputs.find(key);
 	if (input != _inputs.end()) {
 		return input->second;
 	}
