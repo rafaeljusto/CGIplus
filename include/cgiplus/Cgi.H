@@ -15,11 +15,11 @@ CGIPLUS_NS_BEGIN
 class Cgi
 {
 public:
-	class Metodo
+	class Method
 	{
 	public:
 		enum Valor {
-			DESCONHECIDO,
+			UNKNOWN,
 			GET,
 			POST
 		};
@@ -29,29 +29,29 @@ public:
 
 	string operator[](const string &chave);
 
-	void lerEntradas();
+	void readInputs();
 
-	Metodo::Valor getMetodo() const;
-	unsigned int quantidadeEntradas() const;
+	Method::Valor method() const;
+	unsigned int numberOfInputs() const;
 
-	void exibir(const std::map<string, string> &entradas,
-	            const string &modelo) const;
+	void show(const std::map<string, string> &inputs,
+	          const string &form) const;
 
 private:
-	void lerMetodo();
-	void lerEntradasGet();
-	void lerEntradasPost();
+	void readMethod();
+	void readGetInputs();
+	void readPostInputs();
 
-	void interpretar(string entradas);
+	void parse(string inputs);
 
-	void decodificar(string &entradas);
-	void decodificarSimbolosEspeciais(string &entradas);
-	void decodificarHexadecimal(string &entradas);
-	string hexadecimalParaTexto(const string &hexadecimal);
-	void removerCaracteresHtmlPerigosos(string &entradas);
+	void decode(string &inputs);
+	void decodeSpecialSymbols(string &inputs);
+	void decodeHexadecimal(string &inputs);
+	string hexadecimalToText(const string &hexadecimal);
+	void removeDangerousHtmlCharacters(string &inputs);
 
-	Metodo::Valor _metodo;
-	std::map<string, string> _entradas;
+	Method::Valor _method;
+	std::map<string, string> _inputs;
 };
 
 CGIPLUS_NS_END

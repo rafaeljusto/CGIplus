@@ -15,144 +15,153 @@
 CGIPLUS_NS_BEGIN
 
 Cgi::Cgi() :
-	_metodo(Metodo::DESCONHECIDO)
+	_method(Method::UNKNOWN)
 {
-	lerEntradas();
+	readInputs();
 }
 
 string Cgi::operator[](const string &chave)
 {
-	auto entrada = _entradas.find(chave);
-	if (entrada != _entradas.end()) {
-		return entrada->second;
+	auto input = _inputs.find(chave);
+	if (input != _inputs.end()) {
+		return input->second;
 	}
 
 	return "";
 }
 
-void Cgi::lerEntradas()
+void Cgi::readInputs()
 {
-	lerMetodo();
-	lerEntradasGet();
-	lerEntradasPost();
+	readMethod();
+	readGetInputs();
+	readPostInputs();
 }
 
-Cgi::Metodo::Valor Cgi::getMetodo() const
+Cgi::Method::Valor Cgi::method() const
 {
-	return _metodo;
+	return _method;
 }
 
-unsigned int Cgi::quantidadeEntradas() const
+unsigned int Cgi::numberOfInputs() const
 {
-	return _entradas.size();
+	return _inputs.size();
 }
 
-void Cgi::exibir(const std::map<string, string> &entradas,
-                 const string &modelo) const
+void Cgi::show(const std::map<string, string> &inputs,
+               const string &form) const
 {
-	string conteudo = modelo;
-	for (auto entrada: entradas) {
-		boost::replace_all(conteudo, entrada.first, entrada.second);
+	string content = form;
+	for (auto input: inputs) {
+		boost::replace_all(content, input.first, input.second);
 	}
 	
 	std::cout << "Content-type: text/html\n\r\n\r" << std::endl;
-	std::cout << conteudo << std::endl;
+	std::cout << content << std::endl;
 }
 
-void Cgi::lerMetodo()
+void Cgi::readMethod()
 {
-	const char *metodoPtr = getenv("REQUEST_METHOD");
-	if (metodoPtr != NULL) {
-		string metodo = boost::to_upper_copy((string) metodoPtr);
-		if (metodo == "GET") {
-			_metodo = Metodo::GET;
-		} else if (metodo == "POST") {
-			_metodo = Metodo::POST;
+	const char *methodPtr = getenv("REQUEST_METHOD");
+	if (methodPtr != NULL) {
+		string method = boost::to_upper_copy((string) methodPtr);
+		if (method == "GET") {
+			_method = Method::GET;
+		} else if (method == "POST") {
+			_method = Method::POST;
 		}
 	}
 }
 
-void Cgi::lerEntradasGet()
+void Cgi::readGetInputs()
 {
-	const char *entradasPtr = getenv("QUERY_STRING");
-	if (entradasPtr == NULL) {
+	const char *inputsPtr = getenv("QUERY_STRING");
+	if (inputsPtr == NULL) {
 		return;
 	}
 
-	string entradas = entradasPtr;
-	interpretar(entradas);
+	string inputs = inputsPtr;
+	parse(inputs);
 }
 
-void Cgi::lerEntradasPost()
+void Cgi::readPostInputs()
 {
-	const char *tamanhoPtr = getenv("CONTENT_LENGTH");
-	if (_metodo != Metodo::POST || tamanhoPtr == NULL) {
+	const char *sizePtr = getenv("CONTENT_LENGTH");
+	const char *typePtr = getenv("CONTENT_TYPE");
+
+	if (_method != Method::POST || sizePtr == NULL || typePtr == NULL) {
 		return;
 	}
 
-	int tamanho = 0;
+	string type = typePtr;
+	if (type != "application/x-www-form-urlencoded") {
+		// http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4
+		// TODO: Upload file -> multipart/form-data
+		return;
+	}
+
+	int size = 0;
 	try {
-		tamanho = boost::lexical_cast<int>(tamanhoPtr);
+		size = boost::lexical_cast<int>(sizePtr);
 	} catch (const  boost::bad_lexical_cast &e) {}
 
-	if (tamanho == 0) {
+	if (size == 0) {
 		return;
 	}
 
-	char entradasPtr[tamanho + 1];
-	memset(entradasPtr, 0, tamanho + 1);
+	char inputsPtr[size + 1];
+	memset(inputsPtr, 0, size + 1);
 	
-	std::cin.read(entradasPtr, tamanho);
+	std::cin.read(inputsPtr, size);
 	if (std::cin.good() == false) {
 		return;
 	}
 
-	string entradas = entradasPtr;
-	interpretar(entradas);
+	string inputs = inputsPtr;
+	parse(inputs);
 }
 
-void Cgi::interpretar(string entradas)
+void Cgi::parse(string inputs)
 {
-	decodificar(entradas);
+	decode(inputs);
 
-	std::vector<string> chavesValores;
-	boost::split(chavesValores, entradas, boost::is_any_of("&"));
+	std::vector<string> keysValues;
+	boost::split(keysValues, inputs, boost::is_any_of("&"));
 
-	for (auto chaveValor: chavesValores) {
-		std::vector<string> chaveValorSeparado;
-		boost::split(chaveValorSeparado, chaveValor, boost::is_any_of("="));
-		if (chaveValorSeparado.size() == 2) {
-			_entradas[chaveValorSeparado[0]] = chaveValorSeparado[1];
+	for (auto keyValue: keysValues) {
+		std::vector<string> keyValueSplitted;
+		boost::split(keyValueSplitted, keyValue, boost::is_any_of("="));
+		if (keyValueSplitted.size() == 2) {
+			_inputs[keyValueSplitted[0]] = keyValueSplitted[1];
 		}
 	}
 }
 
-void Cgi::decodificar(string &entradas)
+void Cgi::decode(string &inputs)
 {
-	boost::trim(entradas);
-	decodificarSimbolosEspeciais(entradas);
-	decodificarHexadecimal(entradas);
-	removerCaracteresHtmlPerigosos(entradas);
+	boost::trim(inputs);
+	decodeSpecialSymbols(inputs);
+	decodeHexadecimal(inputs);
+	removeDangerousHtmlCharacters(inputs);
 }
 
-void Cgi::decodificarSimbolosEspeciais(string &entradas)
+void Cgi::decodeSpecialSymbols(string &inputs)
 {
-	boost::replace_all(entradas, "+", " ");	
+	boost::replace_all(inputs, "+", " ");	
 }
 
-void Cgi::decodificarHexadecimal(string &entradas)
+void Cgi::decodeHexadecimal(string &inputs)
 {
-	boost::match_results<string::const_iterator> encontrado;
+	boost::match_results<string::const_iterator> found;
 	boost::regex hexadecimal("%[0-9A-F][0-9A-F]");
 
-	while (boost::regex_search(entradas, encontrado, hexadecimal)) {
-		string hexadecimalTratado = boost::to_upper_copy(encontrado.str());
-		string texto = hexadecimalParaTexto(hexadecimalTratado);
-		boost::replace_all(entradas, encontrado.str(), texto);
+	while (boost::regex_search(inputs, found, hexadecimal)) {
+		string finalHexadecimal = boost::to_upper_copy(found.str());
+		string text = hexadecimalToText(finalHexadecimal);
+		boost::replace_all(inputs, found.str(), text);
 	}
 }
 
-string Cgi::hexadecimalParaTexto(const string &hexadecimal)
+string Cgi::hexadecimalToText(const string &hexadecimal)
 {
 	std::stringstream hexadecimalStream;
 	hexadecimalStream << std::hex << hexadecimal.substr(1);
@@ -160,17 +169,17 @@ string Cgi::hexadecimalParaTexto(const string &hexadecimal)
 	unsigned int hexadecimalNumber = 0;
 	hexadecimalStream >> hexadecimalNumber;
 
-	string texto("");
-	texto += char(hexadecimalNumber);
-	return texto;
+	string text("");
+	text += char(hexadecimalNumber);
+	return text;
 }
 
-void Cgi::removerCaracteresHtmlPerigosos(string &entradas)
+void Cgi::removeDangerousHtmlCharacters(string &inputs)
 {
-	boost::replace_all(entradas, "'", "");
-	boost::replace_all(entradas, "\"", "");
-	boost::replace_all(entradas, "<", "");
-	boost::replace_all(entradas, ">", "");
+	boost::replace_all(inputs, "'", "");
+	boost::replace_all(inputs, "\"", "");
+	boost::replace_all(inputs, "<", "");
+	boost::replace_all(inputs, ">", "");
 }
 
 CGIPLUS_NS_END

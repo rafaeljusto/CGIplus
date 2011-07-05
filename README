@@ -1,9 +1,10 @@
 Pequeno framework C++ web para iterpretar as requisições do
 Apache. Para utiliza-lo é necessário o g++ 4.6 e as bibliotecas do
-boost.
+boost. O código-fonte foi escrito em inglês, com exceção dos testes
+que foram escritos em português.
 
 -------------------------------------------------------------
 
 C++ tiny web framework to parse Apache requests. The software
 requirements are g++ 4.6 and boost libraries. The source code was
-written in portuguese (pt-BR).
+written in english, except for tests were written in Portuguese.
