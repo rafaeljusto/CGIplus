@@ -37,26 +37,14 @@ void Cgi::readInputs()
 	readPostInputs();
 }
 
-Cgi::Method::Valor Cgi::method() const
+Cgi::Method::Value Cgi::getMethod() const
 {
 	return _method;
 }
 
-unsigned int Cgi::numberOfInputs() const
+unsigned int Cgi::getNumberOfInputs() const
 {
 	return _inputs.size();
-}
-
-void Cgi::show(const std::map<string, string> &inputs,
-               const string &form) const
-{
-	string content = form;
-	for (auto input: inputs) {
-		boost::replace_all(content, input.first, input.second);
-	}
-	
-	std::cout << "Content-type: text/html\n\r\n\r" << std::endl;
-	std::cout << content << std::endl;
 }
 
 void Cgi::readMethod()

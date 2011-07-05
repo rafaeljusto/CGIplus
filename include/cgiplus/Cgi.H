@@ -18,7 +18,7 @@ public:
 	class Method
 	{
 	public:
-		enum Valor {
+		enum Value {
 			UNKNOWN,
 			GET,
 			POST
@@ -31,11 +31,8 @@ public:
 
 	void readInputs();
 
-	Method::Valor method() const;
-	unsigned int numberOfInputs() const;
-
-	void show(const std::map<string, string> &inputs,
-	          const string &form) const;
+	Method::Value getMethod() const;
+	unsigned int getNumberOfInputs() const;
 
 private:
 	void readMethod();
@@ -50,7 +47,7 @@ private:
 	string hexadecimalToText(const string &hexadecimal);
 	void removeDangerousHtmlCharacters(string &inputs);
 
-	Method::Valor _method;
+	Method::Value _method;
 	std::map<string, string> _inputs;
 };
 

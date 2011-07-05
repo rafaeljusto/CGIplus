@@ -6,4 +6,9 @@ localLibraries.extend(["boost_unit_test_framework"])
 cgiTest = env.Program("cgiTest", ["CgiTest.cpp"], 
                       LIBS = localLibraries, LIBPATH = libraryPath)
 
+builderTest = env.Program("builderTest", ["BuilderTest.cpp"], 
+                          LIBS = localLibraries, LIBPATH = libraryPath)
+
+
 env.Test("cgi.passed", cgiTest)
+env.Test("builder.passed", builderTest)
