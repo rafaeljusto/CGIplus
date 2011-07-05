@@ -1,5 +1,8 @@
 .:: Português ::.
 
+Requisitos: scons, libboost-system-dev, libboost-test-dev e
+libboost-regex-dev
+
 Pequeno framework C++ web para iterpretar as requisições do
 Apache. Para utiliza-lo é necessário o g++ 4.6 e as bibliotecas do
 boost. O código-fonte foi escrito em inglês, com exceção dos testes
@@ -33,6 +36,9 @@ int main()
 -------------------------------------------------------------
 
 .:: English ::.
+
+Requirements: scons, libboost-system-dev, libboost-test-dev and
+libboost-regex-dev
 
 C++ tiny web framework to parse Apache requests. The software
 requirements are g++ 4.6 and boost libraries. The source code was
