@@ -28,28 +28,28 @@ BOOST_AUTO_TEST_CASE(deveInterpretarEntradaVazia)
 
 BOOST_AUTO_TEST_CASE(deveInterpretarComNEntradas)
 {
-	setenv("QUERY_STRING", "teste1=valor1", 1);
+	setenv("QUERY_STRING", "key1=value1", 1);
 
 	Cgi cgi;
 	BOOST_CHECK_EQUAL(cgi.getNumberOfInputs(), 1);
-	BOOST_CHECK_EQUAL(cgi["teste1"], "valor1");
+	BOOST_CHECK_EQUAL(cgi["key1"], "value1");
 
-	setenv("QUERY_STRING", "teste1=valor1&teste2=valor2&teste3=valor3", 1);
+	setenv("QUERY_STRING", "key1=value1&key2=value2&key3=value3", 1);
 
 	Cgi cgi2;
 	BOOST_CHECK_EQUAL(cgi2.getNumberOfInputs(), 3);
-	BOOST_CHECK_EQUAL(cgi2["teste1"], "valor1");
-	BOOST_CHECK_EQUAL(cgi2["teste2"], "valor2");
-	BOOST_CHECK_EQUAL(cgi2["teste3"], "valor3");
+	BOOST_CHECK_EQUAL(cgi2["key1"], "value1");
+	BOOST_CHECK_EQUAL(cgi2["key2"], "value2");
+	BOOST_CHECK_EQUAL(cgi2["key3"], "value3");
 }
 
-BOOST_AUTO_TEST_CASE(deveArmazenarOUltimoValorDeUmaChaveDuplicada)
+BOOST_AUTO_TEST_CASE(deveArmazenarOUltimoValueDeUmaChaveDuplicada)
 {
-	setenv("QUERY_STRING", "teste1=valor1&teste1=valor2", 1);
+	setenv("QUERY_STRING", "key1=value1&key1=value2", 1);
 
 	Cgi cgi;
 	BOOST_CHECK_EQUAL(cgi.getNumberOfInputs(), 1);
-	BOOST_CHECK_EQUAL(cgi["teste1"], "valor2");
+	BOOST_CHECK_EQUAL(cgi["key1"], "value2");
 }
 
 BOOST_AUTO_TEST_CASE(deveDefinirOMetodoDeAcesso)
@@ -72,11 +72,11 @@ BOOST_AUTO_TEST_CASE(deveDefinirOMetodoDeAcesso)
 
 BOOST_AUTO_TEST_CASE(deveInterpretarDadosEnviadosViaPost)
 {
-	string entradaPost = "teste2=valor2";
+	string entradaPost = "key2=value2";
 	string tamanhoEntradaPost = 
 		boost::lexical_cast<string>(entradaPost.size());
 
-	setenv("QUERY_STRING", "teste1=valor1", 1);
+	setenv("QUERY_STRING", "key1=value1", 1);
 	setenv("CONTENT_LENGTH", tamanhoEntradaPost.c_str(), 1);
 	setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", 1);
 	setenv("REQUEST_METHOD", "POST", 1);
@@ -88,18 +88,30 @@ BOOST_AUTO_TEST_CASE(deveInterpretarDadosEnviadosViaPost)
 
 	Cgi cgi;
 	BOOST_CHECK_EQUAL(cgi.getNumberOfInputs(), 2);
-	BOOST_CHECK_EQUAL(cgi["teste1"], "valor1");
-	BOOST_CHECK_EQUAL(cgi["teste2"], "valor2");
+	BOOST_CHECK_EQUAL(cgi["key1"], "value1");
+	BOOST_CHECK_EQUAL(cgi["key2"], "value2");
 }
 
 BOOST_AUTO_TEST_CASE(deveDecodificarCorretamenteUmaUrl)
 {
 	setenv("REQUEST_METHOD", "GET", 1);
-	setenv("QUERY_STRING", "teste1=valor1+valor2+%2B%3A", 1);
+	setenv("QUERY_STRING", "key1=value1+value2+%2B%3A", 1);
 
 	Cgi cgi;
 	BOOST_CHECK_EQUAL(cgi.getNumberOfInputs(), 1);
-	BOOST_CHECK_EQUAL(cgi["teste1"], "valor1 valor2 +:");
+	BOOST_CHECK_EQUAL(cgi["key1"], "value1 value2 +:");
+}
+
+BOOST_AUTO_TEST_CASE(deveInterpretarCookies)
+{
+	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("HTTP_COOKIE", "key1=value1; key2=value2; key3=value3", 1);
+
+	Cgi cgi;
+	BOOST_CHECK_EQUAL(cgi.getNumberOfCookies(), 3);
+	BOOST_CHECK_EQUAL(cgi("key1"), "value1");
+	BOOST_CHECK_EQUAL(cgi("key2"), "value2");
+	BOOST_CHECK_EQUAL(cgi("key3"), "value3");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

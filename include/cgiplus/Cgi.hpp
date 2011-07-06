@@ -34,6 +34,7 @@ public:
 
 	Method::Value getMethod() const;
 	unsigned int getNumberOfInputs() const;
+	unsigned int getNumberOfCookies() const;
 
 private:
 	void readMethod();

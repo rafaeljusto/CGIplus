@@ -58,6 +58,11 @@ unsigned int Cgi::getNumberOfInputs() const
 	return _inputs.size();
 }
 
+unsigned int Cgi::getNumberOfCookies() const
+{
+	return _cookies.size();
+}
+
 void Cgi::readMethod()
 {
 	const char *methodPtr = getenv("REQUEST_METHOD");
