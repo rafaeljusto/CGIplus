@@ -30,11 +30,22 @@ string Cgi::operator[](const string &key)
 	return "";
 }
 
+string Cgi::operator()(const string &key)
+{
+	auto cookie = _cookies.find(key);
+	if (cookie != _cookies.end()) {
+		return cookie->second;
+	}
+
+	return "";
+}
+
 void Cgi::readInputs()
 {
 	readMethod();
 	readGetInputs();
 	readPostInputs();
+	readCookies();
 }
 
 Cgi::Method::Value Cgi::getMethod() const
@@ -106,6 +117,11 @@ void Cgi::readPostInputs()
 
 	string inputs = inputsPtr;
 	parse(inputs);
+}
+
+void Cgi::readCookies()
+{
+	// TODO!
 }
 
 void Cgi::parse(string inputs)

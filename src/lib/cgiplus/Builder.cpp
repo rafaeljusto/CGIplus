@@ -36,6 +36,20 @@ string& Builder::operator[](const string &key)
 	return _fields[key];
 }
 
+Cookie& Builder::operator()(const string &key)
+{
+	auto cookieIt = _cookies.find(key);
+	if (cookieIt == _cookies.end()) {
+		return cookieIt->second;
+	}
+
+	Cookie cookie;
+	cookie.setKey(key);
+	_cookies[key] = cookie;
+
+	return _cookies[key];
+}
+
 string Builder::build() const
 {
 	string content = _form;

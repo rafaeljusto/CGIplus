@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Cgiplus.hpp"
+#include "Cookie.hpp"
 
 using std::string;
 
@@ -27,6 +28,7 @@ public:
 	Builder();
 
 	string& operator[](const string &key);
+	Cookie& operator()(const string &key);
 
 	string build() const;
 	void show() const;
@@ -41,6 +43,7 @@ private:
 	std::pair<string, string> _tags;
 	Method::Value _method;
 	std::map<string, string> _fields;
+	std::map<string, Cookie> _cookies;
 };
 
 CGIPLUS_NS_END

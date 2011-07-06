@@ -28,6 +28,7 @@ public:
 	Cgi();
 
 	string operator[](const string &key);
+	string operator()(const string &key);
 
 	void readInputs();
 
@@ -38,6 +39,7 @@ private:
 	void readMethod();
 	void readGetInputs();
 	void readPostInputs();
+	void readCookies();
 
 	void parse(string inputs);
 
@@ -49,6 +51,7 @@ private:
 
 	Method::Value _method;
 	std::map<string, string> _inputs;
+	std::map<string, string> _cookies;
 };
 
 CGIPLUS_NS_END
