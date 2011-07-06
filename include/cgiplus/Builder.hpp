@@ -33,10 +33,10 @@ public:
 	string build() const;
 	void show() const;
 
-	void setForm(const string &form);
-	void setFormFile(const string &formFile);
-	void setTags(const std::pair<string, string> &tags);
-	void setMethod(const Method::Value method);
+	Builder& setForm(const string &form);
+	Builder& setFormFile(const string &formFile);
+	Builder& setTags(const std::pair<string, string> &tags);
+	Builder& setMethod(const Method::Value method);
 
 private:
 	string _form;

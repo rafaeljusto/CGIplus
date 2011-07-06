@@ -16,49 +16,6 @@ Cookie::Cookie() :
 {
 }
 
-Cookie& Cookie::setDomain(const string &domain)
-{
-	_domain = domain;
-	return *this;
-}
-
-Cookie& Cookie::setPath(const string &path)
-{
-	_path = path;
-	return *this;
-}
-
-Cookie& Cookie::setKey(const string &key)
-{
-	_key = key;
-	return *this;
-}
-
-Cookie& Cookie::setValue(const string &value)
-{
-	_value = value;
-	return *this;
-}
-
-Cookie& Cookie::setSecure(const bool secure)
-{
-	_secure = secure;
-	return *this;
-}
-
-Cookie& Cookie::setHttpOnly(const bool httpOnly)
-{
-	_httpOnly = httpOnly;
-	return *this;
-}
-
-Cookie& Cookie::setExpiration(const unsigned int seconds)
-{
-	_expiration = boost::posix_time::second_clock::universal_time();
-	_expiration += boost::posix_time::seconds(seconds);
-	return *this;
-}
-
 string Cookie::build() const
 {
 	if (_key.empty()) {
@@ -103,6 +60,49 @@ string Cookie::build() const
 	}
 
 	return cookie;
+}
+
+Cookie& Cookie::setDomain(const string &domain)
+{
+	_domain = domain;
+	return *this;
+}
+
+Cookie& Cookie::setPath(const string &path)
+{
+	_path = path;
+	return *this;
+}
+
+Cookie& Cookie::setKey(const string &key)
+{
+	_key = key;
+	return *this;
+}
+
+Cookie& Cookie::setValue(const string &value)
+{
+	_value = value;
+	return *this;
+}
+
+Cookie& Cookie::setSecure(const bool secure)
+{
+	_secure = secure;
+	return *this;
+}
+
+Cookie& Cookie::setHttpOnly(const bool httpOnly)
+{
+	_httpOnly = httpOnly;
+	return *this;
+}
+
+Cookie& Cookie::setExpiration(const unsigned int seconds)
+{
+	_expiration = boost::posix_time::second_clock::universal_time();
+	_expiration += boost::posix_time::seconds(seconds);
+	return *this;
 }
 
 CGIPLUS_NS_END

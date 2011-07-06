@@ -121,7 +121,23 @@ void Cgi::readPostInputs()
 
 void Cgi::readCookies()
 {
-	// TODO!
+	const char *cookiesPtr = getenv("HTTP_COOKIE");
+	if (cookiesPtr == NULL) {
+		return;
+	}
+
+	string cookies = cookiesPtr;
+	
+	std::vector<string> keysValues;
+	boost::split(keysValues, cookies, boost::is_any_of("; "));
+
+	for (string &keyValue: keysValues) {
+		std::vector<string> keyValueSplitted;
+		boost::split(keyValueSplitted, keyValue, boost::is_any_of("="));
+		if (keyValueSplitted.size() == 2) {
+			_cookies[keyValueSplitted[0]] = keyValueSplitted[1];
+		}
+	}
 }
 
 void Cgi::parse(string inputs)

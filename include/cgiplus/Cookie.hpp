@@ -16,6 +16,8 @@ class Cookie
 public:
 	Cookie();
 
+	string build() const;
+
 	Cookie& setDomain(const string &domain);
 	Cookie& setPath(const string &path);
 	Cookie& setKey(const string &key);
@@ -23,8 +25,6 @@ public:
 	Cookie& setSecure(const bool secure);
 	Cookie& setHttpOnly(const bool httpOnly);
 	Cookie& setExpiration(const unsigned int seconds);
-
-	string build() const;
 
 private:
 	string _domain;

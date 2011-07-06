@@ -65,12 +65,13 @@ void Builder::show() const
 	std::cout << build() << std::endl;
 }
 
-void Builder::setForm(const string &form)
+Builder& Builder::setForm(const string &form)
 {
 	_form = form;
+	return *this;
 }
 
-void Builder::setFormFile(const string &formFile)
+Builder& Builder::setFormFile(const string &formFile)
 {
 	std::ifstream formFileStream(formFile.c_str());
 	while (formFileStream.good()) {
@@ -78,16 +79,19 @@ void Builder::setFormFile(const string &formFile)
 		std::getline(formFileStream, line);
 		_form += line;
 	}
+	return *this;
 }
 
-void Builder::setTags(const std::pair<string, string> &tags)
+Builder& Builder::setTags(const std::pair<string, string> &tags)
 {
 	_tags = tags;
+	return *this;
 }
 
-void Builder::setMethod(const Builder::Method::Value method)
+Builder& Builder::setMethod(const Builder::Method::Value method)
 {
 	_method = method;
+	return *this;
 }
 
 CGIPLUS_NS_END
