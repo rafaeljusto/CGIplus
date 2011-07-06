@@ -9,10 +9,13 @@
 
 using cgiplus::Cgi;
 
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MAIN
-#define BOOST_TEST_MODULE Cgi
+// When you need to run only one test, compile only this file with the
+// STAND_ALONE flag.
+#ifdef STAND_ALONE
+#define BOOST_TEST_MODULE CGIplus
+#endif
 
+#define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(cgiplusTests)
