@@ -3,6 +3,8 @@ Import("env", "libraryPath", "localBinInstall", "getLibraries")
 localLibraries = getLibraries(["CGIPLUS"])
 localLibraries.extend(["boost_unit_test_framework"])
 
-test = env.Program("test", ["Main.cpp", "CgiTest.cpp", "BuilderTest.cpp"], 
+test = env.Program("test", 
+                   ["Main.cpp", "CgiTest.cpp", 
+                    "BuilderTest.cpp", "CookieTest.cpp"], 
                    LIBS = localLibraries, LIBPATH = libraryPath)
 env.Test("test.passed", test)
