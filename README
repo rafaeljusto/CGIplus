@@ -8,6 +8,11 @@ Apache. Para utiliza-lo é necessário o g++ 4.6 e as bibliotecas do
 boost. O código-fonte foi escrito em inglês, com exceção dos testes
 que foram escritos em português.
 
+Instalação:
+
+  # scons
+  # scons install
+
 Segue um exemplo de utilização da biblioteca.
 
 #include <cstdlib>
@@ -44,6 +49,11 @@ libboost-regex-dev
 C++ tiny web framework to parse Apache requests. The software
 requirements are g++ 4.6 and boost libraries. The source code was
 written in english, except for tests were written in Portuguese.
+
+Installation:
+
+  # scons
+  # scons install
 
 An example of use of the library.
 
