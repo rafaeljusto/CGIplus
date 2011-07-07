@@ -18,8 +18,9 @@ Segue um exemplo de utilização da biblioteca.
 
 int main()
 {
+  // Variaveis de ambiente definidas pelo Apache em uma requisição
   setenv("QUERY_STRING", "teste=abc123", 1);
-	setenv("REQUEST_METHOD", "GET", 1);
+  setenv("REQUEST_METHOD", "GET", 1);
 
   string form = "O teste tem como conteudo: <!-- conteudo -->";
 
@@ -54,8 +55,9 @@ An example of use of the library.
 
 int main()
 {
+  // Enviroment variables defined by Apache for a request
   setenv("QUERY_STRING", "test=abc123", 1);
-	setenv("REQUEST_METHOD", "GET", 1);
+  setenv("REQUEST_METHOD", "GET", 1);
 
   string form = "The test has as content: <!-- content -->";
 
