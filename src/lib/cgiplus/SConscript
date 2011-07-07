@@ -1,4 +1,15 @@
 import os
-Import("env", "localLibraryInstall")
-env.StaticLibrary(localLibraryInstall + "/" + os.getcwd().split("/")[-1], 
-                  Glob("*.cpp"))
+import installer
+
+Import("env", "basePath", "localLibraryInstall")
+
+cgiplusName = localLibraryInstall + "/" + os.getcwd().split("/")[-1]
+cgiplusLib = env.StaticLibrary(cgiplusName, Glob("*.cpp"))
+
+opts = Variables(basePath + "/cgiplus.conf", ARGUMENTS)
+installer.AddOptions(opts)
+opts.Update(env)
+
+install = installer.Installer(env)
+install.AddLibrary(cgiplusLib)
+install.AddHeaders(basePath + "/include/cgiplus/", "*.hpp")

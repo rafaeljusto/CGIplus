@@ -84,6 +84,7 @@ def getLibraries(names):
 
 # Compile destinations
 
+basePath = os.getcwd()
 localLibraryInstall = "#lib"
 localBinInstall = "#bin"
 
@@ -105,6 +106,7 @@ env.Append(BUILDERS = {'Test' :  bld})
 # Export for modules
 
 Export("env",
+       "basePath",
        "localLibraryInstall", 
        "localBinInstall",
        "libraryPath",
