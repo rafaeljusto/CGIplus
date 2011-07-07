@@ -1,6 +1,8 @@
 #include <cgiplus/Builder.hpp>
+#include <cgiplus/Cookie.hpp>
 
 using cgiplus::Builder;
+using cgiplus::Cookie;
 
 // When you need to run only one test, compile only this file with the
 // STAND_ALONE flag.
@@ -49,6 +51,26 @@ BOOST_AUTO_TEST_CASE(deveSubstituirCorretamenteNoTemplate)
 		"<html><body>This is a test. <!-- test2 --> Another test. "
 		"Guess what? One more test!</body></html>";
 	BOOST_CHECK_EQUAL(builder2.build(), content2);
+}
+
+BOOST_AUTO_TEST_CASE(deveDefinirCorretamenteUmCookie) 
+{
+	string form = "<html><body>Test</body></html>";
+
+	Builder builder;
+	builder.setForm(form);
+	
+	builder("key")
+		.setValue("value")
+		.setDomain("test.com.br")
+		.setPath("/")
+		.setSecure(true)
+		.setHttpOnly(true);
+
+	string content = "Content-type: text/html\n\r\n\r"
+		"Set-Cookie: key=value; Domain=test.com.br; Path=/; Secure; httponly; "
+		"<html><body>Test</body></html>";
+	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

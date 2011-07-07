@@ -39,7 +39,7 @@ string& Builder::operator[](const string &key)
 Cookie& Builder::operator()(const string &key)
 {
 	auto cookieIt = _cookies.find(key);
-	if (cookieIt == _cookies.end()) {
+	if (cookieIt != _cookies.end()) {
 		return cookieIt->second;
 	}
 
@@ -52,12 +52,18 @@ Cookie& Builder::operator()(const string &key)
 
 string Builder::build() const
 {
+	string header = Method::toString(_method);
+	for (auto cookie: _cookies) {
+		header += cookie.second.build();
+	}
+	
 	string content = _form;
 	for (auto field: _fields) {
 		string key  = _tags.first + field.first + _tags.second;
 		boost::replace_all(content, key, field.second);
 	}
-	return Method::toString(_method) + content;
+
+	return header + content;
 }
 
 void Builder::show() const
