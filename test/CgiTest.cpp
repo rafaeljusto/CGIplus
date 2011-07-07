@@ -43,6 +43,22 @@ BOOST_AUTO_TEST_CASE(deveInterpretarComNEntradas)
 	BOOST_CHECK_EQUAL(cgi2["key3"], "value3");
 }
 
+BOOST_AUTO_TEST_CASE(deveLimparOsDadosAntigosQuandoForReaproveitado)
+{
+	setenv("QUERY_STRING", "key1=value1", 1);
+
+	Cgi cgi;
+	BOOST_CHECK_EQUAL(cgi.getNumberOfInputs(), 1);
+	BOOST_CHECK_EQUAL(cgi["key1"], "value1");
+
+	setenv("QUERY_STRING", "key2=value2", 1);
+
+	cgi.readInputs();
+
+	BOOST_CHECK_EQUAL(cgi.getNumberOfInputs(), 1);
+	BOOST_CHECK_EQUAL(cgi["key2"], "value2");
+}
+
 BOOST_AUTO_TEST_CASE(deveArmazenarOUltimoValueDeUmaChaveDuplicada)
 {
 	setenv("QUERY_STRING", "key1=value1&key1=value2", 1);

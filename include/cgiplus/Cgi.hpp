@@ -37,6 +37,7 @@ public:
 	unsigned int getNumberOfCookies() const;
 
 private:
+	void clearInputs();
 	void readMethod();
 	void readGetInputs();
 	void readPostInputs();

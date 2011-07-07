@@ -42,6 +42,7 @@ string Cgi::operator()(const string &key)
 
 void Cgi::readInputs()
 {
+	clearInputs();
 	readMethod();
 	readGetInputs();
 	readPostInputs();
@@ -61,6 +62,13 @@ unsigned int Cgi::getNumberOfInputs() const
 unsigned int Cgi::getNumberOfCookies() const
 {
 	return _cookies.size();
+}
+
+void Cgi::clearInputs()
+{
+	_method = Method::UNKNOWN;
+	_inputs.clear();
+	_cookies.clear();
 }
 
 void Cgi::readMethod()
