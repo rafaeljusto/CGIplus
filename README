@@ -1,6 +1,6 @@
 .:: Português ::.
 
-Requisitos: scons, libboost-system-dev, libboost-test-dev e
+Requisitos: python, scons, libboost-system-dev, libboost-test-dev e
 libboost-regex-dev
 
 Pequeno framework C++ web para iterpretar as requisições do
@@ -48,8 +48,8 @@ Contato:
 
 .:: English ::.
 
-Requirements: scons, libboost-system-dev, libboost-test-dev and
-libboost-regex-dev
+Requirements: python, scons, libboost-system-dev, libboost-test-dev
+and libboost-regex-dev
 
 C++ tiny web framework to parse Apache requests. The software
 requirements are g++ 4.6 and boost libraries. The source code was
