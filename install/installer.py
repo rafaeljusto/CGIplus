@@ -1,3 +1,6 @@
+# This module was downloaded from http://www.scons.org/wiki/Installer
+# on July 7, 2011. No changes were made.
+
 """ installer
 
 This module defines a minimal installer for scons build scripts.  It is aimed
