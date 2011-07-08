@@ -74,6 +74,7 @@ void Builder::show() const
 Builder& Builder::setForm(const string &form)
 {
 	_form = form;
+	_fields.clear();
 	return *this;
 }
 
@@ -85,6 +86,8 @@ Builder& Builder::setFormFile(const string &formFile)
 		std::getline(formFileStream, line);
 		_form += line;
 	}
+
+	_fields.clear();
 	return *this;
 }
 
