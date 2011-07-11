@@ -18,39 +18,35 @@ Pre-Requisits
 Installation
 ------------
 
-<pre>
-  # scons
-  # scons install
-</pre>
+    # scons
+    # scons install
 
 Usage
 -----
 
-<pre><code>
-  #include <cstdlib>
-  #include <iostream>
-
-  #include <cgiplus/Builder.hpp>
-  #include <cgiplus/Cgi.hpp>
-
-  int main()
-  {
-    // Enviroment variables defined by Apache in a request
-    setenv("QUERY_STRING", "test=abc123", 1);
-    setenv("REQUEST_METHOD", "GET", 1);
-
-    string form = "The test has as content: <!-- content -->";
-
-    cgiplus::Cgi cgi;
-    cgiplus::Builder builder;
-
-    builder.setForm(form);
-    builder["content"] = cgi["test"]
-
-    std::cout << builder.build() << std::endl;
-    return 0;
-  }
-</code></pre>
+    #include <cstdlib>
+    #include <iostream>
+    
+    #include <cgiplus/Builder.hpp>
+    #include <cgiplus/Cgi.hpp>
+    
+    int main()
+    {
+      // Enviroment variables defined by Apache in a request
+      setenv("QUERY_STRING", "test=abc123", 1);
+      setenv("REQUEST_METHOD", "GET", 1);
+      
+      string form = "The test has as content: <!-- content -->";
+      
+      cgiplus::Cgi cgi;
+      cgiplus::Builder builder;
+      
+      builder.setForm(form);
+      builder["content"] = cgi["test"]
+      
+      std::cout \<\< builder.build() \<\< std::endl;
+      return 0;
+    }
 
 Contact
 -------
