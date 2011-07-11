@@ -8,12 +8,12 @@ Portuguese.
 Prerequisits
 ------------
 
-  * g++ 4.6 - see <http://gcc.gnu.org/>
-  * python - see <http://www.python.org/>
-  * scons - see <http://www.scons.org/>
-  * libboost-system-dev - see <http://www.boost.org>
-  * libboost-test-dev - see <http://www.boost.org>
-  * libboost-regex-dev - see <http://www.boost.org>
+  * g++ 4.6 - <http://gcc.gnu.org/>
+  * python - <http://www.python.org/>
+  * scons - <http://www.scons.org/>
+  * libboost-system-dev - <http://www.boost.org>
+  * libboost-test-dev - <http://www.boost.org>
+  * libboost-regex-dev - <http://www.boost.org>
 
 Installation
 ------------
