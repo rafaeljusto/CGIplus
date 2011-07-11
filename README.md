@@ -27,33 +27,32 @@ Usage
 -----
 
 <pre><code>
-#include <cstdlib>
-#include <iostream>
+  #include <cstdlib>
+  #include <iostream>
 
-#include <cgiplus/Builder.hpp>
-#include <cgiplus/Cgi.hpp>
+  #include <cgiplus/Builder.hpp>
+  #include <cgiplus/Cgi.hpp>
 
-int main()
-{
-  // Enviroment variables defined by Apache in a request
-  setenv("QUERY_STRING", "test=abc123", 1);
-  setenv("REQUEST_METHOD", "GET", 1);
+  int main()
+  {
+    // Enviroment variables defined by Apache in a request
+    setenv("QUERY_STRING", "test=abc123", 1);
+    setenv("REQUEST_METHOD", "GET", 1);
 
-  string form = "The test has as content: <!-- content -->";
+    string form = "The test has as content: <!-- content -->";
 
-  cgiplus::Cgi cgi;
-  cgiplus::Builder builder;
+    cgiplus::Cgi cgi;
+    cgiplus::Builder builder;
 
-  builder.setForm(form);
-  builder["content"] = cgi["test"]
+    builder.setForm(form);
+    builder["content"] = cgi["test"]
 
-  std::cout << builder.build() << std::endl;
-  return 0;
-}
+    std::cout << builder.build() << std::endl;
+    return 0;
+  }
 </code></pre>
 
 Contact
 -------
 
-  Rafael Dantas Justo
-  adm@rafael.net.br
+  [Rafael Dantas Justo](mailto:adm@rafael.net.br)
