@@ -5,15 +5,15 @@ CGIplus
 source code was written in english, except for tests were written in
 Portuguese.
 
-Pre-Requisits
--------------
+Prerequisits
+------------
 
-  * g++ 4.6
-  * python
-  * scons
-  * libboost-system-dev
-  * libboost-test-dev
-  * libboost-regex-dev
+  * g++ 4.6 - see <http://gcc.gnu.org/>
+  * python - see <http://www.python.org/>
+  * scons - see <http://www.scons.org/>
+  * libboost-system-dev - see <http://www.boost.org>
+  * libboost-test-dev - see <http://www.boost.org>
+  * libboost-regex-dev - see <http://www.boost.org>
 
 Installation
 ------------
@@ -51,4 +51,5 @@ Usage
 Contact
 -------
 
-  [Rafael Dantas Justo](mailto:adm@rafael.net.br)
+  Rafael Dantas Justo  
+  <adm@rafael.net.br>
