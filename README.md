@@ -1,66 +1,28 @@
-.:: Português ::.
+CGIplus
+=======
 
-Requisitos: python, scons, libboost-system-dev, libboost-test-dev e
-libboost-regex-dev
+**CGIplus** is a C++ tiny web framework to parse Apache requests. The
+source code was written in english, except for tests were written in
+Portuguese.
 
-Pequeno framework C++ web para iterpretar as requisições do
-Apache. Para utiliza-lo é necessário o g++ 4.6 e as bibliotecas do
-boost. O código-fonte foi escrito em inglês, com exceção dos testes
-que foram escritos em português.
+Pre-Requisits
+-------------
 
-Instalação:
+  * g++ 4.6
+  * python
+  * scons
+  * libboost-system-dev
+  * libboost-test-dev
+  * libboost-regex-dev
 
-  # scons
-  # scons install
-
-Segue um exemplo de utilização da biblioteca.
-
-#include <cstdlib>
-#include <iostream>
-
-#include <cgiplus/Builder.hpp>
-#include <cgiplus/Cgi.hpp>
-
-int main()
-{
-  // Variaveis de ambiente definidas pelo Apache em uma requisição
-  setenv("QUERY_STRING", "teste=abc123", 1);
-  setenv("REQUEST_METHOD", "GET", 1);
-
-  string form = "O teste tem como conteudo: <!-- conteudo -->";
-
-  cgiplus::Cgi cgi;
-  cgiplus::Builder builder;
-
-  builder.setForm(form);
-  builder["conteudo"] = cgi["teste"]
-
-  std::cout << builder.build() << std::endl;
-  return 0;
-}
-
-Contato:
-
-  Rafael Dantas Justo
-  adm@rafael.net.br
-
--------------------------------------------------------------
-
-.:: English ::.
-
-Requirements: python, scons, libboost-system-dev, libboost-test-dev
-and libboost-regex-dev
-
-C++ tiny web framework to parse Apache requests. The software
-requirements are g++ 4.6 and boost libraries. The source code was
-written in english, except for tests were written in Portuguese.
-
-Installation:
+Installation
+------------
 
   # scons
   # scons install
 
-An example of use of the library.
+Example
+-------
 
 #include <cstdlib>
 #include <iostream>
@@ -86,7 +48,8 @@ int main()
   return 0;
 }
 
-Contact:
+Contact
+-------
 
   Rafael Dantas Justo
   adm@rafael.net.br
