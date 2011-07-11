@@ -18,12 +18,15 @@ Pre-Requisits
 Installation
 ------------
 
+<pre>
   # scons
   # scons install
+</pre>
 
-Example
--------
+Usage
+-----
 
+<pre>
 #include <cstdlib>
 #include <iostream>
 
@@ -47,6 +50,7 @@ int main()
   std::cout << builder.build() << std::endl;
   return 0;
 }
+</pre>
 
 Contact
 -------
