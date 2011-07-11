@@ -26,7 +26,7 @@ Installation
 Usage
 -----
 
-<pre>
+<pre><code>
 #include <cstdlib>
 #include <iostream>
 
@@ -50,7 +50,7 @@ int main()
   std::cout << builder.build() << std::endl;
   return 0;
 }
-</pre>
+</code></pre>
 
 Contact
 -------
