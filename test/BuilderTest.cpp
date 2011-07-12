@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 {
 	std::ofstream templateFile("template-file.tmp");
-	templateFile << "This is a <!-- test -->" << std::endl;
+	templateFile << "This is a <!-- test -->";
 	templateFile.close();
 
 	Builder builder;

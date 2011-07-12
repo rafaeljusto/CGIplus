@@ -60,9 +60,9 @@ public:
 private:
 	string _form;
 	std::pair<string, string> _tags;
-	Method::Value _method;
 	std::map<string, string> _fields;
 	std::map<string, Cookie> _cookies;
+	Method::Value _method;
 };
 
 CGIPLUS_NS_END

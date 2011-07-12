@@ -19,7 +19,9 @@ along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
 #include <cgiplus/Builder.hpp>
@@ -99,11 +101,11 @@ Builder& Builder::setForm(const string &form)
 
 Builder& Builder::setFormFile(const string &formFile)
 {
-	std::ifstream formFileStream(formFile.c_str());
-	while (formFileStream.good()) {
-		string line;
-		std::getline(formFileStream, line);
-		_form += line;
+	std::ifstream fileStream(formFile.c_str());
+	if (fileStream.good()) {
+		std::stringstream contentStream;
+		contentStream << fileStream.rdbuf();
+		_form = contentStream.str();
 	}
 
 	_fields.clear();
