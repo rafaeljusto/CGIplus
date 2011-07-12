@@ -35,7 +35,7 @@ using cgiplus::Cookie;
 
 BOOST_AUTO_TEST_SUITE(cgiplusTests)
 
-BOOST_AUTO_TEST_CASE(naoDeveSubstituirNadaQuandoVazio)
+BOOST_AUTO_TEST_CASE(mustNotReplaceWhenThereIsNoKeyNoMatch)
 {
 	string form = "<html><body><!-- test --></body></html>";
 
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(naoDeveSubstituirNadaQuandoVazio)
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
-BOOST_AUTO_TEST_CASE(deveSubstituirCorretamenteNoTemplate)
+BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 {
 	string form1 = "<html><body><!-- test --></body></html>";
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(deveSubstituirCorretamenteNoTemplate)
 	BOOST_CHECK_EQUAL(builder2.build(), content2);
 }
 
-BOOST_AUTO_TEST_CASE(deveDefinirCorretamenteUmCookie) 
+BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 {
 	string form = "<html><body>Test</body></html>";
 
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(deveDefinirCorretamenteUmCookie)
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
-BOOST_AUTO_TEST_CASE(deveCarregarCorretamenteUmArquivoTemplate) 
+BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 {
 	std::ofstream templateFile("template-file.tmp");
 	templateFile << "This is a <!-- test -->" << std::endl;
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(deveCarregarCorretamenteUmArquivoTemplate)
 	remove("template-file.tmp");
 }
 
-BOOST_AUTO_TEST_CASE(naoDeveArmazenarDadosAoSerReaproveitado) 
+BOOST_AUTO_TEST_CASE(mustFlushOldDataWhenReused)
 {
 	string form1 = "<html><body><!-- test1 --></body></html>";
 

@@ -36,13 +36,13 @@ using cgiplus::Cgi;
 
 BOOST_AUTO_TEST_SUITE(cgiplusTests)
 
-BOOST_AUTO_TEST_CASE(deveInterpretarEntradaVazia)
+BOOST_AUTO_TEST_CASE(mustParseEmptyInput)
 {
 	Cgi cgi;
 	BOOST_CHECK_EQUAL(cgi.getNumberOfInputs(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(deveInterpretarComNEntradas)
+BOOST_AUTO_TEST_CASE(mustParseWithNInputs)
 {
 	setenv("QUERY_STRING", "key1=value1", 1);
 
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(deveInterpretarComNEntradas)
 	BOOST_CHECK_EQUAL(cgi2["key3"], "value3");
 }
 
-BOOST_AUTO_TEST_CASE(deveLimparOsDadosAntigosQuandoForReaproveitado)
+BOOST_AUTO_TEST_CASE(mustCleanOldDataWhenReused)
 {
 	setenv("QUERY_STRING", "key1=value1", 1);
 
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(deveLimparOsDadosAntigosQuandoForReaproveitado)
 	BOOST_CHECK_EQUAL(cgi["key2"], "value2");
 }
 
-BOOST_AUTO_TEST_CASE(deveArmazenarOUltimoValueDeUmaChaveDuplicada)
+BOOST_AUTO_TEST_CASE(mustStoreTheLastValueOfDuplicatedKey)
 {
 	setenv("QUERY_STRING", "key1=value1&key1=value2", 1);
 
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(deveArmazenarOUltimoValueDeUmaChaveDuplicada)
 	BOOST_CHECK_EQUAL(cgi["key1"], "value2");
 }
 
-BOOST_AUTO_TEST_CASE(deveDefinirOMetodoDeAcesso)
+BOOST_AUTO_TEST_CASE(mustDefineTheAccessMethod)
 {
 	setenv("REQUEST_METHOD", "GeT", 1);
 
@@ -102,19 +102,18 @@ BOOST_AUTO_TEST_CASE(deveDefinirOMetodoDeAcesso)
 	BOOST_CHECK_EQUAL(cgi3.getMethod(), Cgi::Method::UNKNOWN);
 }
 
-BOOST_AUTO_TEST_CASE(deveInterpretarDadosEnviadosViaPost)
+BOOST_AUTO_TEST_CASE(mustParseDataSentViaPost)
 {
-	string entradaPost = "key2=value2";
-	string tamanhoEntradaPost = 
-		boost::lexical_cast<string>(entradaPost.size());
+	string postInput = "key2=value2";
+	string postInputSize = boost::lexical_cast<string>(postInput.size());
 
 	setenv("QUERY_STRING", "key1=value1", 1);
-	setenv("CONTENT_LENGTH", tamanhoEntradaPost.c_str(), 1);
+	setenv("CONTENT_LENGTH", postInputSize.c_str(), 1);
 	setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", 1);
 	setenv("REQUEST_METHOD", "POST", 1);
 
 	std::cin.clear();
-	for (auto it = entradaPost.rbegin(); it != entradaPost.rend(); it++) {
+	for (auto it = postInput.rbegin(); it != postInput.rend(); it++) {
 		std::cin.putback(*it);
 	}
 
@@ -124,7 +123,7 @@ BOOST_AUTO_TEST_CASE(deveInterpretarDadosEnviadosViaPost)
 	BOOST_CHECK_EQUAL(cgi["key2"], "value2");
 }
 
-BOOST_AUTO_TEST_CASE(deveDecodificarCorretamenteUmaUrl)
+BOOST_AUTO_TEST_CASE(mustDecodeAnUrlCorrectly)
 {
 	setenv("REQUEST_METHOD", "GET", 1);
 	setenv("QUERY_STRING", "key1=value1+value2+%2B%3A", 1);
@@ -134,7 +133,7 @@ BOOST_AUTO_TEST_CASE(deveDecodificarCorretamenteUmaUrl)
 	BOOST_CHECK_EQUAL(cgi["key1"], "value1 value2 +:");
 }
 
-BOOST_AUTO_TEST_CASE(deveInterpretarCookies)
+BOOST_AUTO_TEST_CASE(mustParseCookies)
 {
 	setenv("REQUEST_METHOD", "GET", 1);
 	setenv("HTTP_COOKIE", "key1=value1; key2=value2; key3=value3", 1);

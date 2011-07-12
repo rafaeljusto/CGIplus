@@ -30,7 +30,7 @@ using cgiplus::Cookie;
 
 BOOST_AUTO_TEST_SUITE(cgiplusTests)
 
-BOOST_AUTO_TEST_CASE(deveGerarUmCookieCorretamente)
+BOOST_AUTO_TEST_CASE(mustGenerateACookieCorrectly)
 {
 	Cookie cookie;
 	cookie

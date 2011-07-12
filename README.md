@@ -1,9 +1,14 @@
 CGIplus
 =======
 
-**CGIplus** is a C++ tiny web framework to parse Apache requests. The
-source code was written in english, except for tests were written in
-Portuguese.
+**CGIplus** is a C++ tiny web framework to parse Apache requests. Some
+features that you will find in this framework:
+
+  * Easy interface - use [] and () to get (Cgi) or define (Builder)
+    GET/POST and cookie data respectively
+
+  * Protection against cross-site scripting - Some special symbols are
+    removed from the input data
 
 Prerequisits
 ------------
