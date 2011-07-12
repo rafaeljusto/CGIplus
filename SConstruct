@@ -1,3 +1,5 @@
+# CGIplus Copyright (C) 2011 Rafael Dantas Justo
+#
 # This file is part of CGIplus.
 #
 # CGIplus is free software: you can redistribute it and/or modify
