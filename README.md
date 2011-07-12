@@ -4,8 +4,8 @@ CGIplus
 **CGIplus** is a C++ tiny web framework to parse Apache requests. Some
 features that you will find in this framework:
 
-  * Easy interface - use [] and () to get (Cgi) or define (Builder)
-    GET/POST and cookie data respectively
+  * Easy interface - use [] and () operators to get (Cgi) or define
+    (Builder) GET/POST data and cookie respectively
 
   * Protection against cross-site scripting - Some special symbols are
     removed from the input data
@@ -19,6 +19,9 @@ Prerequisits
   * libboost-system-dev 1.4 - <http://www.boost.org>
   * libboost-test-dev 1.4 - <http://www.boost.org>
   * libboost-regex-dev 1.4 - <http://www.boost.org>
+
+  The project was compiled using the above compilers and libraries,
+  higher versions should work well.
 
 Installation
 ------------
