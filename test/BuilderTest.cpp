@@ -112,6 +112,17 @@ BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 	remove("template-file.tmp");
 }
 
+BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
+{
+	Builder builder;
+	builder.setForm("Any form example");
+	builder.setFormFile("idontexist.tmp");
+	builder["test"] = "test";
+	
+	string content = "Content-type: text/html\n\r\n\r";
+	BOOST_CHECK_EQUAL(builder.build(), content);
+}
+
 BOOST_AUTO_TEST_CASE(mustFlushOldDataWhenReused)
 {
 	string form1 = "<html><body><!-- test1 --></body></html>";

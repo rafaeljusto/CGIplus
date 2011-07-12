@@ -101,6 +101,8 @@ Builder& Builder::setForm(const string &form)
 
 Builder& Builder::setFormFile(const string &formFile)
 {
+	_form.clear();
+
 	std::ifstream fileStream(formFile.c_str());
 	if (fileStream.good()) {
 		std::stringstream contentStream;
