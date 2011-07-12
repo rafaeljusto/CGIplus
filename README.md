@@ -44,7 +44,7 @@ Usage
       builder.setForm(form);
       builder["content"] = cgi["test"]
       
-      std::cout \<\< builder.build() \<\< std::endl;
+      std::cout << builder.build() << std::endl;
       return 0;
     }
 
