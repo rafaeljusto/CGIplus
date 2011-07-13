@@ -57,6 +57,9 @@ public:
 	Builder& setTags(const std::pair<string, string> &tags);
 	Builder& setMethod(const Method::Value method);
 
+	static string redirect(const string &url);
+	static string EOL;
+
 private:
 	string _form;
 	std::pair<string, string> _tags;

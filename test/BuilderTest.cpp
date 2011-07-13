@@ -44,7 +44,8 @@ BOOST_AUTO_TEST_CASE(mustNotReplaceWhenThereIsNoKeyNoMatch)
 	Builder builder;
 	builder.setForm(form);
 
-	string content = "Content-type: text/html\n\r\n\r" + form;
+	string content = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL + form;
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
@@ -56,7 +57,8 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 	builder1.setForm(form1);
 	builder1["test"] = "This is a test.";
 
-	string content1 = "Content-type: text/html\n\r\n\r"
+	string content1 = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL +
 		"<html><body>This is a test.</body></html>";
 	BOOST_CHECK_EQUAL(builder1.build(), content1);
 
@@ -69,7 +71,8 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 	builder2["test3"] = "Another test.";
 	builder2["test4"] = "Guess what? One more test!";
 
-	string content2 = "Content-type: text/html\n\r\n\r"
+	string content2 = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL +
 		"<html><body>This is a test. <!-- test2 --> Another test. "
 		"Guess what? One more test!</body></html>";
 	BOOST_CHECK_EQUAL(builder2.build(), content2);
@@ -89,7 +92,8 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 		.setSecure(true)
 		.setHttpOnly(true);
 
-	string content = "Content-type: text/html\n\r\n\r"
+	string content = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL +
 		"Set-Cookie: key=value; Domain=test.com.br; Path=/; Secure; httponly; "
 		"<html><body>Test</body></html>";
 	BOOST_CHECK_EQUAL(builder.build(), content);
@@ -105,7 +109,8 @@ BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 	builder.setFormFile("template-file.tmp");
 	builder["test"] = "test";
 
-	string content = "Content-type: text/html\n\r\n\r"
+	string content = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL +
 		"This is a test";
 	BOOST_CHECK_EQUAL(builder.build(), content);
 
@@ -119,7 +124,8 @@ BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
 	builder.setFormFile("idontexist.tmp");
 	builder["test"] = "test";
 
-	string content = "Content-type: text/html\n\r\n\r";
+	string content = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL;
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
@@ -131,7 +137,8 @@ BOOST_AUTO_TEST_CASE(mustFlushOldDataWhenReused)
 	builder.setForm(form1);
 	builder["test1"] = "This is a test.";
 
-	string content1 = "Content-type: text/html\n\r\n\r"
+	string content1 = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL +
 		"<html><body>This is a test.</body></html>";
 	BOOST_CHECK_EQUAL(builder.build(), content1);
 
@@ -143,10 +150,20 @@ BOOST_AUTO_TEST_CASE(mustFlushOldDataWhenReused)
 	builder["test3"] = "Another test.";
 	builder["test4"] = "Guess what? One more test!";
 
-	string content2 = "Content-type: text/html\n\r\n\r"
+	string content2 = "Content-type: text/html" + 
+		Builder::EOL + Builder::EOL +
 		"<html><body><!-- test1 --> This is a test. Another test. "
 		"Guess what? One more test!</body></html>";
 	BOOST_CHECK_EQUAL(builder.build(), content2);
+}
+
+BOOST_AUTO_TEST_CASE(mustBuildRedirectCorrectly)
+{
+	string redirection = 
+		"Location: http://127.0.0.1" + Builder::EOL + Builder::EOL;
+
+	Builder builder;
+	BOOST_CHECK_EQUAL(builder.redirect("http://127.0.0.1"), redirection);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

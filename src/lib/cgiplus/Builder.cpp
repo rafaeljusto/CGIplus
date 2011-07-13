@@ -28,6 +28,8 @@
 
 CGIPLUS_NS_BEGIN
 
+string Builder::EOL("\r\n");
+
 string Builder::Method::toString(const Value value)
 {
 	string valueToString = "Content-type: ";
@@ -41,7 +43,7 @@ string Builder::Method::toString(const Value value)
 		break;
 	}
 
-	valueToString += "\n\r\n\r";
+	valueToString += EOL + EOL;
 	return valueToString;
 }
 
@@ -124,6 +126,12 @@ Builder& Builder::setMethod(const Builder::Method::Value method)
 {
 	_method = method;
 	return *this;
+}
+
+string Builder::redirect(const string &url)
+{
+	string header = "Location: " + url + EOL + EOL;
+	return header;
 }
 
 CGIPLUS_NS_END
