@@ -50,7 +50,7 @@ string Builder::Method::toString(const Value value)
 Builder::Builder() :
 	_form(""),
 	_tags("<!-- ", " -->"),
-	_method(Builder::Method::HTML)
+	_method(Method::HTML)
 {
 }
 
