@@ -1,20 +1,20 @@
 /*
-CGIplus Copyright (C) 2011 Rafael Dantas Justo
+  CGIplus Copyright (C) 2011 Rafael Dantas Justo
 
-This file is part of CGIplus.
+  This file is part of CGIplus.
 
-CGIplus is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  CGIplus is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-CGIplus is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  CGIplus is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <cstdlib>
@@ -34,7 +34,8 @@ along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 CGIPLUS_NS_BEGIN
 
 Cgi::Cgi() :
-	_method(Method::UNKNOWN)
+	_method(Method::UNKNOWN),
+	_remoteAddress("")
 {
 	readInputs();
 }
@@ -66,6 +67,7 @@ void Cgi::readInputs()
 	readGetInputs();
 	readPostInputs();
 	readCookies();
+	readRemoteAddress();
 }
 
 Cgi::Method::Value Cgi::getMethod() const
@@ -83,11 +85,17 @@ unsigned int Cgi::getNumberOfCookies() const
 	return _cookies.size();
 }
 
+string Cgi::getRemoteAddress() const
+{
+	return _remoteAddress;
+}
+
 void Cgi::clearInputs()
 {
 	_method = Method::UNKNOWN;
 	_inputs.clear();
 	_cookies.clear();
+	_remoteAddress.clear();
 }
 
 void Cgi::readMethod()
@@ -141,7 +149,7 @@ void Cgi::readPostInputs()
 
 	char inputsPtr[size + 1];
 	memset(inputsPtr, 0, size + 1);
-	
+
 	std::cin.read(inputsPtr, size);
 	if (std::cin.good() == false) {
 		return;
@@ -159,7 +167,7 @@ void Cgi::readCookies()
 	}
 
 	string cookies = cookiesPtr;
-	
+
 	std::vector<string> keysValues;
 	boost::split(keysValues, cookies, boost::is_any_of("; "));
 
@@ -170,6 +178,16 @@ void Cgi::readCookies()
 			_cookies[keyValueSplitted[0]] = keyValueSplitted[1];
 		}
 	}
+}
+
+void Cgi::readRemoteAddress()
+{
+	const char *remoteAddressPtr = getenv("REMOTE_ADDR");
+	if (remoteAddressPtr == NULL) {
+		return;
+	}
+
+	_remoteAddress = remoteAddressPtr;
 }
 
 void Cgi::parse(string inputs)
@@ -198,7 +216,7 @@ void Cgi::decode(string &inputs)
 
 void Cgi::decodeSpecialSymbols(string &inputs)
 {
-	boost::replace_all(inputs, "+", " ");	
+	boost::replace_all(inputs, "+", " ");
 }
 
 void Cgi::decodeHexadecimal(string &inputs)
