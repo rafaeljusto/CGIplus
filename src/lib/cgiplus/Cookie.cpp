@@ -1,20 +1,20 @@
 /*
-CGIplus Copyright (C) 2011 Rafael Dantas Justo
+  CGIplus Copyright (C) 2011 Rafael Dantas Justo
 
-This file is part of CGIplus.
+  This file is part of CGIplus.
 
-CGIplus is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  CGIplus is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-CGIplus is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  CGIplus is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <sstream>
@@ -44,21 +44,21 @@ string Cookie::build() const
 	string cookie = "Set-Cookie: " + _key + "=" + _value + "; ";
 
 	if (_expiration != boost::posix_time::not_a_date_time) {
-		boost::gregorian::date_facet *facetDate = 
+		boost::gregorian::date_facet *facetDate =
 			new boost::gregorian::date_facet("%A, %d-%b-%y ");
 
 		std::stringstream expirationDate;
 		expirationDate.imbue(std::locale(std::locale::classic(), facetDate));
 		expirationDate << _expiration.date();
 
-		boost::gregorian::date_facet *facetTime = 
+		boost::gregorian::date_facet *facetTime =
 			new boost::gregorian::date_facet("%T GMT");
 
 		std::stringstream expirationTime;
 		expirationDate.imbue(std::locale(std::locale::classic(), facetTime));
 		expirationDate << _expiration.time_of_day();
 
-		cookie += "Expires=" + expirationDate.str() + 
+		cookie += "Expires=" + expirationDate.str() +
 			expirationTime.str() + "; ";
 	}
 

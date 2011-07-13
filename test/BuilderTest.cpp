@@ -1,20 +1,20 @@
 /*
-CGIplus Copyright (C) 2011 Rafael Dantas Justo
+  CGIplus Copyright (C) 2011 Rafael Dantas Justo
 
-This file is part of CGIplus.
+  This file is part of CGIplus.
 
-CGIplus is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+  CGIplus is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-CGIplus is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  CGIplus is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <cstdio>
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 
 	Builder builder;
 	builder.setForm(form);
-	
+
 	builder("key")
 		.setValue("value")
 		.setDomain("test.com.br")
@@ -104,11 +104,11 @@ BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 	Builder builder;
 	builder.setFormFile("template-file.tmp");
 	builder["test"] = "test";
-	
+
 	string content = "Content-type: text/html\n\r\n\r"
 		"This is a test";
 	BOOST_CHECK_EQUAL(builder.build(), content);
-	
+
 	remove("template-file.tmp");
 }
 
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
 	builder.setForm("Any form example");
 	builder.setFormFile("idontexist.tmp");
 	builder["test"] = "test";
-	
+
 	string content = "Content-type: text/html\n\r\n\r";
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
