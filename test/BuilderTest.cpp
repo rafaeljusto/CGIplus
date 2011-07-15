@@ -129,32 +129,34 @@ BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
-BOOST_AUTO_TEST_CASE(mustFlushOldDataWhenReused)
+BOOST_AUTO_TEST_CASE(mustNotFlushOldDataWhenReused)
 {
-	string form1 = "<html><body><!-- test1 --></body></html>";
-
-	Builder builder;
-	builder.setForm(form1);
-	builder["test1"] = "This is a test.";
-
-	string content1 = "Content-type: text/html" + 
-		Builder::EOL + Builder::EOL +
-		"<html><body>This is a test.</body></html>";
-	BOOST_CHECK_EQUAL(builder.build(), content1);
-
-	string form2 = "<html><body><!-- test1 --> <!-- test2 --> "
+	string form = "<html><body><!-- test1 --> <!-- test2 --> "
 		"<!-- test3 --> <!-- test4 --></body></html>";
 
-	builder.setForm(form2);
+	Builder builder;
+	builder["test1"] = "This is a test.";
+
+	builder.setForm(form);
 	builder["test2"] = "This is a test.";
 	builder["test3"] = "Another test.";
 	builder["test4"] = "Guess what? One more test!";
 
-	string content2 = "Content-type: text/html" + 
+	string content = "Content-type: text/html" + 
 		Builder::EOL + Builder::EOL +
-		"<html><body><!-- test1 --> This is a test. Another test. "
+		"<html><body>This is a test. This is a test. Another test. "
 		"Guess what? One more test!</body></html>";
-	BOOST_CHECK_EQUAL(builder.build(), content2);
+
+	BOOST_CHECK_EQUAL(builder.build(), content);
+
+	std::ofstream templateFile("template-file.tmp");
+	templateFile << form;
+	templateFile.close();
+	builder.setFormFile("template-file.tmp");
+
+	BOOST_CHECK_EQUAL(builder.build(), content);
+
+	remove("template-file.tmp");
 }
 
 BOOST_AUTO_TEST_CASE(mustBuildRedirectCorrectly)
