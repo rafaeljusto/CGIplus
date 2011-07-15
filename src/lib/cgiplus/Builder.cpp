@@ -126,6 +126,25 @@ Builder& Builder::setMethod(const Builder::Method::Value method)
 	return *this;
 }
 
+Builder& Builder::clear()
+{
+	clearFields();
+	clearCookies();
+	return *this;
+}
+
+Builder& Builder::clearFields()
+{
+	_fields.clear();
+	return *this;
+}
+
+Builder& Builder::clearCookies()
+{
+	_cookies.clear();
+	return *this;
+}
+
 string Builder::redirect(const string &url)
 {
 	string header = "Location: " + url + EOL + EOL;

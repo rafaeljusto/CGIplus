@@ -57,6 +57,10 @@ public:
 	Builder& setTags(const std::pair<string, string> &tags);
 	Builder& setMethod(const Method::Value method);
 
+	Builder& clear();
+	Builder& clearFields();
+	Builder& clearCookies();
+
 	static string redirect(const string &url);
 	static string EOL;
 
