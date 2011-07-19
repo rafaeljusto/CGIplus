@@ -22,7 +22,7 @@ Project
 -------
 
   The CGIplus was created in July, 2011 as an auxiliary tool for a
-  bigger project. The purpouse is to abstract all apache requests and
+  bigger project. The purpose is to abstract all Apache requests and
   facilitate the build of a webpage from server-side.
 
   C++ is far away from being the perfect solution for web
@@ -59,19 +59,50 @@ Features
        cookie's values you can use the () operator.
 
      * All requests are have their special symbols decoded according
-       to RFC 3986 <http://www.ietf.org/rfc/rfc3986.txt>.
+       to RFC 3986 <http://www.ietf.org/rfc/rfc3986.txt>. Other
+       symbols used for javascript and mysql injection are also
+       removed, avoiding cross-site scripting and database attacks.
 
      * The client IP address is also stored, you can retrieve it with
        the method "getRemoteAddress".
 
    2. Builder class
 
-     * TODO!
+     * After parsing all the data, you can think: "Okay, now that I
+       got the data and processed everything, how I will put all this
+       information on client screen?!?". The Builder class is your
+       solution!  Just build a template with everything that is static
+       in your "post back" page and set tags on variable html
+       parts. There is no magic in these class, just an easy interface
+       for a query/replace feature.
+
+     * Using Builder you can easily set tags with [] operator and
+       cookies using () operator with the Cookie object.
+
+     * To use the builder you should set a template or give the file
+       path where to the location of the template. For file paths that
+       fails to load, the builder will store an empty string.
+
+     * The tags are removed only when you call clear or clearFields
+       methods. And the cookies are removed only when you call clear
+       or clearCookies methods.
+
+     * The default tag delimiter is <!-- TAG -->, where you replace
+       the word TAG with your key target. If you want to change it,
+       just call the method setTags and inform the beginning part
+       ("<!-- ") and the end part (" -->").
+
+     * You can also set the output format (TEXT or HTML) that will be
+       described in the html header. By default is HTML.
+
+     * Finally to parse your tags with the given template just call
+       the show method. This method will return a screen that you can
+       just print it in standard output.
 
    3. Some additional information
 
      * This web framework do not throw exceptions, if any error occurs
-       it just ignores it and move on. The main purpouse of this is
+       it just ignores it and move on. The main purpose of this is
        that you do not want to worry about your framework errors, you
        just need to focus in your application.
 
