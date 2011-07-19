@@ -1,0 +1,81 @@
+License
+-------
+
+  CGIplus Copyright (C) 2011 Rafael Dantas Justo
+
+  This file is part of CGIplus.
+
+  CGIplus is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  CGIplus is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
+
+Project
+-------
+
+  The CGIplus was created in July, 2011 as an auxiliary tool for a
+  bigger project. The purpouse is to abstract all apache requests and
+  facilitate the build of a webpage from server-side.
+
+  C++ is far away from being the perfect solution for web
+  applications, but in the back-end you will find many advantages in
+  performance. And for those who have programmed for years in C++,
+  CGIplus is a fast solution compared to other programming languages
+  and their giant web frameworks.
+
+  This document describes this tiny web framework behavior in many
+  situations with examples. Feel free to send comments, suggestions
+  and fixes.
+
+Features
+--------
+
+   1. Cgi class
+
+     * The Cgi class is who does all the hard work, parsing the
+       request sent by Apache. When you instantiate a Cgi, the GET or
+       POST requests are already parsed and stored into his internal
+       structures.
+
+     * Every time that you call "readInputs" method, all the current
+       fields that were stored previously are removed before a new
+       parse. By the way the "readInputs" method is the one that is
+       called by the constructor to parse and store all the request
+       data.
+
+     * If in the request you find more than one field with the same
+       name, the framework is going to store the last value.
+
+     * The framework supports CGI, POST and Cookie in Apache
+       requests. To get field's values use the [] operator, and for a
+       cookie's values you can use the () operator.
+
+     * All requests are have their special symbols decoded according
+       to RFC 3986 <http://www.ietf.org/rfc/rfc3986.txt>.
+
+     * The client IP address is also stored, you can retrieve it with
+       the method "getRemoteAddress".
+
+   2. Builder class
+
+     * TODO!
+
+   3. Some additional information
+
+     * This web framework do not throw exceptions, if any error occurs
+       it just ignores it and move on. The main purpouse of this is
+       that you do not want to worry about your framework errors, you
+       just need to focus in your application.
+
+Examples
+--------
+
+  TODO!
