@@ -1,0 +1,164 @@
+License
+-------
+
+  CGIplus Copyright (C) 2011 Rafael Dantas Justo
+
+  This file is part of CGIplus.
+
+  CGIplus is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  CGIplus is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
+
+Examples
+--------
+
+  For the examples we are assuming that we are receiving requests from
+  the current webpage:
+
+    <!doctype>
+    <html>
+      <head>
+        <title>CGIplus - Examples</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+      </head>
+      <body>
+        <form method="post" action="/cgi-bin/test">
+          <fieldset>
+            <legend>Example Fields</legend>
+            <label for="test1">Test1</label>
+            <input type="text" name="test1" id="test1" />
+            <label for="test2">Test2</label>
+            <input type="text" name="test2" id="test2" />
+            <input type="submit" name="Submit" />
+          </fieldset>
+        </form>
+      </body>
+    </html>
+
+  The current cookie is also set in client side:
+
+    cookie_test = "this is a cookie test"
+
+  For output, we assume the following template as "template.html"
+  file:
+
+    <!doctype>
+    <html>
+      <head>
+        <title>CGIplus - Examples</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+      </head>
+      <body>
+        Test1: <!-- test1 -->
+        <br/>
+        Test2: <!-- test2 -->
+      </body>
+    </html>
+
+  1. Reading requests fields
+
+    #include <iostream>
+    #include <fstream>
+    #include <cgiplus/Cgi.hpp>
+
+    int main()
+    {
+      cgiplus::Cgi cgi;
+
+      std::ofstream requestData("requestData.txt");
+      requestData << cgi["test1"] << std::endl;
+      requestData << cgi["test2"] << std::endl;
+      requestData.close();
+
+      return 0;
+    }
+
+  2. Printing client address
+
+    #include <iostream>
+    #include <fstream>
+    #include <cgiplus/Cgi.hpp>
+
+    int main()
+    {
+      cgiplus::Cgi cgi;
+
+      std::ofstream requestData("requestAddress.txt");
+      requestData << cgi.getRemoteAddress() << std::endl;
+      requestData.close();
+
+      return 0;
+    }
+
+  3. Reading cookie data
+
+    #include <iostream>
+    #include <fstream>
+    #include <cgiplus/Cgi.hpp>
+
+    int main()
+    {
+      cgiplus::Cgi cgi;
+
+      std::ofstream requestData("requestCookies.txt");
+      requestData << cgi("cookie-test") << std::endl;
+      requestData.close();
+
+      return 0;
+    }
+
+  4. Building output
+
+    #include <iostream>
+    #include <cgiplus/Builder.hpp>
+    #include <cgiplus/Cgi.hpp>
+
+    int main()
+    {
+      cgiplus::Cgi cgi;
+      cgiplus::Builder builder;
+
+      builder.setFormFile("template.html");
+      builder["test1"] = cgi["test1"];
+      builder["test2"] = cgi["test2"];
+
+      std::cout << builder.build() << std::endl;
+
+      return 0;
+    }
+
+  5. Setting cookie
+
+    #include <iostream>
+    #include <cgiplus/Builder.hpp>
+    #include <cgiplus/Cookie.hpp>
+    #include <cgiplus/Cgi.hpp>
+
+    int main()
+    {
+      cgiplus::Cgi cgi;
+      cgiplus::Builder builder;
+
+      builder.setFormFile("template.html");
+      builder["test1"] = cgi["test1"];
+      builder["test2"] = cgi["test2"];
+
+      builder("cookie_test")
+        .setValue("this is another cookie test")
+        .setPath("/")
+        .setSecure(true)
+        .setHttpOnly(false);
+
+      std::cout << builder.build() << std::endl;
+
+      return 0;
+    }

@@ -105,8 +105,3 @@ Features
        it just ignores it and move on. The main purpose of this is
        that you do not want to worry about your framework errors, you
        just need to focus in your application.
-
-Examples
---------
-
-  TODO!
