@@ -24,7 +24,7 @@ Examples
   For the examples we are assuming that we are receiving requests from
   the current webpage:
 
-    <!doctype>
+    <!doctype html>
     <html>
       <head>
         <title>CGIplus - Examples</title>
