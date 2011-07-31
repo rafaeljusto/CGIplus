@@ -29,6 +29,10 @@ Installation
     # scons
     # scons install
 
+  For API documentation:
+
+    # scons doc
+
 Usage
 -----
 
