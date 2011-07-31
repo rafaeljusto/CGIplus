@@ -5,7 +5,7 @@ CGIplus
 features that you will find in this framework:
 
   * Easy interface - use [] and () operators to get (Cgi) or define
-    (Builder) GET/POST data and cookie respectively
+    (Builder) GET/POST data and Cookie respectively
 
   * Protection against cross-site scripting - Some special symbols are
     removed from the input data

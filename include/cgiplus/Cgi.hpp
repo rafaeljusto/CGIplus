@@ -31,12 +31,22 @@ using std::string;
 
 CGIPLUS_NS_BEGIN
 
+/*! \class Cgi
+ *  \brief Parse Apache requests.
+ *
+ * Use this class to get all data sent by the client browser.
+ */
 class Cgi
 {
 public:
+	/*! \class Method
+	 *  \brief Represents a request method.
+	 */
 	class Method
 	{
 	public:
+		/*! List all types of request methods.
+		 */
 		enum Value {
 			UNKNOWN,
 			GET,
@@ -44,16 +54,64 @@ public:
 		};
 	};
 
+	/*! The Apache enviroment variables are parsed in the constructor.
+	 *
+	 * @see readInputs
+	 */
 	Cgi();
 
+	/*! Access request fields retrieved from QUERY_STRING enviroment
+	 * variable.
+	 *
+	 * @param key Field key
+	 * @return Field value
+	 */
 	string operator[](const string &key);
+
+	/*! Access request cookies retieved from HTTP_COOKIE enviroment
+	 * variale.
+	 *
+	 * @param key Cookie key
+	 * @return Cookie value
+	 */
 	string operator()(const string &key);
 
+	/*! Parse Apche envirment variables. The constructor already calls
+	 * this method, so you don't need to call it again unless you have
+	 * some special case.
+	 *
+	 * The enviroment variables current parsed are REQUEST_METHOD,
+	 * CONTENT_LENGTH, CONTENT_TYPE, QUERY_STRING, HTTP_COOKIE,
+	 * REMOTE_ADDR.
+	 *
+	 * @todo Support multipart/form-data
+	 */
 	void readInputs();
 
+	/*! Returns the request type related to REQUEST_METHOD enviroment
+	 * variable. Possible types are defined in Cgi::Method::Value.
+	 *
+	 * @return Request type
+	 */
 	Method::Value getMethod() const;
+
+	/*! Returns the number of fields parsed. Usefull for testing.
+	 *
+	 * @return Number of fields parsed
+	 */
 	unsigned int getNumberOfInputs() const;
+
+	/*! Returns the number of cookies parsed. Usefull for testing.
+	 *
+	 * @return Number of cookies parsed
+	 */
 	unsigned int getNumberOfCookies() const;
+
+	/*! Returns client IP address retrieved from REMOTE_ADDR enviroment
+	 * variable.
+	 *
+	 * @return Client IP address
+	 */
 	string getRemoteAddress() const;
 
 private:

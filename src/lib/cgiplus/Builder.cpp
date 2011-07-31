@@ -30,7 +30,7 @@ CGIPLUS_NS_BEGIN
 
 string Builder::EOL("\r\n");
 
-string Builder::Method::toString(const Value value)
+string Builder::Format::toString(const Value value)
 {
 	string valueToString = "Content-type: ";
 
@@ -50,7 +50,7 @@ string Builder::Method::toString(const Value value)
 Builder::Builder() :
 	_form(""),
 	_tags("<!-- ", " -->"),
-	_method(Method::HTML)
+	_format(Format::HTML)
 {
 }
 
@@ -75,7 +75,7 @@ Cookie& Builder::operator()(const string &key)
 
 string Builder::build() const
 {
-	string header = Method::toString(_method);
+	string header = Format::toString(_format);
 	for (auto cookie: _cookies) {
 		header += cookie.second.build();
 	}
@@ -120,9 +120,9 @@ Builder& Builder::setTags(const std::pair<string, string> &tags)
 	return *this;
 }
 
-Builder& Builder::setMethod(const Builder::Method::Value method)
+Builder& Builder::setFormat(const Builder::Format::Value format)
 {
-	_method = method;
+	_format = format;
 	return *this;
 }
 

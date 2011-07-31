@@ -20,6 +20,13 @@
 #ifndef __CGIPLUS_CGIPLUS_H__
 #define __CGIPLUS_CGIPLUS_H__
 
+/*! \mainpage CGIplus
+ *
+ * To avoid duplicated documentation you can check \b README.md file
+ * in project root directory or \b features.txt and \b examples.txt
+ * files in doc directory.
+ */
+
 #define CGIPLUS_NS_BEGIN namespace cgiplus {
 #define CGIPLUS_NS_END };
 

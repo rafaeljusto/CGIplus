@@ -118,7 +118,6 @@ Examples
 
   4. Building output
 
-    #include <iostream>
     #include <cgiplus/Builder.hpp>
     #include <cgiplus/Cgi.hpp>
 
@@ -130,15 +129,13 @@ Examples
       builder.setFormFile("template.html");
       builder["test1"] = cgi["test1"];
       builder["test2"] = cgi["test2"];
-
-      std::cout << builder.build() << std::endl;
+      builder.show();
 
       return 0;
     }
 
   5. Setting cookie
 
-    #include <iostream>
     #include <cgiplus/Builder.hpp>
     #include <cgiplus/Cookie.hpp>
     #include <cgiplus/Cgi.hpp>
@@ -158,7 +155,7 @@ Examples
         .setSecure(true)
         .setHttpOnly(false);
 
-      std::cout << builder.build() << std::endl;
+      builder.show();
 
       return 0;
     }

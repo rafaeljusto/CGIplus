@@ -30,19 +30,79 @@ using std::string;
 
 CGIPLUS_NS_BEGIN
 
+/*! \class Cookie
+ *  \brief Store all data related to a cookie
+ *
+ * Use this class to create a cookie with all necessary parameters
+ */
 class Cookie
 {
 public:
+	/*! Nothing special here, just initializing everything.
+	 */
 	Cookie();
 
+	/*! Generate html header format text to set this cookie. It's not
+	 * allowed to generate a cookie with an empty key. On any error it
+	 * will return an empty string.
+	 *
+	 * @return Html header text
+	 */
 	string build() const;
 
+	/*! Sets cookie's domain (RFC 6265 - Section 4.1.2.3). By default is
+	 * empty.
+	 *
+	 * @param domain Cookie's domain
+	 * @return Reference to the current object, allowing easy usability
+	 */
 	Cookie& setDomain(const string &domain);
+
+	/*! Sets cookie's path (RFC 6265 - Section 4.1.2.4). By default is
+	 * empty.
+	 *
+	 * @param path Cookie's path
+	 * @return Reference to the current object, allowing easy usability
+	 */
 	Cookie& setPath(const string &path);
+
+	/*! Sets cookie's key to identified your cookie. By default is
+	 * empty.
+	 *
+	 * @param key Cookie's key
+	 * @return Reference to the current object, allowing easy usability
+	 */
 	Cookie& setKey(const string &key);
+
+	/*! Sets cookie's value. By default is empty.
+	 *
+	 * @param value Cookie's value
+	 * @return Reference to the current object, allowing easy usability
+	 */
 	Cookie& setValue(const string &value);
+
+	/*! Sets cookie's Secure flag (RFC 6265 - Section 4.1.2.5). By default is
+	 * false.
+	 *
+	 * @param secure Cookie's Secure flag
+	 * @return Reference to the current object, allowing easy usability
+	 */
 	Cookie& setSecure(const bool secure);
+
+	/*! Sets cookie's HttpOnly flag (RFC 6265 - Section 4.1.2.5). By
+	 * default is false.
+	 *
+	 * @param httpOnly Cookie's HttpOnly flag
+	 * @return Reference to the current object, allowing easy usability
+	 */
 	Cookie& setHttpOnly(const bool httpOnly);
+
+	/*! Sets cookie's expiration date (RFC 6265 - Section 4.1.2.1). By
+	 * default is undefined (will not be in set-cookie).
+	 *
+	 * @param seconds Cookie's expiration date in seconds from now
+	 * @return Reference to the current object, allowing easy usability
+	 */
 	Cookie& setExpiration(const unsigned int seconds);
 
 private:
