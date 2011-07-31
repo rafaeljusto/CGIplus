@@ -120,6 +120,15 @@ bld = Builder(action = builder_unit_test)
 env.Append(BUILDERS = {'Test' :  bld})
 # ------------------------------------------------------
 
+# Documentation
+
+def PhonyTargets(env = None, **kw):
+    if not env: env = DefaultEnvironment()
+    for target,action in kw.items():
+        env.AlwaysBuild(env.Alias(target, [], action))
+
+PhonyTargets(env, doc  = "cd doc; doxygen doxygen.cfg")
+
 # Export for modules
 
 Export("env",
