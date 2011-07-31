@@ -33,14 +33,13 @@ Usage
 -----
 
     #include <cstdlib>
-    #include <iostream>
     
     #include <cgiplus/Builder.hpp>
     #include <cgiplus/Cgi.hpp>
     
     int main()
     {
-      // Enviroment variables defined by Apache in a request
+      // Simulating inputs
       setenv("QUERY_STRING", "test=abc123", 1);
       setenv("REQUEST_METHOD", "GET", 1);
       
@@ -51,8 +50,8 @@ Usage
       
       builder.setForm(form);
       builder["content"] = cgi["test"]
-      
-      std::cout << builder.build() << std::endl;
+      builder.show();
+
       return 0;
     }
 

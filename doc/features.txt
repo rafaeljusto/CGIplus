@@ -35,6 +35,22 @@ Project
   situations with examples. Feel free to send comments, suggestions
   and fixes.
 
+How It Works?
+-------------
+
+  Just take a look in RFC 3875. For now CGIplus only read 6 of 17
+  enviroment variables.
+
+  ---------                    ----------                           ---------
+ |         |   HTTP Request   |          |  Enviroment Variables   |         |
+ | Browser | ---------------> |  Apache  | ----------------------> | CGIplus |
+ |         |                  |          |  CONTENT_LENGTH         |         |
+  ---------                    ----------   CONTENT_TYPE            ---------
+                                            QUERY_STRING
+                                            HTTP_COOKIE
+                                            REMOTE_ADDR
+                                            REQUEST_METHOD
+
 Features
 --------
 
