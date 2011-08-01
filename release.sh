@@ -38,4 +38,4 @@ tar -czf CGIplus-$version.tar.gz CGIplus-$version
 rm -fr CGIplus-$version
 cd ..
 
-echo "Release done! File generated at releases/CGIplus-$version"
+echo "File generated at releases/CGIplus-$version.tar.gz"
