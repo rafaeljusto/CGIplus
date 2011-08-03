@@ -53,7 +53,7 @@ Usage
       cgiplus::Builder builder;
       
       builder.setForm(form);
-      builder["content"] = cgi["test"]
+      builder["content"] = cgi["test"];
       builder.show();
 
       return 0;
