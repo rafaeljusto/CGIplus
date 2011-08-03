@@ -67,7 +67,6 @@ Usage
 
   Output:
 
-    # ./test 
     Content-type: text/html
 
     The test has as content: abc123
