@@ -36,6 +36,8 @@ Installation
 Usage
 -----
 
+  Source code:
+
     #include <cstdlib>
     
     #include <cgiplus/Builder.hpp>
@@ -58,6 +60,17 @@ Usage
 
       return 0;
     }
+
+  Compliling:
+
+    g++ test.cpp -o test -lcgiplus -lboost_regex
+
+  Output:
+
+    # ./test 
+    Content-type: text/html
+
+    The test has as content: abc123
 
 Contact
 -------
