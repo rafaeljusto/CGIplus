@@ -1,7 +1,7 @@
 CGIplus
 =======
 
-**CGIplus** is a C++ tiny web framework to parse Apache requests. Some
+**CGIplus** is a C++ tiny web framework to parse CGI requests. Some
 features that you will find in this framework:
 
   * Easy interface - use [] and () operators to get (Cgi) or define

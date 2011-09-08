@@ -22,7 +22,7 @@ Project
 -------
 
   The CGIplus was created in July, 2011 as an auxiliary tool for a
-  bigger project. The purpose is to abstract all Apache requests and
+  bigger project. The purpose is to abstract all CGI requests and
   facilitate the build of a webpage from server-side.
 
   C++ is far away from being the perfect solution for web
@@ -57,9 +57,9 @@ Features
    1. Cgi class
 
      * The Cgi class is who does all the hard work, parsing the
-       request sent by Apache. When you instantiate a Cgi, the GET or
-       POST requests are already parsed and stored into his internal
-       structures.
+       request sent by HTTP server. When you instantiate a Cgi, the
+       GET or POST requests are already parsed and stored into his
+       internal structures.
 
      * Every time that you call "readInputs" method, all the current
        fields that were stored previously are removed before a new
@@ -70,9 +70,9 @@ Features
      * If in the request you find more than one field with the same
        name, the framework is going to store the last value.
 
-     * The framework supports CGI, POST and Cookie in Apache
-       requests. To get field's values use the [] operator, and for a
-       cookie's values you can use the () operator.
+     * The framework supports GET, POST and Cookie in CGI requests. To
+       get field's values use the [] operator, and for a cookie's
+       values you can use the () operator.
 
      * All requests are have their special symbols decoded according
        to RFC 3986 <http://www.ietf.org/rfc/rfc3986.txt>. Other

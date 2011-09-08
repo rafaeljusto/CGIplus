@@ -30,7 +30,7 @@ using std::string;
 CGIPLUS_NS_BEGIN
 
 /*! \class Cgi
- *  \brief Parse Apache requests.
+ *  \brief Parse HTTP server requests.
  *
  * Use this class to get all data sent by the client browser.
  */
@@ -52,7 +52,8 @@ public:
 		};
 	};
 
-	/*! The Apache enviroment variables are parsed in the constructor.
+	/*! The HTTP server enviroment variables are parsed in the
+	 * constructor.
 	 *
 	 * @see readInputs
 	 */
