@@ -24,11 +24,12 @@
 #include <string>
 
 #include "Cgiplus.hpp"
-#include "Cookie.hpp"
 
 using std::string;
 
 CGIPLUS_NS_BEGIN
+
+class Cookie;
 
 /*! \class Builder
  *  \brief Build html outputs using templates.

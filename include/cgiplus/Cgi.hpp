@@ -23,8 +23,6 @@
 #include <map>
 #include <string>
 
-#include <boost/lexical_cast.hpp>
-
 #include "Cgiplus.hpp"
 
 using std::string;

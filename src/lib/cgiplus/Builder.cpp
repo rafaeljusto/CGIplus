@@ -25,6 +25,7 @@
 #include <boost/algorithm/string/replace.hpp>
 
 #include <cgiplus/Builder.hpp>
+#include <cgiplus/Cookie.hpp>
 
 CGIPLUS_NS_BEGIN
 
