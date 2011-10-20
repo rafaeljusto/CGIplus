@@ -37,9 +37,12 @@ cflags = ARGUMENTS.get("cflags", "")
 for cflagsItem in cflags.split(" "):
     compilerFlags.append(cflagsItem)
 
+if "CXX" not in os.environ:
+    os.environ["CXX"] = "g++"
+
 env = Environment(AR = "ar", 
                   ARFLAGS = "-csrv", 
-                  CXX = "g++-4.6", 
+                  CXX = os.environ["CXX"], 
                   CPPPATH = includePath, 
                   CXXFLAGS = compilerFlags)
 

@@ -26,6 +26,9 @@ Prerequisits
 Installation
 ------------
 
+  Define the compiler using the CXX environment variable, by default
+  is used "g++".
+
     # scons
     # scons install
 
