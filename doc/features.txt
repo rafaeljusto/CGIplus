@@ -31,9 +31,8 @@ Project
   CGIplus is a fast solution compared to other programming languages
   and their giant web frameworks.
 
-  This document describes this tiny web framework behavior in many
-  situations with examples. Feel free to send comments, suggestions
-  and fixes.
+  This document describes this tool behavior in many situations with
+  examples. Feel free to send comments, suggestions and fixes.
 
 How It Works?
 -------------
@@ -68,11 +67,11 @@ Features
        data.
 
      * If in the request you find more than one field with the same
-       name, the framework is going to store the last value.
+       name, the tool is going to store the last value.
 
-     * The framework supports GET, POST and Cookie in CGI requests. To
-       get field's values use the [] operator, and for a cookie's
-       values you can use the () operator.
+     * The tool supports GET, POST and Cookie in CGI requests. To get
+       field's values use the [] operator, and for a cookie's values
+       you can use the () operator.
 
      * All requests are have their special symbols decoded according
        to RFC 3986 <http://www.ietf.org/rfc/rfc3986.txt>. Other
@@ -117,7 +116,7 @@ Features
 
    3. Some additional information
 
-     * This web framework do not throw exceptions, if any error occurs
-       it just ignores it and move on. The main purpose of this is
-       that you do not want to worry about your framework errors, you
-       just need to focus in your application.
+     * This tool do not throw exceptions, if any error occurs it just
+       ignores it and move on. The main purpose of this is that you do
+       not want to worry about your tool errors, you just need to
+       focus in your application.

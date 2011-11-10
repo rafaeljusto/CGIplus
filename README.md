@@ -1,8 +1,8 @@
 CGIplus
 =======
 
-**CGIplus** is a C++ tiny web framework to parse CGI requests. Some
-features that you will find in this framework:
+**CGIplus** is a C++ tool to parse CGI requests. Some features that
+you will find:
 
   * Easy interface - use [] and () operators to get (Cgi) or define
     (Builder) GET/POST data and Cookie respectively
