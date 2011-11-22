@@ -96,6 +96,7 @@ void Cgi::clearInputs()
 	_method = Method::UNKNOWN;
 	_inputs.clear();
 	_cookies.clear();
+	_files.clear();
 	_remoteAddress.clear();
 }
 
