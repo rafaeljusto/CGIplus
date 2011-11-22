@@ -122,6 +122,7 @@ private:
 	void readRemoteAddress();
 
 	void parse(string inputs);
+	void parseMultipart(string inputs);
 
 	void decode(string &inputs);
 	void decodeSpecialSymbols(string &inputs);
@@ -132,6 +133,7 @@ private:
 	Method::Value _method;
 	std::map<string, string> _inputs;
 	std::map<string, string> _cookies;
+	std::map<string, string> _files;
 	string _remoteAddress;
 };
 
