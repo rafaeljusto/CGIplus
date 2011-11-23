@@ -52,6 +52,21 @@ public:
 		};
 	};
 
+	/*! \class Source
+	 *  \brief Represents the different data types stored in Cgi.
+	 */
+	class Source
+	{
+	public:
+		/*! List all types of stored in Cgi.
+		 */
+		enum Value {
+			FIELD,
+			COOKIE,
+			FILE
+		};
+	};
+
 	/*! The HTTP server enviroment variables are parsed in the
 	 * constructor.
 	 *
@@ -65,7 +80,7 @@ public:
 	 * @param key Field key
 	 * @return Field value
 	 */
-	string operator[](const string &key);
+	string operator[](const string &key) const;
 
 	/*! Access request cookies retieved from HTTP_COOKIE enviroment
 	 * variale.
@@ -73,7 +88,75 @@ public:
 	 * @param key Cookie key
 	 * @return Cookie value
 	 */
-	string operator()(const string &key);
+	string operator()(const string &key) const;
+
+	/*! Access all data types retrieved by the CGI. You can also convert
+	 * the data using a callback function.
+	 *
+	 * @tparam T Type of the data that is going to be returned.
+	 * @param key Data key
+	 * @param source Possible data sources (Check Cgi::Source for
+	 *               possible values).
+	 * @param converter callback function to convert the data value into
+	 *                  the type that you want.
+	 * @return Data value (in the desired format, by default is string),
+	 *         when the data is not found an empty type is going to be
+	 *         returned.
+	 */
+	template<class T = string>
+	T get(const string &key, 
+	      const Source::Value source = Source::FIELD,
+	      T (*converter)(const string&) = boost::lexical_cast<T>) const
+	{
+		T value;
+
+		if (source == Source::FIELD) {
+			auto input = _inputs.find(key);
+			if (input != _inputs.end()) {
+				value = converter(input->second);
+			}
+		
+		} else if (source == Source::COOKIE) {
+			auto cookie = _cookies.find(key);
+			if (cookie != _cookies.end()) {
+				value = converter(cookie->second);
+			}
+		
+		} else if (source == Source::FILE) {
+			auto file = _files.find(key);
+			if (file != _files.end()) {
+				value = converter(file->second);
+			}
+		}
+
+		return value;
+	}
+
+	/*! Allow converting all source data into a desired object using a
+	 * callback function.
+	 *
+	 * @tparam T Type of the data that is going to be returned.
+	 * @param source Possible data sources (Check Cgi::Source for
+	 *               possible values).
+	 * @param converter callback function to convert the data value into
+	 *                  the type that you want.
+	 * @return Data value (in the desired format).
+	 */
+	template<class T>
+	T get(const Source::Value source, 
+	      T (*converter)(std::map<string, string>)) const
+	{
+		switch(source) {
+		case Source::FIELD:
+			return converter(_inputs);
+		case Source::COOKIE:
+			return converter(_cookies);
+		case Source::FILE:
+			return converter(_files);			
+		};
+
+		return T();
+	}
 
 	/*! Parse Apche envirment variables. The constructor already calls
 	 * this method, so you don't need to call it again unless you have
@@ -82,8 +165,6 @@ public:
 	 * The enviroment variables current parsed are REQUEST_METHOD,
 	 * CONTENT_LENGTH, CONTENT_TYPE, QUERY_STRING, HTTP_COOKIE,
 	 * REMOTE_ADDR.
-	 *
-	 * @todo Support multipart/form-data
 	 */
 	void readInputs();
 

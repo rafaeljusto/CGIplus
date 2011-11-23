@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <map>
 
 #include <boost/lexical_cast.hpp>
 
@@ -159,6 +160,48 @@ BOOST_AUTO_TEST_CASE(mustParseRemoteAddress)
 	
 	Cgi cgi2;
 	BOOST_CHECK_EQUAL(cgi2.getRemoteAddress(), "");
+}
+
+BOOST_AUTO_TEST_CASE(mustConvertInputData)
+{
+	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("QUERY_STRING", "key1=5&key2=5.1", 1);
+
+	Cgi cgi;
+	BOOST_CHECK_EQUAL(cgi.get<int>("key1"), 5);
+	BOOST_CHECK_EQUAL(cgi.get<double>("key2"), 5.1);
+}
+
+BOOST_AUTO_TEST_CASE(mustConvertInputDataIntoObject)
+{
+	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("QUERY_STRING", "name=Rafael&age=26", 1);
+
+	class Person
+	{
+	public:
+		Person() :
+			name(""),
+			age(0)
+		{}
+
+		string name;
+		unsigned int age;
+	};
+
+	Cgi cgi;
+	Person person = cgi.get<Person>
+		(Cgi::Source::FIELD, 
+		 [] (std::map<string, string> fields)
+		 {
+			 Person person;
+			 person.name = fields["name"];
+			 person.age = boost::lexical_cast<unsigned int>(fields["age"]);
+			 return person;
+		 });
+
+	BOOST_CHECK_EQUAL(person.name, "Rafael");
+	BOOST_CHECK_EQUAL(person.age, 26);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

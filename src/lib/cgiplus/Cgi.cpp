@@ -41,24 +41,14 @@ Cgi::Cgi() :
 	readInputs();
 }
 
-string Cgi::operator[](const string &key)
+string Cgi::operator[](const string &key) const
 {
-	auto input = _inputs.find(key);
-	if (input != _inputs.end()) {
-		return input->second;
-	}
-
-	return "";
+	return get(key);
 }
 
-string Cgi::operator()(const string &key)
+string Cgi::operator()(const string &key) const
 {
-	auto cookie = _cookies.find(key);
-	if (cookie != _cookies.end()) {
-		return cookie->second;
-	}
-
-	return "";
+	return get(key, Source::COOKIE);
 }
 
 void Cgi::readInputs()
