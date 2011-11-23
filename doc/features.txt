@@ -69,9 +69,16 @@ Features
      * If in the request you find more than one field with the same
        name, the tool is going to store the last value.
 
-     * The tool supports GET, POST and Cookie in CGI requests. To get
-       field's values use the [] operator, and for a cookie's values
-       you can use the () operator.
+     * The tool supports GET, POST, Cookie and file upload in CGI
+       requests. To get field's values use the [] operator, and for a
+       cookie's values you can use the () operator. When there's a
+       file upload use the "get" method to retrieve the file path
+       where you can find the file.
+
+     * There's also support to convert the data (field or cookie
+       value) into a desired type using "get" method. For complex
+       conversions it's necessary to inform the callback method that
+       knows how to convert the string into the complex type.
 
      * All requests are have their special symbols decoded according
        to RFC 3986 <http://www.ietf.org/rfc/rfc3986.txt>. Other
