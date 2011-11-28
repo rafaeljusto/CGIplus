@@ -17,6 +17,12 @@
   along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+extern "C" {
+#include <unistd.h>
+}
+
+#include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <sstream>
 
@@ -63,18 +69,13 @@ void UploadedFile::setMultipart(const string &multipart)
 		}
 	}
 
-	if (_filename.empty()) {
-		// TODO: _filename = Random file name
-		return;
-	}
-
 	// Payload ends with "--"
 	int begin = ss.tellg();
 	int end = multipart.find_last_of("--") - ss.tellg() - 1;
 
 	// Write data into file
-	// TODO: What directory should we write?
-	std::ofstream file(_filename);
+	generateRandomFilename();
+	std::ofstream file(_filename); // TODO: Write binary?
 	file << multipart.substr(begin, end);
 	file.close();
 }
@@ -114,5 +115,19 @@ void UploadedFile::parseContentHeader(const string &contentHeader)
 	}
 }
 
+void UploadedFile::generateRandomFilename()
+{
+	// Ignore current filename
+	char filename[21] = "uploaded_file-XXXXXX";
+	memset(filename, 0, 21);
+
+	int fd = mkstemp(filename);
+	if (fd == -1) {
+		return;
+	}
+
+	_filename = static_cast<string>(filename);
+	close(fd);
+}
 
 CGIPLUS_NS_END

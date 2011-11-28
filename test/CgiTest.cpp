@@ -19,6 +19,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <map>
 
@@ -202,6 +203,36 @@ BOOST_AUTO_TEST_CASE(mustConvertInputDataIntoObject)
 
 	BOOST_CHECK_EQUAL(person.name, "Rafael");
 	BOOST_CHECK_EQUAL(person.age, 26);
+}
+
+BOOST_AUTO_TEST_CASE(mustParseUploadedFile)
+{
+	string content = "multipart/form-data; boundary=AaB03x";
+
+	string file = "--AaB03x\n"
+		"Content-Disposition: form-data; name=\"file\"; filename=\"file.txt\"\n"
+		"Content-Type: text/plain\n\n"
+		"... contents of file.txt ...\n"
+		"--AaB03x--\n";
+	string fileSize = boost::lexical_cast<string>(file.size());
+
+	setenv("CONTENT_TYPE", content.c_str(), 1);
+	setenv("CONTENT_LENGTH", fileSize.c_str(), 1);
+	setenv("REQUEST_METHOD", "POST", 1);
+
+	std::cin.clear();
+	for (auto it = file.rbegin(); it != file.rend(); it++) {
+		std::cin.putback(*it);
+	}
+
+	Cgi cgi;
+
+	string fileLine("");
+	std::ifstream fileStream(cgi.get("file", Cgi::Source::FILE));
+	BOOST_CHECK_EQUAL(fileStream.good(), true);
+
+	std::getline(fileStream, fileLine);
+	BOOST_CHECK_EQUAL(fileLine, "... contents of file.txt ...");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

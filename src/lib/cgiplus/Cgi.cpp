@@ -18,6 +18,7 @@
 */
 
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -123,9 +124,9 @@ void Cgi::readPostInputs()
 		return;
 	}
 
-	int size = 0;
+	unsigned int size = 0;
 	try {
-		size = boost::lexical_cast<int>(sizePtr);
+		size = boost::lexical_cast<unsigned int>(sizePtr);
 	} catch (const  boost::bad_lexical_cast &e) {}
 
 	if (size == 0) {
@@ -144,10 +145,11 @@ void Cgi::readPostInputs()
 	string inputs = inputsPtr;
 
 	if (type == "application/x-www-form-urlencoded") {
-		parse(inputs);		
-	
+		parse(inputs);
+
 	} else if (type.find("multipart/form-data") != string::npos) {
-		parseMultipart(inputs);
+		string boundary = parseBoundary(type);
+		parseMultipart(inputs, boundary);
 	}
 }
 
@@ -198,23 +200,30 @@ void Cgi::parse(string inputs)
 	}
 }
 
-void Cgi::parseMultipart(string inputs)
+string Cgi::parseBoundary(const string &type)
 {
 	std::vector<string> keyValues;
-	boost::split(keyValues, inputs, boost::is_any_of(";"));
+	boost::split(keyValues, type, boost::is_any_of(";"));
 
 	if (keyValues.size() != 2) {
-		return;
+		return "";
 	}
 
 	std::vector<string> keyValueSplitted;
 	boost::split(keyValueSplitted, keyValues[1], boost::is_any_of("="));
-	
+
 	if (keyValueSplitted.size() != 2) {
-		return;
+		return "";
 	}
 
-	string boundary = keyValueSplitted[1];
+	return keyValueSplitted[1];
+}
+
+void Cgi::parseMultipart(const string &inputs, const string &boundary)
+{
+	if (boundary.empty()) {
+		return;
+	}
 
 	UploadedFile uploadedFile;
 
@@ -238,13 +247,15 @@ void Cgi::parseMultipart(string inputs)
 
 		unsigned int begin = firstOccurrence + boundary.size();
 		unsigned int end = secondOccurrence - (firstOccurrence + boundary.size());
-		position += secondOccurrence + boundary.size();
-		
-		string partialData = inputs.substr(begin, end);
-		uploadedFile.setMultipart(partialData);
+
+		uploadedFile.setMultipart(inputs.substr(begin, end));
+		position = secondOccurrence + boundary.size();
 	}
 
-	_files[uploadedFile.getControlName()] = uploadedFile.getFilename();
+	if (uploadedFile.getControlName().empty() == false &&
+	    uploadedFile.getFilename().empty() == false) {
+		_files[uploadedFile.getControlName()] = uploadedFile.getFilename();
+	}
 }
 
 void Cgi::decode(string &inputs)

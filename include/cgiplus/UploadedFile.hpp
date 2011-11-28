@@ -62,6 +62,7 @@ public:
 
 private:
 	void parseContentHeader(const string &contentHeader);
+	void generateRandomFilename();
 
 	string _filename;
 	string _controlName;

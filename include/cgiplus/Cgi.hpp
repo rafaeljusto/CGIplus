@@ -23,6 +23,8 @@
 #include <map>
 #include <string>
 
+#include <boost/lexical_cast.hpp>
+
 #include "Cgiplus.hpp"
 
 using std::string;
@@ -165,6 +167,8 @@ public:
 	 * The enviroment variables current parsed are REQUEST_METHOD,
 	 * CONTENT_LENGTH, CONTENT_TYPE, QUERY_STRING, HTTP_COOKIE,
 	 * REMOTE_ADDR.
+	 *
+	 * @todo Upload binary files. For now is only allowed text/plain.
 	 */
 	void readInputs();
 
@@ -203,7 +207,8 @@ private:
 	void readRemoteAddress();
 
 	void parse(string inputs);
-	void parseMultipart(string inputs);
+	string parseBoundary(const string &type);
+	void parseMultipart(const string &inputs, const string &boundary);
 
 	void decode(string &inputs);
 	void decodeSpecialSymbols(string &inputs);
