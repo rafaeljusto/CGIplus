@@ -45,7 +45,7 @@ Cgi::Cgi() :
 
 Cgi::~Cgi()
 {
-	for(auto file: _files) {
+	for (auto file: _files) {
 		if (remove(file.second.c_str()) == -1) {
 			// Error while trying to remove file, leave the file there
 		}
@@ -175,7 +175,7 @@ void Cgi::readCookies()
 	std::vector<string> keysValues;
 	boost::split(keysValues, cookies, boost::is_any_of("; "));
 
-	for (string &keyValue: keysValues) {
+	for (auto keyValue: keysValues) {
 		std::vector<string> keyValueSplitted;
 		boost::split(keyValueSplitted, keyValue, boost::is_any_of("="));
 		if (keyValueSplitted.size() == 2) {

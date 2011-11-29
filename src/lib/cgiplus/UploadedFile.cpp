@@ -101,7 +101,7 @@ void UploadedFile::parseContentHeader(const string &contentHeader)
 
 	boost::split(keysValues, keysValues[1], boost::is_any_of(";"));
 
-	for (string keyValue: keysValues) {
+	for (auto keyValue: keysValues) {
 		boost::trim(keyValue);
 
 		if (boost::starts_with(keyValue, "name=")) {
@@ -126,9 +126,9 @@ void UploadedFile::generateRandomFilename()
 	if (fd == -1) {
 		return;
 	}
+	close(fd);
 
 	_filename = static_cast<string>(filename);
-	close(fd);
 }
 
 CGIPLUS_NS_END
