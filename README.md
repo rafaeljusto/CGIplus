@@ -66,7 +66,7 @@ Usage
 
   Compliling:
 
-    g++ test.cpp -o test -lcgiplus -lboost_regex
+    g++ -std=c++0x test.cpp -o test -lcgiplus -lboost_regex
 
   Output:
 
