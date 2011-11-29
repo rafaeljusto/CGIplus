@@ -73,7 +73,8 @@ Features
        requests. To get field's values use the [] operator, and for a
        cookie's values you can use the () operator. When there's a
        file upload use the "get" method to retrieve the file path
-       where you can find the file.
+       where you can find the file. The uploaded files are removed
+       when the CGI class loses scope.
 
      * There's also support to convert the data (field or cookie
        value) into a desired type using "get" method. For complex
