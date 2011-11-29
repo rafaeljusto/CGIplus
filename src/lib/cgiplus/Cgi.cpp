@@ -18,6 +18,7 @@
 */
 
 #include <cstdlib>
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -40,6 +41,15 @@ Cgi::Cgi() :
 	_remoteAddress("")
 {
 	readInputs();
+}
+
+Cgi::~Cgi()
+{
+	for(auto file: _files) {
+		if (remove(file.second.c_str()) == -1) {
+			// Error while trying tor emove file, leave the file there
+		}
+	}
 }
 
 string Cgi::operator[](const string &key) const

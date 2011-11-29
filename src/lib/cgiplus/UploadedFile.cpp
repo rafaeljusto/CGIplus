@@ -117,9 +117,10 @@ void UploadedFile::parseContentHeader(const string &contentHeader)
 
 void UploadedFile::generateRandomFilename()
 {
-	// Ignore current filename
+	// For now we are ignoring the current filename because this field
+	// is optional in upload parameters.
+
 	char filename[21] = "uploaded_file-XXXXXX";
-	memset(filename, 0, 21);
 
 	int fd = mkstemp(filename);
 	if (fd == -1) {

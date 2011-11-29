@@ -76,6 +76,10 @@ public:
 	 */
 	Cgi();
 
+	/*! All uploaded files are removed in destructor
+	 */
+	~Cgi();
+
 	/*! Access request fields retrieved from QUERY_STRING enviroment
 	 * variable.
 	 *
