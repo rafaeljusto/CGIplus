@@ -233,6 +233,7 @@ BOOST_AUTO_TEST_CASE(mustParseUploadedFile)
 
 	std::getline(fileStream, fileLine);
 	BOOST_CHECK_EQUAL(fileLine, "... contents of file.txt ...");
+	fileStream.close();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
