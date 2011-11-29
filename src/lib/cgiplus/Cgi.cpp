@@ -47,7 +47,7 @@ Cgi::~Cgi()
 {
 	for(auto file: _files) {
 		if (remove(file.second.c_str()) == -1) {
-			// Error while trying tor emove file, leave the file there
+			// Error while trying to remove file, leave the file there
 		}
 	}
 }
