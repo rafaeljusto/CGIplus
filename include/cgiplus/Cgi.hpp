@@ -49,8 +49,15 @@ public:
 		 */
 		enum Value {
 			UNKNOWN,
+			CONNECT,
+			DELETE,
+			HEAD,
 			GET,
-			POST
+			OPTIONS,
+			PATCH,
+			POST,
+			PUT,
+			TRACE
 		};
 	};
 

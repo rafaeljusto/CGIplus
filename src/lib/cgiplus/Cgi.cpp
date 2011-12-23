@@ -106,10 +106,24 @@ void Cgi::readMethod()
 	const char *methodPtr = getenv("REQUEST_METHOD");
 	if (methodPtr != NULL) {
 		string method = boost::to_upper_copy((string) methodPtr);
-		if (method == "GET") {
+		if (method == "CONNECT") {
+			_method = Method::CONNECT;
+		} else if (method == "DELETE") {
+			_method = Method::DELETE;
+		} else if (method == "HEAD") {
+			_method = Method::HEAD;
+		} else if (method == "GET") {
 			_method = Method::GET;
+		} else if (method == "OPTIONS") {
+			_method = Method::OPTIONS;
+		} else if (method == "PATCH") {
+			_method = Method::PATCH;
 		} else if (method == "POST") {
 			_method = Method::POST;
+		} else if (method == "PUT") {
+			_method = Method::PUT;
+		} else if (method == "TRACE") {
+			_method = Method::TRACE;
 		}
 	}
 }

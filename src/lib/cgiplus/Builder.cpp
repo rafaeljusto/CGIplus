@@ -48,10 +48,20 @@ string Builder::Format::toString(const Value value)
 	return valueToString;
 }
 
+string Builder::HttpStatus::toString(const Value value)
+{
+	if (value == UNDEFINED) {
+		return string("");
+	}
+
+	return "Status: " + boost::lexical_cast<string>(value) + EOL;
+}
+
 Builder::Builder() :
 	_form(""),
 	_tags("<!-- ", " -->"),
-	_format(Format::HTML)
+	_format(Format::HTML),
+	_httpStatus(HttpStatus::UNDEFINED)
 {
 }
 
@@ -76,7 +86,7 @@ Cookie& Builder::operator()(const string &key)
 
 string Builder::build() const
 {
-	string header = Format::toString(_format);
+	string header = HttpStatus::toString(_httpStatus) + Format::toString(_format);
 	for (auto cookie: _cookies) {
 		header += cookie.second.build();
 	}
@@ -124,6 +134,12 @@ Builder& Builder::setTags(const std::pair<string, string> &tags)
 Builder& Builder::setFormat(const Builder::Format::Value format)
 {
 	_format = format;
+	return *this;
+}
+
+Builder& Builder::setHttpStatus(const Builder::HttpStatus::Value httpStatus)
+{
+	_httpStatus = httpStatus;
 	return *this;
 }
 

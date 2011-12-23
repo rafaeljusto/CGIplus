@@ -55,8 +55,81 @@ public:
 
 		/*! Convert format into html header compliance text.
 		 *
-		 * @param value Output format type
-		 * @return Text to be added into html header
+		 * @param value Format type
+		 * @return Text to be added into http header
+		 */
+		static string toString(const Value value);
+	};
+
+	/*! \class HttpStatus
+	 *  \brief Represents a HTTP response status
+	 */
+	class HttpStatus
+	{
+	public:
+		/*! List all HTTP response status
+		 */
+		enum Value {
+			UNDEFINED = 0,
+
+			// 1xx: Informational - Request received, continuing process
+			CONTINUE = 100,
+			SWITCHING_PROTOCOLS,
+
+			// 2xx: Success - The action was successfully received,
+			// understood, and accepted
+			OK = 200,
+			CREATED,
+			ACCEPTED,
+			NON_AUTHORITATIVE_INFORMATION,
+			NO_CONTENT,
+			RESET_CONTENT,
+			PARTIAL_CONTENT,
+
+			// 3xx: Redirection - Further action must be taken in order to
+			// complete the request
+			MULTIPLE_CHOICES = 300,
+			MOVED_PERMANENTLY,
+			FOUND,
+			SEE_OTHER,
+			NOT_MODIFIED,
+			USE_PROXY,
+			TEMPORARY_REDIRECT,
+
+			// 4xx: Client Error - The request contains bad syntax or cannot
+			// be fulfilled
+			BAD_REQUEST = 400,
+			UNAUTHORIZED,
+			PAYMENT_REQUIRED,
+			FORBIDDEN,
+			NOT_FOUND,
+			METHOD_NOT_ALLOWED,
+			NOT_ACCEPTABLE,
+			PROXY_AUTHENTICATION_REQUIRED,
+			REQUEST_TIME_OUT,
+			CONFLICT,
+			GONE,
+			LENGTH_REQUIRED,
+			PRECONDITION_FAILED,
+			REQUEST_ENTITY_TOO_LARGE,
+			REQUEST_URI_TOO_LARGE,
+			UNSUPPORTED_MEDIA_TYPE,
+			REQUESTED_RANGE_NOT_SATISFIABLE,
+			EXPECTATION_FAILED,
+
+			// 5xx: Server Error - The server failed to fulfill an
+			// apparently valid request
+			INTERNAL_SERVER_ERROR = 500,
+			BAD_GATEWAY,
+			SERVICE_UNAVAILABLE,
+			GATEWAY_TIME_OUT,
+			HTTP_VERSION_NOT_SUPPORTED
+		};
+
+		/*! Convert http status into html header compliance text.
+		 *
+		 * @param value Http status
+		 * @return Text to be added into http header
 		 */
 		static string toString(const Value value);
 	};
@@ -111,13 +184,21 @@ public:
 	 */
 	Builder& setTags(const std::pair<string, string> &tags);
 
-	/*! Set html output format type. Possible values are defined in
+	/*! Set output format type. Possible values are defined in
 	 * Builder::Format::Value. By default is HTML.
 	 *
-	 * @param format Html output format type.
+	 * @param format Output format type
 	 * @return Reference to the current object, allowing easy usability
 	 */
 	Builder& setFormat(const Format::Value format);
+
+	/*! Set http status. Possible values are defined in
+	 * Builder::HttpStatus::Value. By default is UNDEFINED.
+	 *
+	 * @param httpStatus Http status
+	 * @return Reference to the current object, allowing easy usability
+	 */
+	Builder& setHttpStatus(const HttpStatus::Value httpStatus);
 
 	/*! Remove all fields and cookies from builder.
 	 *
@@ -155,6 +236,7 @@ private:
 	std::map<string, string> _fields;
 	std::map<string, Cookie> _cookies;
 	Format::Value _format;
+	HttpStatus::Value _httpStatus;
 };
 
 CGIPLUS_NS_END
