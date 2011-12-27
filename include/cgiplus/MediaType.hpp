@@ -51,6 +51,12 @@ public:
 		TEXT_XML
 	};
 
+	/*! Convert a media type in string format into one of the value of
+	 * MediaType::Value
+	 *
+	 * @param value Media type in text format
+	 * @return Enum item of the media type
+	 */
 	static Value detect(const string &value);
 };
 
