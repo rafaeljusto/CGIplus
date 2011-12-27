@@ -22,10 +22,12 @@
 
 #include <map>
 #include <string>
+#include <set>
 
 #include <boost/lexical_cast.hpp>
 
 #include "Cgiplus.hpp"
+#include "MediaType.hpp"
 
 using std::string;
 
@@ -196,6 +198,12 @@ public:
 	 */
 	unsigned int getNumberOfInputs() const;
 
+	/*! Returns client supported response formats.
+	 *
+	 * @return List of media types that the client support
+	 */
+	std::set<MediaType::Value> getResponseSupportedFormats() const;
+
 	/*! Returns the number of cookies parsed. Usefull for testing.
 	 *
 	 * @return Number of cookies parsed
@@ -212,8 +220,9 @@ public:
 private:
 	void clearInputs();
 	void readMethod();
-	void readGetInputs();
-	void readPostInputs();
+	void readQueryStringInputs();
+	void readContentInputs();
+	void readResponseSupportedFormats();
 	void readCookies();
 	void readRemoteAddress();
 
@@ -229,6 +238,7 @@ private:
 
 	Method::Value _method;
 	std::map<string, string> _inputs;
+	std::set<MediaType::Value> _responseSupportedFormats;
 	std::map<string, string> _cookies;
 	std::map<string, string> _files;
 	string _remoteAddress;

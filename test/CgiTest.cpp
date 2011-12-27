@@ -26,8 +26,10 @@
 #include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Cgi.hpp>
+#include <cgiplus/MediaType.hpp>
 
 using cgiplus::Cgi;
+using cgiplus::MediaType;
 
 // When you need to run only one test, compile only this file with the
 // STAND_ALONE flag.
@@ -234,6 +236,20 @@ BOOST_AUTO_TEST_CASE(mustParseUploadedFile)
 	std::getline(fileStream, fileLine);
 	BOOST_CHECK_EQUAL(fileLine, "... contents of file.txt ...");
 	fileStream.close();
+}
+
+BOOST_AUTO_TEST_CASE(mustParseAcceptField)
+{
+	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("HTTP_ACCEPT", "application/json", 1);
+
+	Cgi cgi;
+
+	BOOST_CHECK_EQUAL(cgi.getResponseSupportedFormats().size(), 1);
+	if (cgi.getResponseSupportedFormats().empty() == false) {
+		BOOST_CHECK_EQUAL(*cgi.getResponseSupportedFormats().begin(), 
+		                  MediaType::APPLICATION_JSON);
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END()

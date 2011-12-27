@@ -28,6 +28,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 
@@ -66,8 +67,9 @@ void Cgi::readInputs()
 {
 	clearInputs();
 	readMethod();
-	readGetInputs();
-	readPostInputs();
+	readQueryStringInputs();
+	readContentInputs();
+	readResponseSupportedFormats();
 	readCookies();
 	readRemoteAddress();
 }
@@ -80,6 +82,11 @@ Cgi::Method::Value Cgi::getMethod() const
 unsigned int Cgi::getNumberOfInputs() const
 {
 	return _inputs.size();
+}
+
+std::set<MediaType::Value> Cgi::getResponseSupportedFormats() const
+{
+	return _responseSupportedFormats;
 }
 
 unsigned int Cgi::getNumberOfCookies() const
@@ -99,6 +106,7 @@ void Cgi::clearInputs()
 	_cookies.clear();
 	_files.clear();
 	_remoteAddress.clear();
+	_responseSupportedFormats.clear();
 }
 
 void Cgi::readMethod()
@@ -128,7 +136,7 @@ void Cgi::readMethod()
 	}
 }
 
-void Cgi::readGetInputs()
+void Cgi::readQueryStringInputs()
 {
 	const char *inputsPtr = getenv("QUERY_STRING");
 	if (inputsPtr == NULL) {
@@ -139,7 +147,7 @@ void Cgi::readGetInputs()
 	parse(inputs);
 }
 
-void Cgi::readPostInputs()
+void Cgi::readContentInputs()
 {
 	const char *sizePtr = getenv("CONTENT_LENGTH");
 	const char *typePtr = getenv("CONTENT_TYPE");
@@ -168,12 +176,40 @@ void Cgi::readPostInputs()
 	string type = typePtr;
 	string inputs = inputsPtr;
 
-	if (type == "application/x-www-form-urlencoded") {
-		parse(inputs);
+	std::vector<string> typeItems;
+	boost::split(typeItems, type, boost::is_any_of(";"));
 
-	} else if (type.find("multipart/form-data") != string::npos) {
-		string boundary = parseBoundary(type);
-		parseMultipart(inputs, boundary);
+	if (typeItems.empty() == false) {
+		MediaType::Value mediaType = MediaType::detect(typeItems[0]);
+		if (mediaType == MediaType::APPLICATION_X_WWW_FORM_URL_ENCODED) {
+			parse(inputs);
+
+		} else if (mediaType == MediaType::MULTIPART_FORM_DATA) {
+			string boundary = parseBoundary(type);
+			parseMultipart(inputs, boundary);
+		}
+	}
+}
+
+void Cgi::readResponseSupportedFormats()
+{
+	const char *acceptsPtr = getenv("HTTP_ACCEPT");
+	if (acceptsPtr == NULL) {
+		return;
+	}
+
+	string accepts = acceptsPtr;
+
+	std::vector<string> acceptsList;
+	boost::split(acceptsList, accepts, boost::is_any_of(","));
+
+	for (auto accept: acceptsList) {
+		std::vector<string> acceptItems;
+		boost::split(acceptItems, accept, boost::is_any_of(";"));
+
+		if (acceptItems.empty() == false) {
+			_responseSupportedFormats.insert(MediaType::detect(acceptItems[0]));
+		}
 	}
 }
 
@@ -187,11 +223,14 @@ void Cgi::readCookies()
 	string cookies = cookiesPtr;
 
 	std::vector<string> keysValues;
-	boost::split(keysValues, cookies, boost::is_any_of("; "));
+	boost::split(keysValues, cookies, boost::is_any_of(";"));
 
 	for (auto keyValue: keysValues) {
+		boost::trim(keyValue);
+
 		std::vector<string> keyValueSplitted;
 		boost::split(keyValueSplitted, keyValue, boost::is_any_of("="));
+
 		if (keyValueSplitted.size() == 2) {
 			_cookies[keyValueSplitted[0]] = keyValueSplitted[1];
 		}
@@ -257,14 +296,14 @@ void Cgi::parseMultipart(const string &inputs, const string &boundary)
 
 	while (true) {
 		firstOccurrence = inputs.find(boundary, position);
-		
+
 		if (firstOccurrence == string::npos) {
 			break;
 		}
 
 		position += firstOccurrence + boundary.size();
 		secondOccurrence = inputs.find(boundary, position);
-		
+
 		if (secondOccurrence == string::npos) {
 			break;
 		}
