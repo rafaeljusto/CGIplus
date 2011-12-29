@@ -31,6 +31,15 @@ CGIPLUS_NS_BEGIN
 
 string Builder::EOL("\r\n");
 
+string Builder::Status::toString(const Value value, const string &message)
+{
+	if (value == UNDEFINED) {
+		return string("");
+	}
+
+	return "Status: " + boost::lexical_cast<string>(value) + " " + message + EOL;
+}
+
 string Builder::Format::toString(const Value value)
 {
 	string valueToString = "Content-type: ";
@@ -44,24 +53,14 @@ string Builder::Format::toString(const Value value)
 		break;
 	}
 
-	valueToString += EOL + EOL;
-	return valueToString;
-}
-
-string Builder::HttpStatus::toString(const Value value)
-{
-	if (value == UNDEFINED) {
-		return string("");
-	}
-
-	return "Status: " + boost::lexical_cast<string>(value) + EOL;
+	return valueToString + EOL;
 }
 
 Builder::Builder() :
 	_form(""),
 	_tags("<!-- ", " -->"),
-	_format(Format::HTML),
-	_httpStatus(HttpStatus::UNDEFINED)
+	_status(Status::UNDEFINED, ""),
+	_format(Format::HTML)
 {
 }
 
@@ -86,10 +85,14 @@ Cookie& Builder::operator()(const string &key)
 
 string Builder::build() const
 {
-	string header = HttpStatus::toString(_httpStatus) + Format::toString(_format);
+	string header = Status::toString(_status.first, _status.second) +
+		Format::toString(_format);
+
 	for (auto cookie: _cookies) {
-		header += cookie.second.build();
+		header += cookie.second.build() + EOL;
 	}
+
+	header += EOL;
 
 	string content = _form;
 	for (auto field: _fields) {
@@ -131,15 +134,15 @@ Builder& Builder::setTags(const std::pair<string, string> &tags)
 	return *this;
 }
 
-Builder& Builder::setFormat(const Builder::Format::Value format)
+Builder& Builder::setStatus(const Status::Value status, const string &message)
 {
-	_format = format;
+	_status = std::make_pair(status, message);
 	return *this;
 }
 
-Builder& Builder::setHttpStatus(const Builder::HttpStatus::Value httpStatus)
+Builder& Builder::setFormat(const Format::Value format)
 {
-	_httpStatus = httpStatus;
+	_format = format;
 	return *this;
 }
 

@@ -245,11 +245,19 @@ BOOST_AUTO_TEST_CASE(mustParseAcceptField)
 
 	Cgi cgi;
 
-	BOOST_CHECK_EQUAL(cgi.getResponseSupportedFormats().size(), 1);
-	if (cgi.getResponseSupportedFormats().empty() == false) {
-		BOOST_CHECK_EQUAL(*cgi.getResponseSupportedFormats().begin(), 
+	BOOST_CHECK_EQUAL(cgi.getResponseFormats().size(), 1);
+	if (cgi.getResponseFormats().empty() == false) {
+		BOOST_CHECK_EQUAL(*cgi.getResponseFormats().begin(), 
 		                  MediaType::APPLICATION_JSON);
 	}
+}
+
+BOOST_AUTO_TEST_CASE(mustBuildURIFields) {
+	setenv("SCRIPT_NAME", "/cgi-bin/cgi", 1);
+	setenv("PATH_INFO", "/param/1", 1);
+
+	Cgi cgi;
+	BOOST_CHECK_EQUAL(cgi.getURI(), "/cgi-bin/cgi/param/1");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

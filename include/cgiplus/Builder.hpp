@@ -22,6 +22,7 @@
 
 #include <map>
 #include <string>
+#include <utility>
 
 #include "Cgiplus.hpp"
 #include "Cookie.hpp"
@@ -40,31 +41,10 @@ CGIPLUS_NS_BEGIN
 class Builder
 {
 public:
-	/*! \class Format
-	 *  \brief Represents a html output format type.
-	 */
-	class Format
-	{
-	public:
-		/*! List all types of format.
-		 */
-		enum Value {
-			PLAIN_TEXT,
-			HTML
-		};
-
-		/*! Convert format into html header compliance text.
-		 *
-		 * @param value Format type
-		 * @return Text to be added into http header
-		 */
-		static string toString(const Value value);
-	};
-
-	/*! \class HttpStatus
+	/*! \class Status
 	 *  \brief Represents a HTTP response status
 	 */
-	class HttpStatus
+	class Status
 	{
 	public:
 		/*! List all HTTP response status
@@ -129,6 +109,29 @@ public:
 		/*! Convert http status into html header compliance text.
 		 *
 		 * @param value Http status
+		 * @param message Textual description of the error to be returned to
+		 *                the client for human consumption
+		 * @return Text to be added into http header
+		 */
+		static string toString(const Value value, const string &message);
+	};
+
+	/*! \class Format
+	 *  \brief Represents a html output format type.
+	 */
+	class Format
+	{
+	public:
+		/*! List all types of format.
+		 */
+		enum Value {
+			PLAIN_TEXT,
+			HTML
+		};
+
+		/*! Convert format into html header compliance text.
+		 *
+		 * @param value Format type
 		 * @return Text to be added into http header
 		 */
 		static string toString(const Value value);
@@ -184,6 +187,16 @@ public:
 	 */
 	Builder& setTags(const std::pair<string, string> &tags);
 
+	/*! Set http status. Possible values are defined in
+	 * Builder::Status::Value. By default is UNDEFINED.
+	 *
+	 * @param status Http status
+	 * @param message Textual description of the error to be returned to
+	 *                the client for human consumption
+	 * @return Reference to the current object, allowing easy usability
+	 */
+	Builder& setStatus(const Status::Value status, const string &message);
+
 	/*! Set output format type. Possible values are defined in
 	 * Builder::Format::Value. By default is HTML.
 	 *
@@ -191,14 +204,6 @@ public:
 	 * @return Reference to the current object, allowing easy usability
 	 */
 	Builder& setFormat(const Format::Value format);
-
-	/*! Set http status. Possible values are defined in
-	 * Builder::HttpStatus::Value. By default is UNDEFINED.
-	 *
-	 * @param httpStatus Http status
-	 * @return Reference to the current object, allowing easy usability
-	 */
-	Builder& setHttpStatus(const HttpStatus::Value httpStatus);
 
 	/*! Remove all fields and cookies from builder.
 	 *
@@ -235,8 +240,8 @@ private:
 	std::pair<string, string> _tags;
 	std::map<string, string> _fields;
 	std::map<string, Cookie> _cookies;
+	std::pair<Status::Value, string> _status;
 	Format::Value _format;
-	HttpStatus::Value _httpStatus;
 };
 
 CGIPLUS_NS_END

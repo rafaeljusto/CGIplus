@@ -92,9 +92,9 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 		.setSecure(true)
 		.setHttpOnly(true);
 
-	string content = "Content-type: text/html" + 
+	string content = "Content-type: text/html" + Builder::EOL +
+		"Set-Cookie: key=value; Domain=test.com.br; Path=/; Secure; httponly; " + 
 		Builder::EOL + Builder::EOL +
-		"Set-Cookie: key=value; Domain=test.com.br; Path=/; Secure; httponly; "
 		"<html><body>Test</body></html>";
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
@@ -166,6 +166,17 @@ BOOST_AUTO_TEST_CASE(mustBuildRedirectCorrectly)
 
 	Builder builder;
 	BOOST_CHECK_EQUAL(builder.redirect("http://127.0.0.1"), redirection);
+}
+
+BOOST_AUTO_TEST_CASE(mustBuildStatusCorrectly)
+{
+	Builder builder;
+	builder.setStatus(Builder::Status::OK, "Test");
+
+	string content = "Status: 200 Test" + Builder::EOL +
+		"Content-type: text/html" + Builder::EOL + Builder::EOL;
+
+	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

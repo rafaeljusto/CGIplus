@@ -119,7 +119,7 @@ public:
 	 *         returned.
 	 */
 	template<class T = string>
-	T get(const string &key, 
+	T get(const string &key,
 	      const Source::Value source = Source::FIELD,
 	      T (*converter)(const string&) = boost::lexical_cast<T>) const
 	{
@@ -130,13 +130,13 @@ public:
 			if (input != _inputs.end()) {
 				value = converter(input->second);
 			}
-		
+
 		} else if (source == Source::COOKIE) {
 			auto cookie = _cookies.find(key);
 			if (cookie != _cookies.end()) {
 				value = converter(cookie->second);
 			}
-		
+
 		} else if (source == Source::FILE) {
 			auto file = _files.find(key);
 			if (file != _files.end()) {
@@ -158,7 +158,7 @@ public:
 	 * @return Data value (in the desired format).
 	 */
 	template<class T>
-	T get(const Source::Value source, 
+	T get(const Source::Value source,
 	      T (*converter)(std::map<string, string>)) const
 	{
 		switch(source) {
@@ -167,7 +167,7 @@ public:
 		case Source::COOKIE:
 			return converter(_cookies);
 		case Source::FILE:
-			return converter(_files);			
+			return converter(_files);
 		};
 
 		return T();
@@ -202,13 +202,18 @@ public:
 	 *
 	 * @return List of media types that the client support
 	 */
-	std::set<MediaType::Value> getResponseSupportedFormats() const;
+	std::set<MediaType::Value> getResponseFormats() const;
 
 	/*! Returns the number of cookies parsed. Usefull for testing.
 	 *
 	 * @return Number of cookies parsed
 	 */
 	unsigned int getNumberOfCookies() const;
+
+	/*! Returns URI with parameters that can be used for restful applications.
+	 * @return URI
+	 */
+	string getURI() const;
 
 	/*! Returns client IP address retrieved from REMOTE_ADDR enviroment
 	 * variable.
@@ -222,8 +227,9 @@ private:
 	void readMethod();
 	void readQueryStringInputs();
 	void readContentInputs();
-	void readResponseSupportedFormats();
+	void readResponseFormats();
 	void readCookies();
+	void readURI();
 	void readRemoteAddress();
 
 	void parse(string inputs);
@@ -238,9 +244,10 @@ private:
 
 	Method::Value _method;
 	std::map<string, string> _inputs;
-	std::set<MediaType::Value> _responseSupportedFormats;
+	std::set<MediaType::Value> _responseFormats;
 	std::map<string, string> _cookies;
 	std::map<string, string> _files;
+	string _uri;
 	string _remoteAddress;
 };
 

@@ -39,6 +39,7 @@ CGIPLUS_NS_BEGIN
 
 Cgi::Cgi() :
 	_method(Method::UNKNOWN),
+	_uri(""),
 	_remoteAddress("")
 {
 	readInputs();
@@ -69,8 +70,9 @@ void Cgi::readInputs()
 	readMethod();
 	readQueryStringInputs();
 	readContentInputs();
-	readResponseSupportedFormats();
+	readResponseFormats();
 	readCookies();
+	readURI();
 	readRemoteAddress();
 }
 
@@ -84,14 +86,19 @@ unsigned int Cgi::getNumberOfInputs() const
 	return _inputs.size();
 }
 
-std::set<MediaType::Value> Cgi::getResponseSupportedFormats() const
+std::set<MediaType::Value> Cgi::getResponseFormats() const
 {
-	return _responseSupportedFormats;
+	return _responseFormats;
 }
 
 unsigned int Cgi::getNumberOfCookies() const
 {
 	return _cookies.size();
+}
+
+string Cgi::getURI() const
+{
+	return _uri;
 }
 
 string Cgi::getRemoteAddress() const
@@ -103,10 +110,11 @@ void Cgi::clearInputs()
 {
 	_method = Method::UNKNOWN;
 	_inputs.clear();
+	_responseFormats.clear();
 	_cookies.clear();
 	_files.clear();
+	_uri.clear();
 	_remoteAddress.clear();
-	_responseSupportedFormats.clear();
 }
 
 void Cgi::readMethod()
@@ -191,7 +199,7 @@ void Cgi::readContentInputs()
 	}
 }
 
-void Cgi::readResponseSupportedFormats()
+void Cgi::readResponseFormats()
 {
 	const char *acceptsPtr = getenv("HTTP_ACCEPT");
 	if (acceptsPtr == NULL) {
@@ -208,7 +216,7 @@ void Cgi::readResponseSupportedFormats()
 		boost::split(acceptItems, accept, boost::is_any_of(";"));
 
 		if (acceptItems.empty() == false) {
-			_responseSupportedFormats.insert(MediaType::detect(acceptItems[0]));
+			_responseFormats.insert(MediaType::detect(acceptItems[0]));
 		}
 	}
 }
@@ -234,6 +242,21 @@ void Cgi::readCookies()
 		if (keyValueSplitted.size() == 2) {
 			_cookies[keyValueSplitted[0]] = keyValueSplitted[1];
 		}
+	}
+}
+
+void Cgi::readURI()
+{
+	_uri.clear();
+
+	const char *scriptName = getenv("SCRIPT_NAME");
+	if (scriptName != NULL) {
+		_uri = scriptName;
+	}
+
+	const char *pathInfo = getenv("PATH_INFO");
+	if (pathInfo != NULL) {
+		_uri += pathInfo;
 	}
 }
 
