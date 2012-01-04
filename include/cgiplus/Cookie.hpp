@@ -1,5 +1,5 @@
 /*
-  CGIplus Copyright (C) 2011 Rafael Dantas Justo
+  CGIplus Copyright (C) 2012 Rafael Dantas Justo
 
   This file is part of CGIplus.
 
