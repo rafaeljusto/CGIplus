@@ -22,13 +22,16 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <set>
 
 #include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Cgi.hpp>
+#include <cgiplus/Language.hpp>
 #include <cgiplus/MediaType.hpp>
 
 using cgiplus::Cgi;
+using cgiplus::Language;
 using cgiplus::MediaType;
 
 // When you need to run only one test, compile only this file with the
@@ -258,6 +261,22 @@ BOOST_AUTO_TEST_CASE(mustBuildURIFields) {
 
 	Cgi cgi;
 	BOOST_CHECK_EQUAL(cgi.getURI(), "/cgi-bin/cgi/param/1");
+}
+
+BOOST_AUTO_TEST_CASE(mustParseLanguageField) {
+	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("HTTP_ACCEPT_LANGUAGE", "pt, en-US;q=0.8, en;q=0.7", 1);
+
+	Cgi cgi;
+
+	std::set<Language::Value> languages = cgi.getResponseLanguages();
+	BOOST_CHECK_EQUAL(languages.size(), 3);
+
+	if (languages.empty() == false) {
+		BOOST_CHECK(languages.find(Language::PORTUGUESE_ANY) != languages.end());
+		BOOST_CHECK(languages.find(Language::ENGLISH_US) != languages.end());
+		BOOST_CHECK(languages.find(Language::ENGLISH_ANY) != languages.end());
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END()

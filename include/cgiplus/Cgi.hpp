@@ -27,6 +27,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "Cgiplus.hpp"
+#include "Language.hpp"
 #include "MediaType.hpp"
 
 using std::string;
@@ -69,7 +70,7 @@ public:
 	class Source
 	{
 	public:
-		/*! List all types of stored in Cgi.
+		/*! List all types that can be stored in Cgi.
 		 */
 		enum Value {
 			FIELD,
@@ -204,6 +205,12 @@ public:
 	 */
 	std::set<MediaType::Value> getResponseFormats() const;
 
+	/*! Returns client supported response languages.
+	 *
+	 * @return List of languages that the client support
+	 */
+	std::set<Language::Value> getResponseLanguages() const;
+
 	/*! Returns the number of cookies parsed. Usefull for testing.
 	 *
 	 * @return Number of cookies parsed
@@ -228,6 +235,7 @@ private:
 	void readQueryStringInputs();
 	void readContentInputs();
 	void readResponseFormats();
+	void readResponseLanguages();
 	void readCookies();
 	void readURI();
 	void readRemoteAddress();
@@ -245,6 +253,7 @@ private:
 	Method::Value _method;
 	std::map<string, string> _inputs;
 	std::set<MediaType::Value> _responseFormats;
+	std::set<Language::Value> _responseLanguages;
 	std::map<string, string> _cookies;
 	std::map<string, string> _files;
 	string _uri;

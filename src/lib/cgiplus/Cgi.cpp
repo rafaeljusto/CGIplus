@@ -71,6 +71,7 @@ void Cgi::readInputs()
 	readQueryStringInputs();
 	readContentInputs();
 	readResponseFormats();
+	readResponseLanguages();
 	readCookies();
 	readURI();
 	readRemoteAddress();
@@ -89,6 +90,11 @@ unsigned int Cgi::getNumberOfInputs() const
 std::set<MediaType::Value> Cgi::getResponseFormats() const
 {
 	return _responseFormats;
+}
+
+std::set<Language::Value> Cgi::getResponseLanguages() const
+{
+	return _responseLanguages;
 }
 
 unsigned int Cgi::getNumberOfCookies() const
@@ -111,6 +117,7 @@ void Cgi::clearInputs()
 	_method = Method::UNKNOWN;
 	_inputs.clear();
 	_responseFormats.clear();
+	_responseLanguages.clear();
 	_cookies.clear();
 	_files.clear();
 	_uri.clear();
@@ -217,6 +224,28 @@ void Cgi::readResponseFormats()
 
 		if (acceptItems.empty() == false) {
 			_responseFormats.insert(MediaType::detect(acceptItems[0]));
+		}
+	}
+}
+
+void Cgi::readResponseLanguages()
+{
+	const char *languagesPtr = getenv("HTTP_ACCEPT_LANGUAGE");
+	if (languagesPtr == NULL) {
+		return;
+	}
+
+	string languages = languagesPtr;
+
+	std::vector<string> languagesList;
+	boost::split(languagesList, languages, boost::is_any_of(","));
+
+	for (auto language: languagesList) {
+		std::vector<string> languageItems;
+		boost::split(languageItems, language, boost::is_any_of(";"));
+
+		if (languageItems.empty() == false) {
+			_responseLanguages.insert(Language::detect(languageItems[0]));
 		}
 	}
 }
