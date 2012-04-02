@@ -20,6 +20,7 @@
 #ifndef __CGIPLUS_LANGUAGE_HPP__
 #define __CGIPLUS_LANGUAGE_HPP__
 
+#include <set>
 #include <string>
 
 #include "Cgiplus.hpp"
@@ -61,6 +62,21 @@ public:
 	 * @return Language type in http header string representation
 	 */
 	static string toString(const Value value);
+
+	/*! Faster whay to check if the language is english, any language value
+	 * defaults to english.
+	 *
+	 * @param values List of Language::Value
+	 * @return True if value is english or false otherwise
+	 */
+	static bool isEnglish(const std::set<Value> &values);
+
+	/*! Faster whay to check if the language is portuguese.
+	 *
+	 * @param values List of Language::Value
+	 * @return True if value is portuguese or false otherwise
+	 */
+	static bool isPortuguese(const std::set<Value> &values);
 };
 
 CGIPLUS_NS_END

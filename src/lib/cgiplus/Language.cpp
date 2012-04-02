@@ -88,4 +88,31 @@ string Language::toString(const Value value)
 	return valueToString;
 }
 
+bool Language::isEnglish(const std::set<Value> &values)
+{
+	for (Value value : values) {
+		if (value == ANY || 
+		    value == ENGLISH_ANY || 
+		    value == ENGLISH_US || 
+		    value == ENGLISH_GB) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Language::isPortuguese(const std::set<Value> &values)
+{
+	for (Value value : values) {
+		if (value == PORTUGUESE_ANY || 
+		    value == PORTUGUESE_BR || 
+		    value == PORTUGUESE_PT) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 CGIPLUS_NS_END
