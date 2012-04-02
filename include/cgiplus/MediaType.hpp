@@ -58,6 +58,13 @@ public:
 	 * @return Enum item of the media type
 	 */
 	static Value detect(const string &value);
+
+	/*! Convert media type value into a string, in http header compliance
+	 *
+	 * @param value MediaType::Value
+	 * @return Media type in http header string representation
+	 */
+	static string toString(const Value value);
 };
 
 CGIPLUS_NS_END

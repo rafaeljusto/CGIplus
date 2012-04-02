@@ -67,4 +67,49 @@ MediaType::Value MediaType::detect(const string &value)
 	}
 }
 
+string MediaType::toString(const Value value)
+{
+	string valueToString = "Content-type: ";
+
+	switch(value) {
+	case ANY:
+		valueToString += "*/*";
+		break;
+	case	UNKNOWN:
+		break;
+	case APPLICATION_ANY:
+		valueToString += "application/*";
+		break;
+	case APPLICATION_JSON:
+		valueToString += "application/json";
+		break;
+	case APPLICATION_XML:
+		valueToString += "application/xml";
+		break;
+	case APPLICATION_X_WWW_FORM_URL_ENCODED:
+		valueToString += "application/x-www-form-urlencoded";
+		break;
+	case MULTIPART_ANY:
+		valueToString += "multipart/*";
+		break;
+	case MULTIPART_FORM_DATA:
+		valueToString += "multipart/form-data";
+		break;
+	case TEXT_ANY:
+		valueToString += "text/*";
+		break;
+	case TEXT_HTML:
+		valueToString += "text/html";
+		break;
+	case TEXT_PLAIN:
+		valueToString += "text/plain";
+		break;
+	case TEXT_XML:
+		valueToString += "text/xml";
+		break;
+	}
+
+	return valueToString;
+}
+
 CGIPLUS_NS_END

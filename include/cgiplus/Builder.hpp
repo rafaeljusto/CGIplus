@@ -26,6 +26,7 @@
 
 #include "Cgiplus.hpp"
 #include "Cookie.hpp"
+#include "MediaType.hpp"
 
 using std::string;
 
@@ -116,27 +117,6 @@ public:
 		static string toString(const Value value, const string &message);
 	};
 
-	/*! \class Format
-	 *  \brief Represents a html output format type.
-	 */
-	class Format
-	{
-	public:
-		/*! List all types of format.
-		 */
-		enum Value {
-			PLAIN_TEXT,
-			HTML
-		};
-
-		/*! Convert format into html header compliance text.
-		 *
-		 * @param value Format type
-		 * @return Text to be added into http header
-		 */
-		static string toString(const Value value);
-	};
-
 	/*! Nothing special here, just initializing everything.
 	 */
 	Builder();
@@ -198,12 +178,12 @@ public:
 	Builder& setStatus(const Status::Value status, const string &message);
 
 	/*! Set output format type. Possible values are defined in
-	 * Builder::Format::Value. By default is HTML.
+	 * MediaType::Value. By default is HTML.
 	 *
 	 * @param format Output format type
 	 * @return Reference to the current object, allowing easy usability
 	 */
-	Builder& setFormat(const Format::Value format);
+	Builder& setFormat(const MediaType::Value format);
 
 	/*! Remove all fields and cookies from builder.
 	 *
@@ -241,7 +221,7 @@ private:
 	std::map<string, string> _fields;
 	std::map<string, Cookie> _cookies;
 	std::pair<Status::Value, string> _status;
-	Format::Value _format;
+	MediaType::Value _format;
 };
 
 CGIPLUS_NS_END

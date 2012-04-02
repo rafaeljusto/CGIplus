@@ -40,27 +40,11 @@ string Builder::Status::toString(const Value value, const string &message)
 	return "Status: " + boost::lexical_cast<string>(value) + " " + message + EOL;
 }
 
-string Builder::Format::toString(const Value value)
-{
-	string valueToString = "Content-type: ";
-
-	switch (value) {
-	case PLAIN_TEXT:
-		valueToString += "text/plain";
-		break;
-	case HTML:
-		valueToString += "text/html";
-		break;
-	}
-
-	return valueToString + EOL;
-}
-
 Builder::Builder() :
 	_form(""),
 	_tags("<!-- ", " -->"),
 	_status(Status::UNDEFINED, ""),
-	_format(Format::HTML)
+	_format(MediaType::TEXT_HTML)
 {
 }
 
@@ -86,7 +70,7 @@ Cookie& Builder::operator()(const string &key)
 string Builder::build() const
 {
 	string header = Status::toString(_status.first, _status.second) +
-		Format::toString(_format);
+		MediaType::toString(_format) + EOL;
 
 	for (auto cookie: _cookies) {
 		header += cookie.second.build() + EOL;
@@ -140,7 +124,7 @@ Builder& Builder::setStatus(const Status::Value status, const string &message)
 	return *this;
 }
 
-Builder& Builder::setFormat(const Format::Value format)
+Builder& Builder::setFormat(const MediaType::Value format)
 {
 	_format = format;
 	return *this;
