@@ -44,7 +44,8 @@ Builder::Builder() :
 	_form(""),
 	_tags("<!-- ", " -->"),
 	_status(Status::UNDEFINED, ""),
-	_format(MediaType::TEXT_HTML)
+	_format(MediaType::TEXT_HTML),
+	_language(Language::ENGLISH_US)
 {
 }
 
@@ -70,7 +71,7 @@ Cookie& Builder::operator()(const string &key)
 string Builder::build() const
 {
 	string header = Status::toString(_status.first, _status.second) +
-		MediaType::toString(_format) + EOL;
+		MediaType::toString(_format) + EOL + Language::toString(_language) + EOL;
 
 	for (auto cookie: _cookies) {
 		header += cookie.second.build() + EOL;
@@ -127,6 +128,12 @@ Builder& Builder::setStatus(const Status::Value status, const string &message)
 Builder& Builder::setFormat(const MediaType::Value format)
 {
 	_format = format;
+	return *this;
+}
+
+Builder& Builder::setLanguage(const Language::Value language)
+{
+	_language = language;
 	return *this;
 }
 

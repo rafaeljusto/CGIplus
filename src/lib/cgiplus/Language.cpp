@@ -55,4 +55,37 @@ Language::Value Language::detect(const string &value)
 	}
 }
 
+string Language::toString(const Value value)
+{
+	string valueToString = "Content-Language: ";
+
+	switch(value) {
+	case ANY:
+		valueToString += "*";
+		break;
+	case ENGLISH_ANY:
+		valueToString += "en";
+		break;
+	case ENGLISH_GB:
+		valueToString += "en-gb";
+		break;
+	case ENGLISH_US:
+		valueToString += "en-us";
+		break;
+	case PORTUGUESE_ANY:
+		valueToString += "pt";
+		break;
+	case PORTUGUESE_BR:
+		valueToString += "pt-br";
+		break;
+	case PORTUGUESE_PT:
+		valueToString += "pt-pt";
+		break;
+	case UNKNOWN:
+		break;
+	}
+
+	return valueToString;
+}
+
 CGIPLUS_NS_END

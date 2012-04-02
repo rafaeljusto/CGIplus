@@ -22,9 +22,13 @@
 
 #include <cgiplus/Builder.hpp>
 #include <cgiplus/Cookie.hpp>
+#include <cgiplus/Language.hpp>
+#include <cgiplus/MediaType.hpp>
 
 using cgiplus::Builder;
 using cgiplus::Cookie;
+using cgiplus::Language;
+using cgiplus::MediaType;
 
 // When you need to run only one test, compile only this file with the
 // STAND_ALONE flag.
@@ -44,8 +48,8 @@ BOOST_AUTO_TEST_CASE(mustNotReplaceWhenThereIsNoKeyNoMatch)
 	Builder builder;
 	builder.setForm(form);
 
-	string content = "Content-type: text/html" + 
-		Builder::EOL + Builder::EOL + form;
+	string content = "Content-type: text/html" + Builder::EOL +
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL + form;
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
@@ -57,8 +61,8 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 	builder1.setForm(form1);
 	builder1["test"] = "This is a test.";
 
-	string content1 = "Content-type: text/html" + 
-		Builder::EOL + Builder::EOL +
+	string content1 = "Content-type: text/html" + Builder::EOL + 
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL +
 		"<html><body>This is a test.</body></html>";
 	BOOST_CHECK_EQUAL(builder1.build(), content1);
 
@@ -71,8 +75,8 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 	builder2["test3"] = "Another test.";
 	builder2["test4"] = "Guess what? One more test!";
 
-	string content2 = "Content-type: text/html" + 
-		Builder::EOL + Builder::EOL +
+	string content2 = "Content-type: text/html" + Builder::EOL + 
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL +
 		"<html><body>This is a test. <!-- test2 --> Another test. "
 		"Guess what? One more test!</body></html>";
 	BOOST_CHECK_EQUAL(builder2.build(), content2);
@@ -93,6 +97,7 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 		.setHttpOnly(true);
 
 	string content = "Content-type: text/html" + Builder::EOL +
+		"Content-Language: en-us" + Builder::EOL +
 		"Set-Cookie: key=value; Domain=test.com.br; Path=/; Secure; httponly; " + 
 		Builder::EOL + Builder::EOL +
 		"<html><body>Test</body></html>";
@@ -109,8 +114,8 @@ BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 	builder.setFormFile("template-file.tmp");
 	builder["test"] = "test";
 
-	string content = "Content-type: text/html" + 
-		Builder::EOL + Builder::EOL +
+	string content = "Content-type: text/html" + Builder::EOL + 
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL +
 		"This is a test";
 	BOOST_CHECK_EQUAL(builder.build(), content);
 
@@ -124,8 +129,8 @@ BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
 	builder.setFormFile("idontexist.tmp");
 	builder["test"] = "test";
 
-	string content = "Content-type: text/html" + 
-		Builder::EOL + Builder::EOL;
+	string content = "Content-type: text/html" + Builder::EOL + 
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL;
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
@@ -142,8 +147,8 @@ BOOST_AUTO_TEST_CASE(mustNotFlushOldDataWhenReused)
 	builder["test3"] = "Another test.";
 	builder["test4"] = "Guess what? One more test!";
 
-	string content = "Content-type: text/html" + 
-		Builder::EOL + Builder::EOL +
+	string content = "Content-type: text/html" + Builder::EOL + 
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL +
 		"<html><body>This is a test. This is a test. Another test. "
 		"Guess what? One more test!</body></html>";
 
@@ -174,7 +179,30 @@ BOOST_AUTO_TEST_CASE(mustBuildStatusCorrectly)
 	builder.setStatus(Builder::Status::OK, "Test");
 
 	string content = "Status: 200 Test" + Builder::EOL +
-		"Content-type: text/html" + Builder::EOL + Builder::EOL;
+		"Content-type: text/html" + Builder::EOL +
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL;
+
+	BOOST_CHECK_EQUAL(builder.build(), content);
+}
+
+BOOST_AUTO_TEST_CASE(mustChangeFormat)
+{
+	Builder builder;
+	builder.setFormat(MediaType::APPLICATION_JSON);
+
+	string content = "Content-type: application/json" + Builder::EOL +
+		"Content-Language: en-us" + Builder::EOL + Builder::EOL;
+
+	BOOST_CHECK_EQUAL(builder.build(), content);
+}
+
+BOOST_AUTO_TEST_CASE(mustChangeLanguage)
+{
+	Builder builder;
+	builder.setLanguage(Language::PORTUGUESE_BR);
+
+	string content = "Content-type: text/html" + Builder::EOL +
+		"Content-Language: pt-br" + Builder::EOL + Builder::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }

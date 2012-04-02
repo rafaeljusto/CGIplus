@@ -27,6 +27,7 @@
 #include "Cgiplus.hpp"
 #include "Cookie.hpp"
 #include "MediaType.hpp"
+#include "Language.hpp"
 
 using std::string;
 
@@ -185,6 +186,14 @@ public:
 	 */
 	Builder& setFormat(const MediaType::Value format);
 
+	/*! Set output language. Possible values are defined in
+	 * Language::Value. By default is english.
+	 *
+	 * @param format Output format type
+	 * @return Reference to the current object, allowing easy usability
+	 */
+	Builder& setLanguage(const Language::Value language);
+
 	/*! Remove all fields and cookies from builder.
 	 *
 	 * @return Reference to the current object, allowing easy usability
@@ -222,6 +231,7 @@ private:
 	std::map<string, Cookie> _cookies;
 	std::pair<Status::Value, string> _status;
 	MediaType::Value _format;
+	Language::Value _language;
 };
 
 CGIPLUS_NS_END

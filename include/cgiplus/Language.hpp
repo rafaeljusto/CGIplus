@@ -54,6 +54,13 @@ public:
 	 * @return Enum item of the language
 	 */
 	static Value detect(const string &value);
+
+	/*! Convert language value into a string, in http header compliance
+	 *
+	 * @param value Language::Value
+	 * @return Language type in http header string representation
+	 */
+	static string toString(const Value value);
 };
 
 CGIPLUS_NS_END
