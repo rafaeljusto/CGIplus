@@ -167,7 +167,8 @@ void Cgi::readContentInputs()
 	const char *sizePtr = getenv("CONTENT_LENGTH");
 	const char *typePtr = getenv("CONTENT_TYPE");
 
-	if (_method != Method::POST || sizePtr == NULL || typePtr == NULL) {
+	if ((_method != Method::POST && _method != Method::PUT) ||
+	    sizePtr == NULL || typePtr == NULL) {
 		return;
 	}
 
