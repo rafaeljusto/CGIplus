@@ -136,6 +136,13 @@ public:
 	 */
 	Cookie& operator()(const string &key);
 
+	/*! Add content to form that will be print in output
+	 *
+	 * @param content Form content
+	 * @return The current builder object
+	 */
+	Builder& operator<<(const string &content);
+
 	/*! Parse the given template replacing all tags with the given keys/values.
 	 *
 	 * @return Parsed template file already with html header

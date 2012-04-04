@@ -68,6 +68,12 @@ Cookie& Builder::operator()(const string &key)
 	return _cookies[key];
 }
 
+Builder& Builder::operator<<(const string &content)
+{
+	_form += content;
+	return *this;
+}
+
 string Builder::build() const
 {
 	string header = Status::toString(_status.first, _status.second) +
