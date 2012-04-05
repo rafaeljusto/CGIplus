@@ -67,19 +67,19 @@ string Language::toString(const Value value)
 		valueToString += "en";
 		break;
 	case ENGLISH_GB:
-		valueToString += "en-gb";
+		valueToString += "en-GB";
 		break;
 	case ENGLISH_US:
-		valueToString += "en-us";
+		valueToString += "en-US";
 		break;
 	case PORTUGUESE_ANY:
 		valueToString += "pt";
 		break;
 	case PORTUGUESE_BR:
-		valueToString += "pt-br";
+		valueToString += "pt-BR";
 		break;
 	case PORTUGUESE_PT:
-		valueToString += "pt-pt";
+		valueToString += "pt-PT";
 		break;
 	case UNKNOWN:
 		break;
