@@ -69,7 +69,7 @@ MediaType::Value MediaType::detect(const string &value)
 
 string MediaType::toString(const Value value)
 {
-	string valueToString = "Content-type: ";
+	string valueToString = "Content-Type: ";
 
 	switch(value) {
 	case ANY:

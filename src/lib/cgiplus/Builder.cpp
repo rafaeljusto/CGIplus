@@ -23,6 +23,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Builder.hpp>
 #include <cgiplus/Cookie.hpp>
@@ -76,20 +77,28 @@ Builder& Builder::operator<<(const string &content)
 
 string Builder::build() const
 {
-	string header = Status::toString(_status.first, _status.second) +
-		MediaType::toString(_format) + EOL + Language::toString(_language) + EOL;
-
-	for (auto cookie: _cookies) {
-		header += cookie.second.build() + EOL;
-	}
-
-	header += EOL;
+	// Content
 
 	string content = _form;
 	for (auto field: _fields) {
 		string key  = _tags.first + field.first + _tags.second;
 		boost::replace_all(content, key, field.second);
 	}
+
+	// Header
+
+	string contentLength = "Content-Length: " +
+		boost::lexical_cast<string>(content.size());
+
+	string header = Status::toString(_status.first, _status.second) +
+		MediaType::toString(_format) + EOL + contentLength + EOL +
+		Language::toString(_language) + EOL;
+
+	for (auto cookie: _cookies) {
+		header += cookie.second.build() + EOL;
+	}
+
+	header += EOL;
 
 	return header + content;
 }
