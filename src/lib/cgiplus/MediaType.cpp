@@ -38,9 +38,6 @@ MediaType::Value MediaType::detect(const string &value)
 	} else if (mediaType == "application/json") {
 		return APPLICATION_JSON;
 
-	} else if (mediaType == "application/javascript") {
-		return APPLICATION_JSONP;
-
 	} else if (mediaType == "application/xml") {
 		return APPLICATION_XML;
 
@@ -85,9 +82,6 @@ string MediaType::toString(const Value value)
 		break;
 	case APPLICATION_JSON:
 		valueToString += "application/json";
-		break;
-	case APPLICATION_JSONP:
-		valueToString += "application/javascript";
 		break;
 	case APPLICATION_XML:
 		valueToString += "application/xml";
