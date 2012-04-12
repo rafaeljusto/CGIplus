@@ -59,9 +59,10 @@ public:
 	/*! Convert language value into a string, in http header compliance
 	 *
 	 * @param value Language::Value
+	 * @param withLabel Add HTTP header label
 	 * @return Language type in http header string representation
 	 */
-	static string toString(const Value value);
+	static string toString(const Value value, const bool withLabel = false);
 
 	/*! Faster whay to check if the language is english, any language value
 	 * defaults to english.

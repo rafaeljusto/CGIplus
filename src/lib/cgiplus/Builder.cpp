@@ -91,8 +91,8 @@ string Builder::build() const
 		boost::lexical_cast<string>(content.size());
 
 	string header = Status::toString(_status.first, _status.second) +
-		MediaType::toString(_format) + EOL + contentLength + EOL +
-		Language::toString(_language) + EOL;
+		MediaType::toString(_format, true) + EOL + contentLength + EOL +
+		Language::toString(_language, true) + EOL;
 
 	for (auto cookie: _cookies) {
 		header += cookie.second.build() + EOL;

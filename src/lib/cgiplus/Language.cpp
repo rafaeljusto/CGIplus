@@ -55,9 +55,13 @@ Language::Value Language::detect(const string &value)
 	}
 }
 
-string Language::toString(const Value value)
+string Language::toString(const Value value, const bool withLabel)
 {
-	string valueToString = "Content-Language: ";
+	string valueToString("");
+
+	if (withLabel) {
+		valueToString = "Content-Language: ";
+	}
 
 	switch(value) {
 	case ANY:

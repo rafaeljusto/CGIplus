@@ -62,9 +62,10 @@ public:
 	/*! Convert media type value into a string, in http header compliance
 	 *
 	 * @param value MediaType::Value
+	 * @param withLabel Add HTTP header label
 	 * @return Media type in http header string representation
 	 */
-	static string toString(const Value value);
+	static string toString(const Value value, const bool withLabel = false);
 };
 
 CGIPLUS_NS_END

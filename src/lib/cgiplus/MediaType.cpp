@@ -67,9 +67,13 @@ MediaType::Value MediaType::detect(const string &value)
 	}
 }
 
-string MediaType::toString(const Value value)
+string MediaType::toString(const Value value, const bool withLabel)
 {
-	string valueToString = "Content-Type: ";
+	string valueToString("");
+
+	if (withLabel) {
+		valueToString = "Content-Type: ";
+	}
 
 	switch(value) {
 	case ANY:
