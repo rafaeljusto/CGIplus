@@ -22,7 +22,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <set>
+#include <vector>
 
 #include <boost/lexical_cast.hpp>
 
@@ -269,13 +269,35 @@ BOOST_AUTO_TEST_CASE(mustParseLanguageField) {
 
 	Cgi cgi;
 
-	std::set<Language::Value> languages = cgi.getResponseLanguages();
+	std::vector<Language::Value> languages = cgi.getResponseLanguages();
 	BOOST_CHECK_EQUAL(languages.size(), 3);
 
 	if (languages.empty() == false) {
-		BOOST_CHECK(languages.find(Language::PORTUGUESE_ANY) != languages.end());
-		BOOST_CHECK(languages.find(Language::ENGLISH_US) != languages.end());
-		BOOST_CHECK(languages.find(Language::ENGLISH_ANY) != languages.end());
+		BOOST_CHECK(std::find(languages.begin(), 
+		                      languages.end(), 
+		                      Language::PORTUGUESE_ANY) != languages.end());
+		BOOST_CHECK(std::find(languages.begin(), 
+		                      languages.end(), 
+		                      Language::ENGLISH_US) != languages.end());
+		BOOST_CHECK(std::find(languages.begin(), 
+		                      languages.end(), 
+		                      Language::ENGLISH_ANY) != languages.end());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(mustRespectLanguageQuality) {
+	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("HTTP_ACCEPT_LANGUAGE", "pt;q=0.2, en-US;q=0.3, en;q=0.8", 1);
+
+	Cgi cgi;
+
+	std::vector<Language::Value> languages = cgi.getResponseLanguages();
+	BOOST_CHECK_EQUAL(languages.size(), 3);
+
+	if (languages.empty() == false) {
+		BOOST_CHECK(languages[0] == Language::ENGLISH_ANY);
+		BOOST_CHECK(languages[1] == Language::ENGLISH_US);
+		BOOST_CHECK(languages[2] == Language::PORTUGUESE_ANY);
 	}
 }
 

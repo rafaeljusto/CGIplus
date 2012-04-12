@@ -23,6 +23,7 @@
 #include <map>
 #include <string>
 #include <set>
+#include <vector>
 
 #include <boost/lexical_cast.hpp>
 
@@ -207,9 +208,10 @@ public:
 
 	/*! Returns client supported response languages.
 	 *
-	 * @return List of languages that the client support
+	 * @return List of languages that the client support ordered by
+	 * preference
 	 */
-	std::set<Language::Value> getResponseLanguages() const;
+	std::vector<Language::Value> getResponseLanguages() const;
 
 	/*! Returns the number of cookies parsed. Usefull for testing.
 	 *
@@ -253,7 +255,7 @@ private:
 	Method::Value _method;
 	std::map<string, string> _inputs;
 	std::set<MediaType::Value> _responseFormats;
-	std::set<Language::Value> _responseLanguages;
+	std::vector<Language::Value> _responseLanguages;
 	std::map<string, string> _cookies;
 	std::map<string, string> _files;
 	string _uri;

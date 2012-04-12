@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <vector>
 
@@ -30,6 +31,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/range/adaptors.hpp>
 #include <boost/regex.hpp>
 
 #include <cgiplus/Cgi.hpp>
@@ -92,7 +94,7 @@ std::set<MediaType::Value> Cgi::getResponseFormats() const
 	return _responseFormats;
 }
 
-std::set<Language::Value> Cgi::getResponseLanguages() const
+std::vector<Language::Value> Cgi::getResponseLanguages() const
 {
 	return _responseLanguages;
 }
@@ -239,15 +241,39 @@ void Cgi::readResponseLanguages()
 	string languages = languagesPtr;
 
 	std::vector<string> languagesList;
+	std::multimap<double, Language::Value> languagesQuality;
 	boost::split(languagesList, languages, boost::is_any_of(","));
 
-	for (auto language: languagesList) {
+	for (auto languageStr: languagesList) {
 		std::vector<string> languageItems;
-		boost::split(languageItems, language, boost::is_any_of(";"));
+		boost::split(languageItems, languageStr, boost::is_any_of(";"));
 
-		if (languageItems.empty() == false) {
-			_responseLanguages.insert(Language::detect(languageItems[0]));
+		if (languageItems.empty()) {
+			continue;
 		}
+
+		auto language = Language::detect(languageItems[0]);
+
+		if (languageItems.size() != 2) {
+			languagesQuality.insert(std::pair<double, Language::Value>(1, language));
+			continue
+		}
+
+		std::vector<string> qualityItems;
+		boost::split(qualityItems, languageItems[1], boost::is_any_of("="));
+
+		if (qualityItems.size() == 2) {
+			double quality = boost::lexical_cast<double>(qualityItems[1]);
+			languagesQuality.
+				insert(std::pair<double, Language::Value>(quality, language));
+
+		} else {
+			languagesQuality.insert(std::pair<double, Language::Value>(1, language));
+		}
+	}
+
+	for (auto languageQuality : boost::adaptors::reverse(languagesQuality)) {
+		_responseLanguages.push_back(languageQuality.second);
 	}
 }
 
