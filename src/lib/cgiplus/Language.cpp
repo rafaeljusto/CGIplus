@@ -40,16 +40,16 @@ Language::Value Language::detect(const string &value)
 
 	} else if (language == "en-us") {
 		return ENGLISH_US;
-	
+
 	} else if (language == "pt" || language == "pt-*") {
 		return PORTUGUESE_ANY;
-	
+
 	} else if (language == "pt-br") {
 		return PORTUGUESE_BR;
 
 	} else if (language == "pt-pt") {
 		return PORTUGUESE_PT;
-	
+
 	} else {
 		return UNKNOWN;
 	}
@@ -92,28 +92,41 @@ string Language::toString(const Value value, const bool withLabel)
 	return valueToString;
 }
 
-bool Language::isEnglish(const std::set<Value> &values)
+bool Language::isEnglish(const Value value)
 {
-	for (Value value : values) {
-		if (value == ANY || 
-		    value == ENGLISH_ANY || 
-		    value == ENGLISH_US || 
-		    value == ENGLISH_GB) {
-			return true;
-		}
+	switch(value) {
+	case ANY:
+	case ENGLISH_ANY:
+	case ENGLISH_GB:
+	case ENGLISH_US:
+		return true;
+
+	case PORTUGUESE_ANY:
+	case PORTUGUESE_BR:
+	case PORTUGUESE_PT:
+	case UNKNOWN:
+		break;
 	}
 
 	return false;
 }
 
-bool Language::isPortuguese(const std::set<Value> &values)
+bool Language::isPortuguese(const Value value)
 {
-	for (Value value : values) {
-		if (value == PORTUGUESE_ANY || 
-		    value == PORTUGUESE_BR || 
-		    value == PORTUGUESE_PT) {
-			return true;
-		}
+	switch(value) {
+	case ENGLISH_ANY:
+	case ENGLISH_GB:
+	case ENGLISH_US:
+		break;
+
+	case ANY:
+	case PORTUGUESE_ANY:
+	case PORTUGUESE_BR:
+	case PORTUGUESE_PT:
+		return true;
+
+	case UNKNOWN:
+		break;
 	}
 
 	return false;

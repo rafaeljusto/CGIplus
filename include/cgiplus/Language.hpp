@@ -20,7 +20,6 @@
 #ifndef __CGIPLUS_LANGUAGE_HPP__
 #define __CGIPLUS_LANGUAGE_HPP__
 
-#include <set>
 #include <string>
 
 #include "Cgiplus.hpp"
@@ -67,17 +66,17 @@ public:
 	/*! Faster whay to check if the language is english, any language value
 	 * defaults to english.
 	 *
-	 * @param values List of Language::Value
+	 * @param values language from Language::Value
 	 * @return True if value is english or false otherwise
 	 */
-	static bool isEnglish(const std::set<Value> &values);
+	static bool isEnglish(const Value value);
 
 	/*! Faster whay to check if the language is portuguese.
 	 *
-	 * @param values List of Language::Value
+	 * @param values language from Language::Value
 	 * @return True if value is portuguese or false otherwise
 	 */
-	static bool isPortuguese(const std::set<Value> &values);
+	static bool isPortuguese(const Value value);
 };
 
 CGIPLUS_NS_END
