@@ -256,7 +256,7 @@ void Cgi::readResponseLanguages()
 
 		if (languageItems.size() != 2) {
 			languagesQuality.insert(std::pair<double, Language::Value>(1, language));
-			continue
+			continue;
 		}
 
 		std::vector<string> qualityItems;
