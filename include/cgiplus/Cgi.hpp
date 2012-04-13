@@ -194,6 +194,12 @@ public:
 	 */
 	Method::Value getMethod() const;
 
+	/*! Returns the request languages.
+	 *
+	 * @return List of languages of the request
+	 */
+	std::set<Language::Value> getLanguages() const;
+
 	/*! Returns the number of fields parsed. Usefull for testing.
 	 *
 	 * @return Number of fields parsed
@@ -234,6 +240,7 @@ public:
 private:
 	void clearInputs();
 	void readMethod();
+	void readLanguages();
 	void readQueryStringInputs();
 	void readContentInputs();
 	void readResponseFormats();
@@ -253,6 +260,7 @@ private:
 	void removeDangerousHtmlCharacters(string &inputs);
 
 	Method::Value _method;
+	std::set<Language::Value> _languages;
 	std::map<string, string> _inputs;
 	std::set<MediaType::Value> _responseFormats;
 	std::vector<Language::Value> _responseLanguages;

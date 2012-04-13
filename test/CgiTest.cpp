@@ -17,11 +17,13 @@
   along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <set>
 #include <vector>
 
 #include <boost/lexical_cast.hpp>
@@ -265,6 +267,21 @@ BOOST_AUTO_TEST_CASE(mustBuildURIFields) {
 
 BOOST_AUTO_TEST_CASE(mustParseLanguageField) {
 	setenv("REQUEST_METHOD", "GET", 1);
+	setenv("CONTENT_LANGUAGE", "pt-BR, en-US", 1);
+
+	Cgi cgi;
+
+	std::set<Language::Value> languages = cgi.getLanguages();
+	BOOST_CHECK_EQUAL(languages.size(), 2);
+
+	if (languages.empty() == false) {
+		BOOST_CHECK(languages.find(Language::PORTUGUESE_BR) != languages.end());
+		BOOST_CHECK(languages.find(Language::ENGLISH_US) != languages.end());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(mustParseResponseLanguageField) {
+	setenv("REQUEST_METHOD", "GET", 1);
 	setenv("HTTP_ACCEPT_LANGUAGE", "pt, en-US;q=0.8, en;q=0.7", 1);
 
 	Cgi cgi;
@@ -285,7 +302,7 @@ BOOST_AUTO_TEST_CASE(mustParseLanguageField) {
 	}
 }
 
-BOOST_AUTO_TEST_CASE(mustRespectLanguageQuality) {
+BOOST_AUTO_TEST_CASE(mustRespectResponseLanguageQuality) {
 	setenv("REQUEST_METHOD", "GET", 1);
 	setenv("HTTP_ACCEPT_LANGUAGE", "pt;q=0.2, en-US;q=0.3, en;q=0.8", 1);
 

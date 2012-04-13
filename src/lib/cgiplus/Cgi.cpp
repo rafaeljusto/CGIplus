@@ -70,6 +70,7 @@ void Cgi::readInputs()
 {
 	clearInputs();
 	readMethod();
+	readLanguages();
 	readQueryStringInputs();
 	readContentInputs();
 	readResponseFormats();
@@ -82,6 +83,11 @@ void Cgi::readInputs()
 Cgi::Method::Value Cgi::getMethod() const
 {
 	return _method;
+}
+
+std::set<Language::Value> Cgi::getLanguages() const
+{
+	return _languages;
 }
 
 unsigned int Cgi::getNumberOfInputs() const
@@ -117,6 +123,7 @@ string Cgi::getRemoteAddress() const
 void Cgi::clearInputs()
 {
 	_method = Method::UNKNOWN;
+	_languages.clear();
 	_inputs.clear();
 	_responseFormats.clear();
 	_responseLanguages.clear();
@@ -150,6 +157,23 @@ void Cgi::readMethod()
 		} else if (method == "TRACE") {
 			_method = Method::TRACE;
 		}
+	}
+}
+
+void Cgi::readLanguages()
+{
+	const char *languagesPtr = getenv("CONTENT_LANGUAGE");
+	if (languagesPtr == NULL) {
+		return;
+	}
+
+	string languages = languagesPtr;
+
+	std::vector<string> languagesList;
+	boost::split(languagesList, languages, boost::is_any_of(","));
+
+	for (auto languageStr: languagesList) {
+		_languages.insert(Language::detect(languageStr));
 	}
 }
 
