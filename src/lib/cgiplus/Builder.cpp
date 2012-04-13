@@ -46,6 +46,7 @@ Builder::Builder() :
 	_tags("<!-- ", " -->"),
 	_status(Status::UNDEFINED, ""),
 	_format(MediaType::TEXT_HTML),
+	_encoding(Encoding::UNDEFINED),
 	_language(Language::ENGLISH_US)
 {
 }
@@ -91,7 +92,13 @@ string Builder::build() const
 		boost::lexical_cast<string>(content.size());
 
 	string header = Status::toString(_status.first, _status.second) +
-		MediaType::toString(_format, true) + EOL + contentLength + EOL +
+		MediaType::toString(_format, true);
+
+	if (_encoding != Encoding::UNDEFINED) {
+		header += "; " + Encoding::toString(_encoding, true);
+	}
+
+	header += EOL + contentLength + EOL + 
 		Language::toString(_language, true) + EOL;
 
 	for (auto cookie: _cookies) {
@@ -143,6 +150,12 @@ Builder& Builder::setStatus(const Status::Value status, const string &message)
 Builder& Builder::setFormat(const MediaType::Value format)
 {
 	_format = format;
+	return *this;
+}
+
+Builder& Builder::setEncoding(const Encoding::Value encoding)
+{
+	_encoding = encoding;
 	return *this;
 }
 

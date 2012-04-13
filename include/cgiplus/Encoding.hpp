@@ -39,7 +39,6 @@ public:
 	 */
 	enum Value {
 		UNDEFINED,
-		ANY,
 		UTF8,
 		UTF16,
 		UTF32,
