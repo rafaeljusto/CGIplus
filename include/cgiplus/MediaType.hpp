@@ -20,6 +20,7 @@
 #ifndef __CGIPLUS_MEDIATYPE_HPP__
 #define __CGIPLUS_MEDIATYPE_HPP__
 
+#include <set>
 #include <string>
 
 #include "Cgiplus.hpp"
@@ -37,8 +38,8 @@ public:
 	/*! Media types
 	 */
 	enum Value {
+		UNDEFINED,
 		ANY,
-		UNKNOWN,
 		APPLICATION_ANY,
 		APPLICATION_JSON,
 		APPLICATION_XML,
@@ -48,7 +49,8 @@ public:
 		TEXT_ANY,
 		TEXT_HTML,
 		TEXT_PLAIN,
-		TEXT_XML
+		TEXT_XML,
+		UNKNOWN
 	};
 
 	/*! Convert a media type in string format into one of the value of
@@ -67,6 +69,16 @@ public:
 	 * @return Media type in http header string representation
 	 */
 	static string toString(const Value value, const bool withLabel = false);
+
+	/*! Convert media type values into a string, in http header
+	 * compliance (if requested)
+	 *
+	 * @param values List of MediaType::Value
+	 * @param withLabel Add HTTP header label
+	 * @return Media types in http header string representation
+	 */
+	static string toString(const std::set<Value> values, 
+	                       const bool withLabel = false);
 };
 
 CGIPLUS_NS_END

@@ -76,10 +76,10 @@ string MediaType::toString(const Value value, const bool withLabel)
 	}
 
 	switch(value) {
+	case UNDEFINED:
+		break;
 	case ANY:
 		valueToString += "*/*";
-		break;
-	case	UNKNOWN:
 		break;
 	case APPLICATION_ANY:
 		valueToString += "application/*";
@@ -111,6 +111,27 @@ string MediaType::toString(const Value value, const bool withLabel)
 	case TEXT_XML:
 		valueToString += "text/xml";
 		break;
+	case UNKNOWN:
+		break;
+	}
+
+	return valueToString;
+}
+
+string MediaType::toString(const std::set<Value> values, const bool withLabel)
+{
+	string valueToString("");
+
+	if (withLabel) {
+		valueToString = "Accept: ";
+	}
+
+	for (Value value : values) {
+		valueToString += toString(value) + ",";
+	}
+
+	if (values.empty() == false) {
+		valueToString = valueToString.substr(0, valueToString.size() - 1);
 	}
 
 	return valueToString;

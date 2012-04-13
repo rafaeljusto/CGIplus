@@ -55,6 +55,7 @@ string Encoding::toString(const Value value, const bool withLabel)
 	}
 
 	switch(value) {
+	case UNDEFINED:
 	case ANY:
 		break;
 	case UTF8:
@@ -71,6 +72,25 @@ string Encoding::toString(const Value value, const bool withLabel)
 		break;
 	case UNKNOWN:
 		break;
+	}
+
+	return valueToString;
+}
+
+string Encoding::toString(const std::vector<Value> values, const bool withLabel)
+{
+	string valueToString("");
+
+	if (withLabel) {
+		valueToString = "Accept-Charset: ";
+	}
+
+	for (Value value : values) {
+		valueToString += toString(value) + ",";
+	}
+
+	if (values.empty() == false) {
+		valueToString = valueToString.substr(0, valueToString.size() - 1);
 	}
 
 	return valueToString;

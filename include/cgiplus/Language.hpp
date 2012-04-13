@@ -20,7 +20,9 @@
 #ifndef __CGIPLUS_LANGUAGE_HPP__
 #define __CGIPLUS_LANGUAGE_HPP__
 
+#include <set>
 #include <string>
+#include <vector>
 
 #include "Cgiplus.hpp"
 
@@ -63,6 +65,26 @@ public:
 	 * @return Language type in http header string representation
 	 */
 	static string toString(const Value value, const bool withLabel = false);
+
+	/*! Convert language values into a string, in http header compliance
+	 * (if requested)
+	 *
+	 * @param values List of Language::Value
+	 * @param withLabel Add HTTP header label
+	 * @return Language types in http header string representation
+	 */
+	static string toString(const std::set<Value> values, 
+	                       const bool withLabel = false);
+
+	/*! Convert language values into a string, in http header compliance
+	 * (if requested)
+	 *
+	 * @param values List of Language::Value
+	 * @param withLabel Add HTTP header label
+	 * @return Language types in http header string representation
+	 */
+	static string toString(const std::vector<Value> values, 
+	                       const bool withLabel = false);
 
 	/*! Faster whay to check if the language is english, any language value
 	 * defaults to english.

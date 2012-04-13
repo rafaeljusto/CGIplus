@@ -92,6 +92,44 @@ string Language::toString(const Value value, const bool withLabel)
 	return valueToString;
 }
 
+string Language::toString(const std::set<Value> values, const bool withLabel)
+{
+	string valueToString("");
+
+	if (withLabel) {
+		valueToString = "Content-Language: ";
+	}
+
+	for (Value value : values) {
+		valueToString += toString(value) + ",";
+	}
+
+	if (values.empty() == false) {
+		valueToString = valueToString.substr(0, valueToString.size() - 1);
+	}
+
+	return valueToString;
+}
+
+string Language::toString(const std::vector<Value> values, const bool withLabel)
+{
+	string valueToString("");
+
+	if (withLabel) {
+		valueToString = "Accept-Language: ";
+	}
+
+	for (Value value : values) {
+		valueToString += toString(value) + ",";
+	}
+
+	if (values.empty() == false) {
+		valueToString = valueToString.substr(0, valueToString.size() - 1);
+	}
+
+	return valueToString;
+}
+
 bool Language::isEnglish(const Value value)
 {
 	switch(value) {

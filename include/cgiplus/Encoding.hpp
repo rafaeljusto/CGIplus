@@ -21,6 +21,7 @@
 #define __CGIPLUS_ENCODING_HPP__
 
 #include <string>
+#include <vector>
 
 #include "Cgiplus.hpp"
 
@@ -37,6 +38,7 @@ public:
 	/*! List all types of encodings supported by Cgi.
 	 */
 	enum Value {
+		UNDEFINED,
 		ANY,
 		UTF8,
 		UTF16,
@@ -61,6 +63,16 @@ public:
 	 * @return Language type in http header string representation
 	 */
 	static string toString(const Value value, const bool withLabel = false);
+
+	/*! Convert enconding values into a string, in http header
+	 * compliance (if requested)
+	 *
+	 * @param values List of Language::Value
+	 * @param withLabel Add HTTP header label
+	 * @return Language types in http header string representation
+	 */
+	static string toString(const std::vector<Value> values, 
+	                       const bool withLabel = false);
 };
 
 CGIPLUS_NS_END
