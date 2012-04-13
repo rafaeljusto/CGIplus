@@ -29,10 +29,12 @@
 #include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Cgi.hpp>
+#include <cgiplus/Encoding.hpp>
 #include <cgiplus/Language.hpp>
 #include <cgiplus/MediaType.hpp>
 
 using cgiplus::Cgi;
+using cgiplus::Encoding;
 using cgiplus::Language;
 using cgiplus::MediaType;
 
@@ -312,9 +314,50 @@ BOOST_AUTO_TEST_CASE(mustRespectResponseLanguageQuality) {
 	BOOST_CHECK_EQUAL(languages.size(), 3);
 
 	if (languages.empty() == false) {
-		BOOST_CHECK(languages[0] == Language::ENGLISH_ANY);
-		BOOST_CHECK(languages[1] == Language::ENGLISH_US);
-		BOOST_CHECK(languages[2] == Language::PORTUGUESE_ANY);
+		BOOST_CHECK_EQUAL(languages[0], Language::ENGLISH_ANY);
+		BOOST_CHECK_EQUAL(languages[1], Language::ENGLISH_US);
+		BOOST_CHECK_EQUAL(languages[2], Language::PORTUGUESE_ANY);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(mustParseEncoding) {
+	setenv("CONTENT_TYPE", "application/x-www-form-urlencoded; charset=utf-8", 1);
+
+	Cgi cgi;
+
+	BOOST_CHECK_EQUAL(cgi.getEncoding(), Encoding::UTF8);
+}
+
+BOOST_AUTO_TEST_CASE(mustParseResponseEncoding) {
+	setenv("HTTP_ACCEPT_ENCODING", "utf-8, iso-8859-1", 1);
+
+	Cgi cgi;
+
+	std::vector<Encoding::Value> encodings = cgi.getResponseEncodings();
+	BOOST_CHECK_EQUAL(encodings.size(), 2);
+
+	if (encodings.empty() == false) {
+		BOOST_CHECK(std::find(encodings.begin(), 
+		                      encodings.end(), 
+		                      Encoding::UTF8) != encodings.end());
+		BOOST_CHECK(std::find(encodings.begin(), 
+		                      encodings.end(), 
+		                      Encoding::ISO88591) != encodings.end());
+	}
+}
+
+BOOST_AUTO_TEST_CASE(mustRespectResponseEncodingQuality) {
+	setenv("HTTP_ACCEPT_ENCODING", "utf-8;q=0.6,iso-8859-1;q=0.9,utf-16;q=0.5",1);
+
+	Cgi cgi;
+
+	std::vector<Encoding::Value> encodings = cgi.getResponseEncodings();
+	BOOST_CHECK_EQUAL(encodings.size(), 3);
+
+	if (encodings.empty() == false) {
+		BOOST_CHECK_EQUAL(encodings[0], Encoding::ISO88591);
+		BOOST_CHECK_EQUAL(encodings[1], Encoding::UTF8);
+		BOOST_CHECK_EQUAL(encodings[2], Encoding::UTF16);
 	}
 }
 

@@ -28,6 +28,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "Cgiplus.hpp"
+#include "Encoding.hpp"
 #include "Language.hpp"
 #include "MediaType.hpp"
 
@@ -194,17 +195,21 @@ public:
 	 */
 	Method::Value getMethod() const;
 
-	/*! Returns the request languages.
-	 *
-	 * @return List of languages of the request
+	/*! Returns the encoding of the request
 	 */
-	std::set<Language::Value> getLanguages() const;
+	Encoding::Value getEncoding() const;
 
 	/*! Returns the number of fields parsed. Usefull for testing.
 	 *
 	 * @return Number of fields parsed
 	 */
 	unsigned int getNumberOfInputs() const;
+
+	/*! Returns the request languages.
+	 *
+	 * @return List of languages of the request
+	 */
+	std::set<Language::Value> getLanguages() const;
 
 	/*! Returns client supported response formats.
 	 *
@@ -218,6 +223,13 @@ public:
 	 * preference
 	 */
 	std::vector<Language::Value> getResponseLanguages() const;
+
+	/*! Returns client supported response encodings.
+	 *
+	 * @return List of encodings that the client support ordered by
+	 * preference
+	 */
+	std::vector<Encoding::Value> getResponseEncodings() const;
 
 	/*! Returns the number of cookies parsed. Usefull for testing.
 	 *
@@ -240,18 +252,20 @@ public:
 private:
 	void clearInputs();
 	void readMethod();
-	void readLanguages();
+	void readType();
 	void readQueryStringInputs();
 	void readContentInputs();
+	unsigned int readContentSize() const;
+	void readLanguages();
 	void readResponseFormats();
 	void readResponseLanguages();
+	void readResponseEncodings();
 	void readCookies();
 	void readURI();
 	void readRemoteAddress();
 
 	void parse(string inputs);
-	string parseBoundary(const string &type);
-	void parseMultipart(const string &inputs, const string &boundary);
+	void parseMultipart(const string &inputs);
 
 	void decode(string &inputs);
 	void decodeSpecialSymbols(string &inputs);
@@ -260,10 +274,14 @@ private:
 	void removeDangerousHtmlCharacters(string &inputs);
 
 	Method::Value _method;
-	std::set<Language::Value> _languages;
+	MediaType::Value _type;
+	Encoding::Value _encoding;
+	string _boundary;
 	std::map<string, string> _inputs;
+	std::set<Language::Value> _languages;
 	std::set<MediaType::Value> _responseFormats;
 	std::vector<Language::Value> _responseLanguages;
+	std::vector<Encoding::Value> _responseEncodings;
 	std::map<string, string> _cookies;
 	std::map<string, string> _files;
 	string _uri;

@@ -59,7 +59,8 @@ public:
 	 */
 	static Value detect(const string &value);
 
-	/*! Convert media type value into a string, in http header compliance
+	/*! Convert media type value into a string, in http header
+	 * compliance (if requested)
 	 *
 	 * @param value MediaType::Value
 	 * @param withLabel Add HTTP header label

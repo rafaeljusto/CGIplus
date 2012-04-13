@@ -41,6 +41,8 @@ CGIPLUS_NS_BEGIN
 
 Cgi::Cgi() :
 	_method(Method::UNKNOWN),
+	_type(MediaType::UNKNOWN),
+	_boundary(""),
 	_uri(""),
 	_remoteAddress("")
 {
@@ -70,11 +72,13 @@ void Cgi::readInputs()
 {
 	clearInputs();
 	readMethod();
-	readLanguages();
+	readType();
 	readQueryStringInputs();
 	readContentInputs();
+	readLanguages();
 	readResponseFormats();
 	readResponseLanguages();
+	readResponseEncodings();
 	readCookies();
 	readURI();
 	readRemoteAddress();
@@ -85,14 +89,19 @@ Cgi::Method::Value Cgi::getMethod() const
 	return _method;
 }
 
-std::set<Language::Value> Cgi::getLanguages() const
+Encoding::Value Cgi::getEncoding() const
 {
-	return _languages;
+	return _encoding;
 }
 
 unsigned int Cgi::getNumberOfInputs() const
 {
 	return _inputs.size();
+}
+
+std::set<Language::Value> Cgi::getLanguages() const
+{
+	return _languages;
 }
 
 std::set<MediaType::Value> Cgi::getResponseFormats() const
@@ -103,6 +112,11 @@ std::set<MediaType::Value> Cgi::getResponseFormats() const
 std::vector<Language::Value> Cgi::getResponseLanguages() const
 {
 	return _responseLanguages;
+}
+
+std::vector<Encoding::Value> Cgi::getResponseEncodings() const
+{
+	return _responseEncodings;
 }
 
 unsigned int Cgi::getNumberOfCookies() const
@@ -123,10 +137,14 @@ string Cgi::getRemoteAddress() const
 void Cgi::clearInputs()
 {
 	_method = Method::UNKNOWN;
-	_languages.clear();
+	_type = MediaType::UNKNOWN;
+	_encoding = Encoding::UNKNOWN;
+	_boundary.clear();
 	_inputs.clear();
+	_languages.clear();
 	_responseFormats.clear();
 	_responseLanguages.clear();
+	_responseEncodings.clear();
 	_cookies.clear();
 	_files.clear();
 	_uri.clear();
@@ -160,22 +178,44 @@ void Cgi::readMethod()
 	}
 }
 
-void Cgi::readLanguages()
+void Cgi::readType()
 {
-	const char *languagesPtr = getenv("CONTENT_LANGUAGE");
-	if (languagesPtr == NULL) {
+	const char *typePtr = getenv("CONTENT_TYPE");
+	if (typePtr == NULL) {
 		return;
 	}
 
-	string languages = languagesPtr;
+	string type = typePtr;
 
-	std::vector<string> languagesList;
-	boost::split(languagesList, languages, boost::is_any_of(","));
+	std::vector<string> typeItems;
+	boost::split(typeItems, type, boost::is_any_of(";"));
 
-	for (auto languageStr: languagesList) {
-		_languages.insert(Language::detect(languageStr));
+	if (typeItems.empty()) {
+		return;
+	}
+
+	_type = MediaType::detect(typeItems[0]);
+
+	for (unsigned int i = 1; i < typeItems.size(); i++) {
+		std::vector<string> parameterItems;
+		boost::split(parameterItems, typeItems[i], boost::is_any_of("="));
+
+		if (parameterItems.size() != 2) {
+			continue;
+		}
+
+		string key = boost::trim_copy(parameterItems[0]);
+		string value = boost::trim_copy(parameterItems[1]);
+
+		if (key == "charset") {
+			_encoding = Encoding::detect(value);
+
+		} else if (key == "boundary") {
+			_boundary = value;
+		}
 	}
 }
+
 
 void Cgi::readQueryStringInputs()
 {
@@ -190,19 +230,11 @@ void Cgi::readQueryStringInputs()
 
 void Cgi::readContentInputs()
 {
-	const char *sizePtr = getenv("CONTENT_LENGTH");
-	const char *typePtr = getenv("CONTENT_TYPE");
-
-	if ((_method != Method::POST && _method != Method::PUT) ||
-	    sizePtr == NULL || typePtr == NULL) {
+	if (_method != Method::POST && _method != Method::PUT) {
 		return;
 	}
 
-	unsigned int size = 0;
-	try {
-		size = boost::lexical_cast<unsigned int>(sizePtr);
-	} catch (const  boost::bad_lexical_cast &e) {}
-
+	unsigned int size = readContentSize();
 	if (size == 0) {
 		return;
 	}
@@ -215,21 +247,45 @@ void Cgi::readContentInputs()
 		return;
 	}
 
-	string type = typePtr;
 	string inputs = inputsPtr;
 
-	std::vector<string> typeItems;
-	boost::split(typeItems, type, boost::is_any_of(";"));
+	if (_type == MediaType::APPLICATION_X_WWW_FORM_URL_ENCODED) {
+		parse(inputs);
 
-	if (typeItems.empty() == false) {
-		MediaType::Value mediaType = MediaType::detect(typeItems[0]);
-		if (mediaType == MediaType::APPLICATION_X_WWW_FORM_URL_ENCODED) {
-			parse(inputs);
+	} else if (_type == MediaType::MULTIPART_FORM_DATA) {
+		parseMultipart(inputs);
+	}
+}
 
-		} else if (mediaType == MediaType::MULTIPART_FORM_DATA) {
-			string boundary = parseBoundary(type);
-			parseMultipart(inputs, boundary);
-		}
+unsigned int Cgi::readContentSize() const
+{
+	const char *sizePtr = getenv("CONTENT_LENGTH");
+	if (sizePtr == NULL) {
+		return 0;
+	}
+
+	unsigned int size = 0;
+	try {
+		size = boost::lexical_cast<unsigned int>(sizePtr);
+	} catch (const  boost::bad_lexical_cast &e) {}
+
+	return size;
+}
+
+void Cgi::readLanguages()
+{
+	const char *languagesPtr = getenv("CONTENT_LANGUAGE");
+	if (languagesPtr == NULL) {
+		return;
+	}
+
+	string languages = languagesPtr;
+
+	std::vector<string> languagesList;
+	boost::split(languagesList, languages, boost::is_any_of(","));
+
+	for (auto languageStr: languagesList) {
+		_languages.insert(Language::detect(languageStr));
 	}
 }
 
@@ -301,6 +357,52 @@ void Cgi::readResponseLanguages()
 	}
 }
 
+void Cgi::readResponseEncodings()
+{
+	const char *encodingsPtr = getenv("HTTP_ACCEPT_ENCODING");
+	if (encodingsPtr == NULL) {
+		return;
+	}
+
+	string encodings = encodingsPtr;
+
+	std::vector<string> encondingsList;
+	std::multimap<double, Encoding::Value> encodingsQuality;
+	boost::split(encondingsList, encodings, boost::is_any_of(","));
+
+	for (auto encodingStr: encondingsList) {
+		std::vector<string> encodingItems;
+		boost::split(encodingItems, encodingStr, boost::is_any_of(";"));
+
+		if (encodingItems.empty()) {
+			continue;
+		}
+
+		auto encoding = Encoding::detect(encodingItems[0]);
+
+		if (encodingItems.size() != 2) {
+			encodingsQuality.insert(std::pair<double, Encoding::Value>(1, encoding));
+			continue;
+		}
+
+		std::vector<string> qualityItems;
+		boost::split(qualityItems, encodingItems[1], boost::is_any_of("="));
+
+		if (qualityItems.size() == 2) {
+			double quality = boost::lexical_cast<double>(qualityItems[1]);
+			encodingsQuality.
+				insert(std::pair<double, Encoding::Value>(quality, encoding));
+
+		} else {
+			encodingsQuality.insert(std::pair<double, Encoding::Value>(1, encoding));
+		}
+	}
+
+	for (auto encodingQuality : boost::adaptors::reverse(encodingsQuality)) {
+		_responseEncodings.push_back(encodingQuality.second);
+	}
+}
+
 void Cgi::readCookies()
 {
 	const char *cookiesPtr = getenv("HTTP_COOKIE");
@@ -366,28 +468,9 @@ void Cgi::parse(string inputs)
 	}
 }
 
-string Cgi::parseBoundary(const string &type)
+void Cgi::parseMultipart(const string &inputs)
 {
-	std::vector<string> keyValues;
-	boost::split(keyValues, type, boost::is_any_of(";"));
-
-	if (keyValues.size() != 2) {
-		return "";
-	}
-
-	std::vector<string> keyValueSplitted;
-	boost::split(keyValueSplitted, keyValues[1], boost::is_any_of("="));
-
-	if (keyValueSplitted.size() != 2) {
-		return "";
-	}
-
-	return keyValueSplitted[1];
-}
-
-void Cgi::parseMultipart(const string &inputs, const string &boundary)
-{
-	if (boundary.empty()) {
+	if (_boundary.empty()) {
 		return;
 	}
 
@@ -398,24 +481,24 @@ void Cgi::parseMultipart(const string &inputs, const string &boundary)
 	size_t secondOccurrence = 0;
 
 	while (true) {
-		firstOccurrence = inputs.find(boundary, position);
+		firstOccurrence = inputs.find(_boundary, position);
 
 		if (firstOccurrence == string::npos) {
 			break;
 		}
 
-		position += firstOccurrence + boundary.size();
-		secondOccurrence = inputs.find(boundary, position);
+		position += firstOccurrence + _boundary.size();
+		secondOccurrence = inputs.find(_boundary, position);
 
 		if (secondOccurrence == string::npos) {
 			break;
 		}
 
-		unsigned int begin = firstOccurrence + boundary.size();
-		unsigned int end = secondOccurrence - (firstOccurrence + boundary.size());
+		unsigned int begin = firstOccurrence + _boundary.size();
+		unsigned int end = secondOccurrence - (firstOccurrence + _boundary.size());
 
 		uploadedFile.setMultipart(inputs.substr(begin, end));
-		position = secondOccurrence + boundary.size();
+		position = secondOccurrence + _boundary.size();
 	}
 
 	if (uploadedFile.getControlName().empty() == false &&

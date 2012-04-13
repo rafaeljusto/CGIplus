@@ -17,8 +17,8 @@
   along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __CGIPLUS_LANGUAGE_HPP__
-#define __CGIPLUS_LANGUAGE_HPP__
+#ifndef __CGIPLUS_ENCODING_HPP__
+#define __CGIPLUS_ENCODING_HPP__
 
 #include <string>
 
@@ -28,34 +28,32 @@ using std::string;
 
 CGIPLUS_NS_BEGIN
 
-/*! \class Language
- *  \brief Represents all supported languages.
+/*! \class Encoding
+ *  \brief Represents all supported encodings.
  */
-class Language
+class Encoding
 {
 public:
-	/*! List all types of language supported by Cgi.
+	/*! List all types of encodings supported by Cgi.
 	 */
 	enum Value {
 		ANY,
-		ENGLISH_ANY,
-		ENGLISH_GB,
-		ENGLISH_US,
-		PORTUGUESE_ANY,
-		PORTUGUESE_BR,
-		PORTUGUESE_PT,
+		UTF8,
+		UTF16,
+		UTF32,
+		ISO88591,
 		UNKNOWN
 	};
 
-	/*! Convert a language in string format into one of the value of
-	 * Language::Value
+	/*! Convert a encoding in string format into one of the value of
+	 * Encoding::Value
 	 *
-	 * @param value Language in text format
-	 * @return Enum item of the language
+	 * @param value Encoding in text format
+	 * @return Enum item of the encoding
 	 */
 	static Value detect(const string &value);
 
-	/*! Convert language value into a string, in http header compliance
+	/*! Convert enconding value into a string, in http header compliance
 	 * (if requested)
 	 *
 	 * @param value Language::Value
@@ -63,23 +61,8 @@ public:
 	 * @return Language type in http header string representation
 	 */
 	static string toString(const Value value, const bool withLabel = false);
-
-	/*! Faster whay to check if the language is english, any language value
-	 * defaults to english.
-	 *
-	 * @param values language from Language::Value
-	 * @return True if value is english or false otherwise
-	 */
-	static bool isEnglish(const Value value);
-
-	/*! Faster whay to check if the language is portuguese.
-	 *
-	 * @param values language from Language::Value
-	 * @return True if value is portuguese or false otherwise
-	 */
-	static bool isPortuguese(const Value value);
 };
 
 CGIPLUS_NS_END
 
-#endif // __CGIPLUS_LANGUAGE_HPP__
+#endif // __CGIPLUS_ENCODING_HPP__
