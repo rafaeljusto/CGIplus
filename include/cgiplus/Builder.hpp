@@ -26,6 +26,7 @@
 
 #include "Cgiplus.hpp"
 #include "Cookie.hpp"
+#include "Encoding.hpp"
 #include "MediaType.hpp"
 #include "Language.hpp"
 
@@ -193,6 +194,14 @@ public:
 	 */
 	Builder& setFormat(const MediaType::Value format);
 
+	/*! Set output encoding type. Possible values are defined in
+	 * Encoding::Value. By default is UNDEFINED.
+	 *
+	 * @param format Output format type
+	 * @return Reference to the current object, allowing easy usability
+	 */
+	Builder& setEncoding(const Encoding::Value encoding);
+
 	/*! Set output language. Possible values are defined in
 	 * Language::Value. By default is english.
 	 *
@@ -238,6 +247,7 @@ private:
 	std::map<string, Cookie> _cookies;
 	std::pair<Status::Value, string> _status;
 	MediaType::Value _format;
+	Encoding::Value _encoding;
 	Language::Value _language;
 };
 

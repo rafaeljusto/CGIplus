@@ -24,6 +24,7 @@
 
 #include <cgiplus/Builder.hpp>
 #include <cgiplus/Cookie.hpp>
+#include <cgiplus/Encoding.hpp>
 #include <cgiplus/Language.hpp>
 #include <cgiplus/MediaType.hpp>
 
@@ -31,6 +32,7 @@ using boost::lexical_cast;
 
 using cgiplus::Builder;
 using cgiplus::Cookie;
+using cgiplus::Encoding;
 using cgiplus::Language;
 using cgiplus::MediaType;
 
@@ -217,6 +219,18 @@ BOOST_AUTO_TEST_CASE(mustChangeLanguage)
 	string content = "Content-Type: text/html" + Builder::EOL +
 		"Content-Length: 0" + Builder::EOL +
 		"Content-Language: pt-BR" + Builder::EOL + Builder::EOL;
+
+	BOOST_CHECK_EQUAL(builder.build(), content);
+}
+
+BOOST_AUTO_TEST_CASE(mustSetEncoding)
+{
+	Builder builder;
+	builder.setEncoding(Encoding::UTF8);
+
+	string content = "Content-Type: text/html; charset=utf-8" + Builder::EOL +
+		"Content-Length: 0" + Builder::EOL +
+		"Content-Language: en-US" + Builder::EOL + Builder::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }

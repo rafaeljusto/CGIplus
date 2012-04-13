@@ -55,7 +55,7 @@ string Encoding::toString(const Value value, const bool withLabel)
 	}
 
 	switch(value) {
-	case ANY:
+	case UNDEFINED:
 		break;
 	case UTF8:
 		valueToString += "utf-8";

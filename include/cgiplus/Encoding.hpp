@@ -37,7 +37,7 @@ public:
 	/*! List all types of encodings supported by Cgi.
 	 */
 	enum Value {
-		ANY,
+		UNDEFINED,
 		UTF8,
 		UTF16,
 		UTF32,
