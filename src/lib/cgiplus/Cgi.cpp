@@ -40,8 +40,8 @@
 CGIPLUS_NS_BEGIN
 
 Cgi::Cgi() :
-	_method(Method::UNKNOWN),
-	_type(MediaType::UNKNOWN),
+	_method(Method::UNDEFINED),
+	_type(MediaType::UNDEFINED),
 	_boundary(""),
 	_uri(""),
 	_remoteAddress("")

@@ -76,10 +76,10 @@ string MediaType::toString(const Value value, const bool withLabel)
 	}
 
 	switch(value) {
+	case UNDEFINED:
+		break;
 	case ANY:
 		valueToString += "*/*";
-		break;
-	case	UNKNOWN:
 		break;
 	case APPLICATION_ANY:
 		valueToString += "application/*";
@@ -110,6 +110,8 @@ string MediaType::toString(const Value value, const bool withLabel)
 		break;
 	case TEXT_XML:
 		valueToString += "text/xml";
+		break;
+	case UNKNOWN:
 		break;
 	}
 

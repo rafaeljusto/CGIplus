@@ -37,8 +37,8 @@ public:
 	/*! Media types
 	 */
 	enum Value {
+		UNDEFINED,
 		ANY,
-		UNKNOWN,
 		APPLICATION_ANY,
 		APPLICATION_JSON,
 		APPLICATION_XML,
@@ -48,7 +48,8 @@ public:
 		TEXT_ANY,
 		TEXT_HTML,
 		TEXT_PLAIN,
-		TEXT_XML
+		TEXT_XML,
+		UNKNOWN
 	};
 
 	/*! Convert a media type in string format into one of the value of

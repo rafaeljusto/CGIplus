@@ -53,6 +53,7 @@ public:
 		/*! List all types of request methods.
 		 */
 		enum Value {
+			UNDEFINED,
 			UNKNOWN,
 			CONNECT,
 			DELETE,
