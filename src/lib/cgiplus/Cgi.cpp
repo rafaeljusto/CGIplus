@@ -65,6 +65,11 @@ string Cgi::operator()(const string &key) const
 	return get(key, Source::COOKIE);
 }
 
+HttpHeader const* Cgi::operator->() const
+{
+	return &_httpHeader;
+}
+
 void Cgi::readInputs()
 {
 	clearInputs();
@@ -89,11 +94,6 @@ unsigned int Cgi::getNumberOfInputs() const
 unsigned int Cgi::getNumberOfCookies() const
 {
 	return _httpHeader.getCookies().size();
-}
-
-HttpHeader Cgi::getHttpHeader() const
-{
-	return _httpHeader;
 }
 
 string Cgi::getURI() const

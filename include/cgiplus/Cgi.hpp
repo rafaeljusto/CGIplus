@@ -82,6 +82,12 @@ public:
 	 */
 	string operator()(const string &key) const;
 
+	/*! Returns HTTP header fields.
+	 *
+	 * @return HTTP header fields
+	 */
+	HttpHeader const* operator->() const;
+
 	/*! Access all data types retrieved by the CGI. You can also convert
 	 * the data using a callback function.
 	 *
@@ -180,12 +186,6 @@ public:
 	 * @return Number of cookies parsed
 	 */
 	unsigned int getNumberOfCookies() const;
-
-	/*! Returns HTTP header fields.
-	 *
-	 * @return HTTP header fields
-	 */
-	HttpHeader getHttpHeader() const;
 
 	/*! Returns URI with parameters that can be used for restful applications.
 	 * @return URI

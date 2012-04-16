@@ -55,9 +55,8 @@ BOOST_AUTO_TEST_CASE(mustNotReplaceWhenThereIsNoKeyNoMatch)
 
 	Builder builder;
 	builder.setContent(form);
-	builder.setHttpHeader(HttpHeader()
-	                      .setContentType(MediaType::TEXT_HTML)
-	                      .addContentLanguage(Language::ENGLISH_US));
+	builder->setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 	
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
 		"Content-Length: 39" + HttpHeader::EOL +
@@ -71,9 +70,8 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 
 	Builder builder1;
 	builder1.setContent(form1);
-	builder1.setHttpHeader(HttpHeader()
-	                       .setContentType(MediaType::TEXT_HTML)
-	                       .addContentLanguage(Language::ENGLISH_US));
+	builder1->setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 	builder1["test"] = "This is a test.";
 
 	string content1 = "Content-Type: text/html" + HttpHeader::EOL +
@@ -87,9 +85,8 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 
 	Builder builder2;
 	builder2.setContent(form2);
-	builder2.setHttpHeader(HttpHeader()
-	                       .setContentType(MediaType::TEXT_HTML)
-	                       .addContentLanguage(Language::ENGLISH_US));
+	builder2->setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 	builder2["test1"] = "This is a test.";
 	builder2["test3"] = "Another test.";
 	builder2["test4"] = "Guess what? One more test!";
@@ -108,16 +105,15 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 
 	Builder builder;
 	builder.setContent(form);
-	builder.setHttpHeader(HttpHeader()
-	                      .setContentType(MediaType::TEXT_HTML)
-	                      .addContentLanguage(Language::ENGLISH_US)
-	                      .addCookie(Cookie()
-	                                 .setKey("key")
-	                                 .setValue("value")
-	                                 .setDomain("test.com.br")
-	                                 .setPath("/")
-	                                 .setSecure(true)
-	                                 .setHttpOnly(true)));
+	builder->setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US)
+		.addCookie(Cookie()
+		           .setKey("key")
+		           .setValue("value")
+		           .setDomain("test.com.br")
+		           .setPath("/")
+		           .setSecure(true)
+		           .setHttpOnly(true));
 		
 
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
@@ -137,9 +133,8 @@ BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 
 	Builder builder;
 	builder.setTemplateFile("template-file.tmp");
-	builder.setHttpHeader(HttpHeader()
-	                      .setContentType(MediaType::TEXT_HTML)
-	                      .addContentLanguage(Language::ENGLISH_US));
+	builder->setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 	builder["test"] = "test";
 
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
@@ -156,9 +151,8 @@ BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
 	Builder builder;
 	builder.setContent("Any form example");
 	builder.setTemplateFile("idontexist.tmp");
-	builder.setHttpHeader(HttpHeader()
-	                      .setContentType(MediaType::TEXT_HTML)
-	                      .addContentLanguage(Language::ENGLISH_US));
+	builder->setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 	builder["test"] = "test";
 
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
@@ -176,9 +170,8 @@ BOOST_AUTO_TEST_CASE(mustNotFlushOldDataWhenReused)
 	builder["test1"] = "This is a test.";
 
 	builder.setContent(form);
-	builder.setHttpHeader(HttpHeader()
-	                      .setContentType(MediaType::TEXT_HTML)
-	                      .addContentLanguage(Language::ENGLISH_US));
+	builder->setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 	builder["test2"] = "This is a test.";
 	builder["test3"] = "Another test.";
 	builder["test4"] = "Guess what? One more test!";
@@ -207,18 +200,16 @@ BOOST_AUTO_TEST_CASE(mustBuildRedirectCorrectly)
 		"Location: http://127.0.0.1" + HttpHeader::EOL + HttpHeader::EOL;
 
 	Builder builder;
-	BOOST_CHECK_EQUAL(builder
-	                  .setHttpHeader(HttpHeader().setLocation("http://127.0.0.1"))
-	                  .build(), redirection);
+	builder->setLocation("http://127.0.0.1");
+	BOOST_CHECK_EQUAL(builder.build(), redirection);
 }
 
 BOOST_AUTO_TEST_CASE(mustBuildStatusCorrectly)
 {
 	Builder builder;
-	builder.setHttpHeader(HttpHeader()
-	                      .setStatus(HttpHeader::Status::OK, "Test")
-	                      .setContentType(MediaType::TEXT_HTML)
-	                      .addContentLanguage(Language::ENGLISH_US));
+	builder->setStatus(HttpHeader::Status::OK, "Test")
+		.setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 
 	string content = "Status: 200 Test" + HttpHeader::EOL +
 		"Content-Type: text/html" + HttpHeader::EOL +
@@ -231,9 +222,8 @@ BOOST_AUTO_TEST_CASE(mustBuildStatusCorrectly)
 BOOST_AUTO_TEST_CASE(mustChangeFormat)
 {
 	Builder builder;
-	builder.setHttpHeader(HttpHeader()
-	                      .setContentType(MediaType::APPLICATION_JSON)
-	                      .addContentLanguage(Language::ENGLISH_US));
+	builder->setContentType(MediaType::APPLICATION_JSON)
+		.addContentLanguage(Language::ENGLISH_US);
 
 	string content = "Content-Type: application/json" + HttpHeader::EOL +
 		"Content-Length: 0" + HttpHeader::EOL +
@@ -245,9 +235,8 @@ BOOST_AUTO_TEST_CASE(mustChangeFormat)
 BOOST_AUTO_TEST_CASE(mustChangeLanguage)
 {
 	Builder builder;
-	builder.setHttpHeader(HttpHeader()
-	                      .addContentLanguage(Language::PORTUGUESE_BR)
-	                      .setContentType(MediaType::TEXT_HTML));
+	builder->addContentLanguage(Language::PORTUGUESE_BR)
+		.setContentType(MediaType::TEXT_HTML);
 
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
 		"Content-Length: 0" + HttpHeader::EOL +
@@ -259,10 +248,9 @@ BOOST_AUTO_TEST_CASE(mustChangeLanguage)
 BOOST_AUTO_TEST_CASE(mustSetEncoding)
 {
 	Builder builder;
-	builder.setHttpHeader(HttpHeader()
-	                      .setContentCharset(Charset::UTF8)
-	                      .setContentType(MediaType::TEXT_HTML)
-	                      .addContentLanguage(Language::ENGLISH_US));
+	builder->setContentCharset(Charset::UTF8)
+		.setContentType(MediaType::TEXT_HTML)
+		.addContentLanguage(Language::ENGLISH_US);
 
 	string content = "Content-Type: text/html; charset=utf-8" + HttpHeader::EOL +
 		"Content-Length: 0" + HttpHeader::EOL +

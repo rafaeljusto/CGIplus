@@ -104,18 +104,17 @@ BOOST_AUTO_TEST_CASE(mustDefineTheAccessMethod)
 	setenv("REQUEST_METHOD", "GeT", 1);
 
 	Cgi cgi;
-	BOOST_CHECK_EQUAL(cgi.getHttpHeader().getMethod(), HttpHeader::Method::GET);
+	BOOST_CHECK_EQUAL(cgi->getMethod(), HttpHeader::Method::GET);
 
 	setenv("REQUEST_METHOD", "POsT", 1);
 
 	Cgi cgi2;
-	BOOST_CHECK_EQUAL(cgi2.getHttpHeader().getMethod(), HttpHeader::Method::POST);
+	BOOST_CHECK_EQUAL(cgi2->getMethod(), HttpHeader::Method::POST);
 
 	setenv("REQUEST_METHOD", "ABC", 1);
 
 	Cgi cgi3;
-	BOOST_CHECK_EQUAL(cgi3.getHttpHeader().getMethod(), 
-	                  HttpHeader::Method::UNDEFINED);
+	BOOST_CHECK_EQUAL(cgi3->getMethod(), HttpHeader::Method::UNDEFINED);
 }
 
 BOOST_AUTO_TEST_CASE(mustParseDataSentViaPost)
@@ -255,10 +254,9 @@ BOOST_AUTO_TEST_CASE(mustParseAcceptField)
 
 	Cgi cgi;
 
-	BOOST_CHECK_EQUAL(cgi.getHttpHeader().getAccepts().size(), 1);
-	if (cgi.getHttpHeader().getAccepts().empty() == false) {
-		BOOST_CHECK_EQUAL(*cgi.getHttpHeader().getAccepts().begin(), 
-		                  MediaType::APPLICATION_JSON);
+	BOOST_CHECK_EQUAL(cgi->getAccepts().size(), 1);
+	if (cgi->getAccepts().empty() == false) {
+		BOOST_CHECK_EQUAL(*cgi->getAccepts().begin(), MediaType::APPLICATION_JSON);
 	}
 }
 
@@ -276,8 +274,7 @@ BOOST_AUTO_TEST_CASE(mustParseLanguageField) {
 
 	Cgi cgi;
 
-	std::set<Language::Value> languages = 
-		cgi.getHttpHeader().getContentLanguages();
+	std::set<Language::Value> languages = cgi->getContentLanguages();
 	BOOST_CHECK_EQUAL(languages.size(), 2);
 
 	if (languages.empty() == false) {
@@ -292,8 +289,7 @@ BOOST_AUTO_TEST_CASE(mustParseResponseLanguageField) {
 
 	Cgi cgi;
 
-	std::vector<Language::Value> languages = 
-		cgi.getHttpHeader().getAcceptLanguages();
+	std::vector<Language::Value> languages = cgi->getAcceptLanguages();
 	BOOST_CHECK_EQUAL(languages.size(), 3);
 
 	if (languages.empty() == false) {
@@ -315,8 +311,7 @@ BOOST_AUTO_TEST_CASE(mustRespectResponseLanguageQuality) {
 
 	Cgi cgi;
 
-	std::vector<Language::Value> languages = 
-		cgi.getHttpHeader().getAcceptLanguages();
+	std::vector<Language::Value> languages = cgi->getAcceptLanguages();
 	BOOST_CHECK_EQUAL(languages.size(), 3);
 
 	if (languages.empty() == false) {
@@ -331,7 +326,7 @@ BOOST_AUTO_TEST_CASE(mustParseEncoding) {
 
 	Cgi cgi;
 
-	BOOST_CHECK_EQUAL(cgi.getHttpHeader().getContentCharset(), Charset::UTF8);
+	BOOST_CHECK_EQUAL(cgi->getContentCharset(), Charset::UTF8);
 }
 
 BOOST_AUTO_TEST_CASE(mustParseResponseEncoding) {
@@ -339,8 +334,7 @@ BOOST_AUTO_TEST_CASE(mustParseResponseEncoding) {
 
 	Cgi cgi;
 
-	std::vector<Charset::Value> encodings = 
-		cgi.getHttpHeader().getAcceptCharsets();
+	std::vector<Charset::Value> encodings = cgi->getAcceptCharsets();
 	BOOST_CHECK_EQUAL(encodings.size(), 2);
 
 	if (encodings.empty() == false) {
@@ -358,8 +352,7 @@ BOOST_AUTO_TEST_CASE(mustRespectResponseEncodingQuality) {
 
 	Cgi cgi;
 
-	std::vector<Charset::Value> encodings = 
-		cgi.getHttpHeader().getAcceptCharsets();
+	std::vector<Charset::Value> encodings = cgi->getAcceptCharsets();
 	BOOST_CHECK_EQUAL(encodings.size(), 3);
 
 	if (encodings.empty() == false) {

@@ -60,6 +60,12 @@ public:
 	 */
 	Builder& operator<<(const string &content);
 
+	/*! Set HTTP header fields
+	 *
+	 * @return HTTP header object
+	 */
+	HttpHeader* operator->();
+
 	/*! Parse the given template replacing all tags with the given keys/values.
 	 *
 	 * @return Parsed template file already with html header
@@ -70,13 +76,6 @@ public:
 	 * standart output.
 	 */
 	void show() const;
-
-	/*! Set HTTP header fields
-	 *
-	 * @param httpHeader HTTP header object
-	 * @return The current builder object
-	 */
-	Builder& setHttpHeader(const HttpHeader &httpHeader);
 
 	/*! Sets template content. By default is empty.
 	 *

@@ -46,6 +46,11 @@ Builder& Builder::operator<<(const string &content)
 	return *this;
 }
 
+HttpHeader* Builder::operator->()
+{
+	return &_httpHeader;
+}
+
 string Builder::build() const
 {
 	string content = _content;
@@ -60,12 +65,6 @@ string Builder::build() const
 void Builder::show() const
 {
 	std::cout << build() << std::endl;
-}
-
-Builder& Builder::setHttpHeader(const HttpHeader &httpHeader)
-{
-	_httpHeader = httpHeader;
-	return *this;
 }
 
 Builder& Builder::setContent(const string &content)
