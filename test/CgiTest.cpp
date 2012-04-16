@@ -29,12 +29,14 @@
 #include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Cgi.hpp>
-#include <cgiplus/Encoding.hpp>
+#include <cgiplus/Charset.hpp>
+#include <cgiplus/HttpHeader.hpp>
 #include <cgiplus/Language.hpp>
 #include <cgiplus/MediaType.hpp>
 
 using cgiplus::Cgi;
-using cgiplus::Encoding;
+using cgiplus::Charset;
+using cgiplus::HttpHeader;
 using cgiplus::Language;
 using cgiplus::MediaType;
 
@@ -102,17 +104,18 @@ BOOST_AUTO_TEST_CASE(mustDefineTheAccessMethod)
 	setenv("REQUEST_METHOD", "GeT", 1);
 
 	Cgi cgi;
-	BOOST_CHECK_EQUAL(cgi.getMethod(), Cgi::Method::GET);
+	BOOST_CHECK_EQUAL(cgi.getHttpHeader().getMethod(), HttpHeader::Method::GET);
 
 	setenv("REQUEST_METHOD", "POsT", 1);
 
 	Cgi cgi2;
-	BOOST_CHECK_EQUAL(cgi2.getMethod(), Cgi::Method::POST);
+	BOOST_CHECK_EQUAL(cgi2.getHttpHeader().getMethod(), HttpHeader::Method::POST);
 
 	setenv("REQUEST_METHOD", "ABC", 1);
 
 	Cgi cgi3;
-	BOOST_CHECK_EQUAL(cgi3.getMethod(), Cgi::Method::UNKNOWN);
+	BOOST_CHECK_EQUAL(cgi3.getHttpHeader().getMethod(), 
+	                  HttpHeader::Method::UNDEFINED);
 }
 
 BOOST_AUTO_TEST_CASE(mustParseDataSentViaPost)
@@ -252,9 +255,9 @@ BOOST_AUTO_TEST_CASE(mustParseAcceptField)
 
 	Cgi cgi;
 
-	BOOST_CHECK_EQUAL(cgi.getResponseFormats().size(), 1);
-	if (cgi.getResponseFormats().empty() == false) {
-		BOOST_CHECK_EQUAL(*cgi.getResponseFormats().begin(), 
+	BOOST_CHECK_EQUAL(cgi.getHttpHeader().getAccepts().size(), 1);
+	if (cgi.getHttpHeader().getAccepts().empty() == false) {
+		BOOST_CHECK_EQUAL(*cgi.getHttpHeader().getAccepts().begin(), 
 		                  MediaType::APPLICATION_JSON);
 	}
 }
@@ -273,7 +276,8 @@ BOOST_AUTO_TEST_CASE(mustParseLanguageField) {
 
 	Cgi cgi;
 
-	std::set<Language::Value> languages = cgi.getLanguages();
+	std::set<Language::Value> languages = 
+		cgi.getHttpHeader().getContentLanguages();
 	BOOST_CHECK_EQUAL(languages.size(), 2);
 
 	if (languages.empty() == false) {
@@ -288,7 +292,8 @@ BOOST_AUTO_TEST_CASE(mustParseResponseLanguageField) {
 
 	Cgi cgi;
 
-	std::vector<Language::Value> languages = cgi.getResponseLanguages();
+	std::vector<Language::Value> languages = 
+		cgi.getHttpHeader().getAcceptLanguages();
 	BOOST_CHECK_EQUAL(languages.size(), 3);
 
 	if (languages.empty() == false) {
@@ -310,7 +315,8 @@ BOOST_AUTO_TEST_CASE(mustRespectResponseLanguageQuality) {
 
 	Cgi cgi;
 
-	std::vector<Language::Value> languages = cgi.getResponseLanguages();
+	std::vector<Language::Value> languages = 
+		cgi.getHttpHeader().getAcceptLanguages();
 	BOOST_CHECK_EQUAL(languages.size(), 3);
 
 	if (languages.empty() == false) {
@@ -325,7 +331,7 @@ BOOST_AUTO_TEST_CASE(mustParseEncoding) {
 
 	Cgi cgi;
 
-	BOOST_CHECK_EQUAL(cgi.getEncoding(), Encoding::UTF8);
+	BOOST_CHECK_EQUAL(cgi.getHttpHeader().getContentCharset(), Charset::UTF8);
 }
 
 BOOST_AUTO_TEST_CASE(mustParseResponseEncoding) {
@@ -333,16 +339,17 @@ BOOST_AUTO_TEST_CASE(mustParseResponseEncoding) {
 
 	Cgi cgi;
 
-	std::vector<Encoding::Value> encodings = cgi.getResponseEncodings();
+	std::vector<Charset::Value> encodings = 
+		cgi.getHttpHeader().getAcceptCharsets();
 	BOOST_CHECK_EQUAL(encodings.size(), 2);
 
 	if (encodings.empty() == false) {
 		BOOST_CHECK(std::find(encodings.begin(), 
 		                      encodings.end(), 
-		                      Encoding::UTF8) != encodings.end());
+		                      Charset::UTF8) != encodings.end());
 		BOOST_CHECK(std::find(encodings.begin(), 
 		                      encodings.end(), 
-		                      Encoding::ISO88591) != encodings.end());
+		                      Charset::ISO88591) != encodings.end());
 	}
 }
 
@@ -351,13 +358,14 @@ BOOST_AUTO_TEST_CASE(mustRespectResponseEncodingQuality) {
 
 	Cgi cgi;
 
-	std::vector<Encoding::Value> encodings = cgi.getResponseEncodings();
+	std::vector<Charset::Value> encodings = 
+		cgi.getHttpHeader().getAcceptCharsets();
 	BOOST_CHECK_EQUAL(encodings.size(), 3);
 
 	if (encodings.empty() == false) {
-		BOOST_CHECK_EQUAL(encodings[0], Encoding::ISO88591);
-		BOOST_CHECK_EQUAL(encodings[1], Encoding::UTF8);
-		BOOST_CHECK_EQUAL(encodings[2], Encoding::UTF16);
+		BOOST_CHECK_EQUAL(encodings[0], Charset::ISO88591);
+		BOOST_CHECK_EQUAL(encodings[1], Charset::UTF8);
+		BOOST_CHECK_EQUAL(encodings[2], Charset::UTF16);
 	}
 }
 

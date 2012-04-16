@@ -67,74 +67,38 @@ MediaType::Value MediaType::detect(const string &value)
 	}
 }
 
-string MediaType::toString(const Value value, const bool withLabel)
+string MediaType::toString(const Value value)
 {
-	string valueToString("");
-
-	if (withLabel) {
-		valueToString = "Content-Type: ";
-	}
-
 	switch(value) {
 	case UNDEFINED:
 		break;
 	case ANY:
-		valueToString += "*/*";
-		break;
+		return "*/*";
 	case APPLICATION_ANY:
-		valueToString += "application/*";
-		break;
+		return "application/*";
 	case APPLICATION_JSON:
-		valueToString += "application/json";
-		break;
+		return "application/json";
 	case APPLICATION_XML:
-		valueToString += "application/xml";
-		break;
+		return "application/xml";
 	case APPLICATION_X_WWW_FORM_URL_ENCODED:
-		valueToString += "application/x-www-form-urlencoded";
-		break;
+		return "application/x-www-form-urlencoded";
 	case MULTIPART_ANY:
-		valueToString += "multipart/*";
-		break;
+		return "multipart/*";
 	case MULTIPART_FORM_DATA:
-		valueToString += "multipart/form-data";
-		break;
+		return "multipart/form-data";
 	case TEXT_ANY:
-		valueToString += "text/*";
-		break;
+		return "text/*";
 	case TEXT_HTML:
-		valueToString += "text/html";
-		break;
+		return "text/html";
 	case TEXT_PLAIN:
-		valueToString += "text/plain";
-		break;
+		return "text/plain";
 	case TEXT_XML:
-		valueToString += "text/xml";
-		break;
+		return "text/xml";
 	case UNKNOWN:
 		break;
 	}
 
-	return valueToString;
-}
-
-string MediaType::toString(const std::set<Value> values, const bool withLabel)
-{
-	string valueToString("");
-
-	if (withLabel) {
-		valueToString = "Accept: ";
-	}
-
-	for (Value value : values) {
-		valueToString += toString(value) + ",";
-	}
-
-	if (values.empty() == false) {
-		valueToString = valueToString.substr(0, valueToString.size() - 1);
-	}
-
-	return valueToString;
+	return "";
 }
 
 CGIPLUS_NS_END

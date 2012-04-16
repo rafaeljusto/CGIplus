@@ -55,79 +55,28 @@ Language::Value Language::detect(const string &value)
 	}
 }
 
-string Language::toString(const Value value, const bool withLabel)
+string Language::toString(const Value value)
 {
-	string valueToString("");
-
-	if (withLabel) {
-		valueToString = "Content-Language: ";
-	}
-
 	switch(value) {
 	case ANY:
-		valueToString += "*";
-		break;
+		return "*";
 	case ENGLISH_ANY:
-		valueToString += "en";
-		break;
+		return "en";
 	case ENGLISH_GB:
-		valueToString += "en-GB";
-		break;
+		return "en-GB";
 	case ENGLISH_US:
-		valueToString += "en-US";
-		break;
+		return "en-US";
 	case PORTUGUESE_ANY:
-		valueToString += "pt";
-		break;
+		return "pt";
 	case PORTUGUESE_BR:
-		valueToString += "pt-BR";
-		break;
+		return "pt-BR";
 	case PORTUGUESE_PT:
-		valueToString += "pt-PT";
-		break;
+		return "pt-PT";
 	case UNKNOWN:
 		break;
 	}
 
-	return valueToString;
-}
-
-string Language::toString(const std::set<Value> values, const bool withLabel)
-{
-	string valueToString("");
-
-	if (withLabel) {
-		valueToString = "Content-Language: ";
-	}
-
-	for (Value value : values) {
-		valueToString += toString(value) + ",";
-	}
-
-	if (values.empty() == false) {
-		valueToString = valueToString.substr(0, valueToString.size() - 1);
-	}
-
-	return valueToString;
-}
-
-string Language::toString(const std::vector<Value> values, const bool withLabel)
-{
-	string valueToString("");
-
-	if (withLabel) {
-		valueToString = "Accept-Language: ";
-	}
-
-	for (Value value : values) {
-		valueToString += toString(value) + ",";
-	}
-
-	if (values.empty() == false) {
-		valueToString = valueToString.substr(0, valueToString.size() - 1);
-	}
-
-	return valueToString;
+	return "";
 }
 
 bool Language::isEnglish(const Value value)

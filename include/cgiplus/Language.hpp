@@ -57,34 +57,12 @@ public:
 	 */
 	static Value detect(const string &value);
 
-	/*! Convert language value into a string, in http header compliance
-	 * (if requested)
+	/*! Convert language value into a string
 	 *
 	 * @param value Language::Value
-	 * @param withLabel Add HTTP header label
 	 * @return Language type in http header string representation
 	 */
-	static string toString(const Value value, const bool withLabel = false);
-
-	/*! Convert language values into a string, in http header compliance
-	 * (if requested)
-	 *
-	 * @param values List of Language::Value
-	 * @param withLabel Add HTTP header label
-	 * @return Language types in http header string representation
-	 */
-	static string toString(const std::set<Value> values, 
-	                       const bool withLabel = false);
-
-	/*! Convert language values into a string, in http header compliance
-	 * (if requested)
-	 *
-	 * @param values List of Language::Value
-	 * @param withLabel Add HTTP header label
-	 * @return Language types in http header string representation
-	 */
-	static string toString(const std::vector<Value> values, 
-	                       const bool withLabel = false);
+	static string toString(const Value value);
 
 	/*! Faster whay to check if the language is english, any language value
 	 * defaults to english.

@@ -23,31 +23,15 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Builder.hpp>
 #include <cgiplus/Cookie.hpp>
 
 CGIPLUS_NS_BEGIN
 
-string Builder::EOL("\r\n");
-
-string Builder::Status::toString(const Value value, const string &message)
-{
-	if (value == UNDEFINED) {
-		return string("");
-	}
-
-	return "Status: " + boost::lexical_cast<string>(value) + " " + message + EOL;
-}
-
 Builder::Builder() :
-	_form(""),
-	_tags("<!-- ", " -->"),
-	_status(Status::UNDEFINED, ""),
-	_format(MediaType::TEXT_HTML),
-	_encoding(Encoding::UNDEFINED),
-	_language(Language::ENGLISH_US)
+	_content(""),
+	_tags("<!-- ", " -->")
 {
 }
 
@@ -56,58 +40,21 @@ string& Builder::operator[](const string &key)
 	return _fields[key];
 }
 
-Cookie& Builder::operator()(const string &key)
-{
-	auto cookieIt = _cookies.find(key);
-	if (cookieIt != _cookies.end()) {
-		return cookieIt->second;
-	}
-
-	Cookie cookie;
-	cookie.setKey(key);
-	_cookies[key] = cookie;
-
-	return _cookies[key];
-}
-
 Builder& Builder::operator<<(const string &content)
 {
-	_form += content;
+	_content += content;
 	return *this;
 }
 
 string Builder::build() const
 {
-	// Content
-
-	string content = _form;
+	string content = _content;
 	for (auto field: _fields) {
 		string key  = _tags.first + field.first + _tags.second;
 		boost::replace_all(content, key, field.second);
 	}
 
-	// Header
-
-	string contentLength = "Content-Length: " +
-		boost::lexical_cast<string>(content.size());
-
-	string header = Status::toString(_status.first, _status.second) +
-		MediaType::toString(_format, true);
-
-	if (_encoding != Encoding::UNDEFINED) {
-		header += "; " + Encoding::toString(_encoding, true);
-	}
-
-	header += EOL + contentLength + EOL + 
-		Language::toString(_language, true) + EOL;
-
-	for (auto cookie: _cookies) {
-		header += cookie.second.build() + EOL;
-	}
-
-	header += EOL;
-
-	return header + content;
+	return _httpHeader.toString(content.size()) + content;
 }
 
 void Builder::show() const
@@ -115,21 +62,27 @@ void Builder::show() const
 	std::cout << build() << std::endl;
 }
 
-Builder& Builder::setForm(const string &form)
+Builder& Builder::setHttpHeader(const HttpHeader &httpHeader)
 {
-	_form = form;
+	_httpHeader = httpHeader;
 	return *this;
 }
 
-Builder& Builder::setFormFile(const string &formFile)
+Builder& Builder::setContent(const string &content)
 {
-	_form.clear();
+	_content = content;
+	return *this;
+}
 
-	std::ifstream fileStream(formFile.c_str());
+Builder& Builder::setTemplateFile(const string &templateFile)
+{
+	_content.clear();
+
+	std::ifstream fileStream(templateFile.c_str());
 	if (fileStream.good()) {
 		std::stringstream contentStream;
 		contentStream << fileStream.rdbuf();
-		_form = contentStream.str();
+		_content = contentStream.str();
 	}
 
 	return *this;
@@ -138,30 +91,6 @@ Builder& Builder::setFormFile(const string &formFile)
 Builder& Builder::setTags(const std::pair<string, string> &tags)
 {
 	_tags = tags;
-	return *this;
-}
-
-Builder& Builder::setStatus(const Status::Value status, const string &message)
-{
-	_status = std::make_pair(status, message);
-	return *this;
-}
-
-Builder& Builder::setFormat(const MediaType::Value format)
-{
-	_format = format;
-	return *this;
-}
-
-Builder& Builder::setEncoding(const Encoding::Value encoding)
-{
-	_encoding = encoding;
-	return *this;
-}
-
-Builder& Builder::setLanguage(const Language::Value language)
-{
-	_language = language;
 	return *this;
 }
 
@@ -180,14 +109,8 @@ Builder& Builder::clearFields()
 
 Builder& Builder::clearCookies()
 {
-	_cookies.clear();
+	_httpHeader.getCookies().clear();
 	return *this;
-}
-
-string Builder::redirect(const string &url)
-{
-	string header = "Location: " + url + EOL + EOL;
-	return header;
 }
 
 CGIPLUS_NS_END

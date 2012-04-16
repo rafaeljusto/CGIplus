@@ -74,12 +74,24 @@ public:
 	 */
 	Cookie& setKey(const string &key);
 
+	/*! Returns cookie's key
+	 *
+	 * @return Cookie's key
+	 */
+	string getKey() const;
+
 	/*! Sets cookie's value. By default is empty.
 	 *
 	 * @param value Cookie's value
 	 * @return Reference to the current object, allowing easy usability
 	 */
 	Cookie& setValue(const string &value);
+
+	/*! Returns cookie's value
+	 *
+	 * @return Cookie's value
+	 */
+	string getValue() const;
 
 	/*! Sets cookie's Secure flag (RFC 6265 - Section 4.1.2.5). By default is
 	 * false.

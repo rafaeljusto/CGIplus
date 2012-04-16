@@ -20,25 +20,25 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include <cgiplus/Encoding.hpp>
+#include <cgiplus/Charset.hpp>
 
 CGIPLUS_NS_BEGIN
 
-Encoding::Value Encoding::detect(const string &value)
+Charset::Value Charset::detect(const string &value)
 {
-	string encoding = boost::algorithm::to_lower_copy(value);
-	boost::trim(encoding);
+	string charset = boost::algorithm::to_lower_copy(value);
+	boost::trim(charset);
 
-	if (encoding == "utf-8") {
+	if (charset == "utf-8") {
 		return UTF8;
 	
-	} else if (encoding == "utf-16") {
+	} else if (charset == "utf-16") {
 		return UTF16;
 	
-	} else if (encoding == "utf-32") {
+	} else if (charset == "utf-32") {
 		return UTF32;
 	
-	} else if (encoding == "iso-8859-1") {
+	} else if (charset == "iso-8859-1") {
 		return ISO88591;
 	
 	} else {
@@ -46,53 +46,24 @@ Encoding::Value Encoding::detect(const string &value)
 	}
 }
 
-string Encoding::toString(const Value value, const bool withLabel)
+string Charset::toString(const Value value)
 {
-	string valueToString("");
-	
-	if (withLabel) {
-		valueToString = "charset=";
-	}
-
 	switch(value) {
 	case UNDEFINED:
 		break;
 	case UTF8:
-		valueToString += "utf-8";
-		break;
+		return "utf-8";
 	case UTF16:
-		valueToString += "utf-16";
-		break;
+		return "utf-16";
 	case UTF32:
-		valueToString += "utf-32";
-		break;
+		return "utf-32";
 	case ISO88591:
-		valueToString += "iso-8859-1";
-		break;
+		return "iso-8859-1";
 	case UNKNOWN:
 		break;
 	}
 
-	return valueToString;
-}
-
-string Encoding::toString(const std::vector<Value> values, const bool withLabel)
-{
-	string valueToString("");
-
-	if (withLabel) {
-		valueToString = "Accept-Charset: ";
-	}
-
-	for (Value value : values) {
-		valueToString += toString(value) + ",";
-	}
-
-	if (values.empty() == false) {
-		valueToString = valueToString.substr(0, valueToString.size() - 1);
-	}
-
-	return valueToString;
+	return "";
 }
 
 CGIPLUS_NS_END

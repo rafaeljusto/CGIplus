@@ -17,8 +17,8 @@
   along with CGIplus.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __CGIPLUS_ENCODING_HPP__
-#define __CGIPLUS_ENCODING_HPP__
+#ifndef __CGIPLUS_CHARSET_HPP__
+#define __CGIPLUS_CHARSET_HPP__
 
 #include <string>
 #include <vector>
@@ -29,10 +29,10 @@ using std::string;
 
 CGIPLUS_NS_BEGIN
 
-/*! \class Encoding
+/*! \class Charset
  *  \brief Represents all supported encodings.
  */
-class Encoding
+class Charset
 {
 public:
 	/*! List all types of encodings supported by Cgi.
@@ -54,26 +54,14 @@ public:
 	 */
 	static Value detect(const string &value);
 
-	/*! Convert enconding value into a string, in http header compliance
-	 * (if requested)
+	/*! Convert enconding value into a string
 	 *
 	 * @param value Language::Value
-	 * @param withLabel Add HTTP header label
 	 * @return Language type in http header string representation
 	 */
-	static string toString(const Value value, const bool withLabel = false);
-
-	/*! Convert enconding values into a string, in http header
-	 * compliance (if requested)
-	 *
-	 * @param values List of Language::Value
-	 * @param withLabel Add HTTP header label
-	 * @return Language types in http header string representation
-	 */
-	static string toString(const std::vector<Value> values, 
-	                       const bool withLabel = false);
+	static string toString(const Value value);
 };
 
 CGIPLUS_NS_END
 
-#endif // __CGIPLUS_ENCODING_HPP__
+#endif // __CGIPLUS_CHARSET_HPP__

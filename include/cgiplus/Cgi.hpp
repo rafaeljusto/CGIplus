@@ -22,15 +22,11 @@
 
 #include <map>
 #include <string>
-#include <set>
-#include <vector>
 
 #include <boost/lexical_cast.hpp>
 
 #include "Cgiplus.hpp"
-#include "Encoding.hpp"
-#include "Language.hpp"
-#include "MediaType.hpp"
+#include "HttpHeader.hpp"
 
 using std::string;
 
@@ -44,29 +40,6 @@ CGIPLUS_NS_BEGIN
 class Cgi
 {
 public:
-	/*! \class Method
-	 *  \brief Represents a request method.
-	 */
-	class Method
-	{
-	public:
-		/*! List all types of request methods.
-		 */
-		enum Value {
-			UNDEFINED,
-			UNKNOWN,
-			CONNECT,
-			DELETE,
-			HEAD,
-			GET,
-			OPTIONS,
-			PATCH,
-			POST,
-			PUT,
-			TRACE
-		};
-	};
-
 	/*! \class Source
 	 *  \brief Represents the different data types stored in Cgi.
 	 */
@@ -136,9 +109,10 @@ public:
 			}
 
 		} else if (source == Source::COOKIE) {
-			auto cookie = _cookies.find(key);
-			if (cookie != _cookies.end()) {
-				value = converter(cookie->second);
+			const std::map<string, Cookie> cookies = _httpHeader.getCookies();
+			auto cookie = cookies.find(key);
+			if (cookie != cookies.end()) {
+				value = converter(cookie->second.getValue());
 			}
 
 		} else if (source == Source::FILE) {
@@ -169,7 +143,13 @@ public:
 		case Source::FIELD:
 			return converter(_inputs);
 		case Source::COOKIE:
-			return converter(_cookies);
+			{
+				std::map<string, string> cookies;
+				for (std::pair<string, Cookie> cookie : _httpHeader.getCookies()) {
+					cookies[cookie.first] = cookie.second.getValue();
+				}
+				return converter(cookies);
+			}
 		case Source::FILE:
 			return converter(_files);
 		};
@@ -189,54 +169,23 @@ public:
 	 */
 	void readInputs();
 
-	/*! Returns the request type related to REQUEST_METHOD enviroment
-	 * variable. Possible types are defined in Cgi::Method::Value.
-	 *
-	 * @return Request type
-	 */
-	Method::Value getMethod() const;
-
-	/*! Returns the encoding of the request
-	 */
-	Encoding::Value getEncoding() const;
-
 	/*! Returns the number of fields parsed. Usefull for testing.
 	 *
 	 * @return Number of fields parsed
 	 */
 	unsigned int getNumberOfInputs() const;
 
-	/*! Returns the request languages.
-	 *
-	 * @return List of languages of the request
-	 */
-	std::set<Language::Value> getLanguages() const;
-
-	/*! Returns client supported response formats.
-	 *
-	 * @return List of media types that the client support
-	 */
-	std::set<MediaType::Value> getResponseFormats() const;
-
-	/*! Returns client supported response languages.
-	 *
-	 * @return List of languages that the client support ordered by
-	 * preference
-	 */
-	std::vector<Language::Value> getResponseLanguages() const;
-
-	/*! Returns client supported response encodings.
-	 *
-	 * @return List of encodings that the client support ordered by
-	 * preference
-	 */
-	std::vector<Encoding::Value> getResponseEncodings() const;
-
 	/*! Returns the number of cookies parsed. Usefull for testing.
 	 *
 	 * @return Number of cookies parsed
 	 */
 	unsigned int getNumberOfCookies() const;
+
+	/*! Returns HTTP header fields.
+	 *
+	 * @return HTTP header fields
+	 */
+	HttpHeader getHttpHeader() const;
 
 	/*! Returns URI with parameters that can be used for restful applications.
 	 * @return URI
@@ -253,14 +202,14 @@ public:
 private:
 	void clearInputs();
 	void readMethod();
-	void readType();
+	void readContentType();
 	void readQueryStringInputs();
 	void readContentInputs();
 	unsigned int readContentSize() const;
-	void readLanguages();
-	void readResponseFormats();
-	void readResponseLanguages();
-	void readResponseEncodings();
+	void readContentLanguages();
+	void readAccepts();
+	void readAcceptLanguages();
+	void readAcceptCharsets();
 	void readCookies();
 	void readURI();
 	void readRemoteAddress();
@@ -274,16 +223,8 @@ private:
 	string hexadecimalToText(const string &hexadecimal);
 	void removeDangerousHtmlCharacters(string &inputs);
 
-	Method::Value _method;
-	MediaType::Value _type;
-	Encoding::Value _encoding;
-	string _boundary;
+	HttpHeader _httpHeader;
 	std::map<string, string> _inputs;
-	std::set<Language::Value> _languages;
-	std::set<MediaType::Value> _responseFormats;
-	std::vector<Language::Value> _responseLanguages;
-	std::vector<Encoding::Value> _responseEncodings;
-	std::map<string, string> _cookies;
 	std::map<string, string> _files;
 	string _uri;
 	string _remoteAddress;

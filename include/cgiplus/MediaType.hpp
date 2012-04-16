@@ -61,24 +61,12 @@ public:
 	 */
 	static Value detect(const string &value);
 
-	/*! Convert media type value into a string, in http header
-	 * compliance (if requested)
+	/*! Convert media type value into a string
 	 *
 	 * @param value MediaType::Value
-	 * @param withLabel Add HTTP header label
 	 * @return Media type in http header string representation
 	 */
-	static string toString(const Value value, const bool withLabel = false);
-
-	/*! Convert media type values into a string, in http header
-	 * compliance (if requested)
-	 *
-	 * @param values List of MediaType::Value
-	 * @param withLabel Add HTTP header label
-	 * @return Media types in http header string representation
-	 */
-	static string toString(const std::set<Value> values, 
-	                       const bool withLabel = false);
+	static string toString(const Value value);
 };
 
 CGIPLUS_NS_END

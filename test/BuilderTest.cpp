@@ -23,16 +23,18 @@
 #include <boost/lexical_cast.hpp>
 
 #include <cgiplus/Builder.hpp>
+#include <cgiplus/Charset.hpp>
 #include <cgiplus/Cookie.hpp>
-#include <cgiplus/Encoding.hpp>
+#include <cgiplus/HttpHeader.hpp>
 #include <cgiplus/Language.hpp>
 #include <cgiplus/MediaType.hpp>
 
 using boost::lexical_cast;
 
 using cgiplus::Builder;
+using cgiplus::Charset;
 using cgiplus::Cookie;
-using cgiplus::Encoding;
+using cgiplus::HttpHeader;
 using cgiplus::Language;
 using cgiplus::MediaType;
 
@@ -52,11 +54,14 @@ BOOST_AUTO_TEST_CASE(mustNotReplaceWhenThereIsNoKeyNoMatch)
 	string form = "<html><body><!-- test --></body></html>";
 
 	Builder builder;
-	builder.setForm(form);
-
-	string content = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 39" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL + form;
+	builder.setContent(form);
+	builder.setHttpHeader(HttpHeader()
+	                      .setContentType(MediaType::TEXT_HTML)
+	                      .addContentLanguage(Language::ENGLISH_US));
+	
+	string content = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 39" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL + form;
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
@@ -65,12 +70,15 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 	string form1 = "<html><body><!-- test --></body></html>";
 
 	Builder builder1;
-	builder1.setForm(form1);
+	builder1.setContent(form1);
+	builder1.setHttpHeader(HttpHeader()
+	                       .setContentType(MediaType::TEXT_HTML)
+	                       .addContentLanguage(Language::ENGLISH_US));
 	builder1["test"] = "This is a test.";
 
-	string content1 = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 41" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL +
+	string content1 = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 41" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL +
 		"<html><body>This is a test.</body></html>";
 	BOOST_CHECK_EQUAL(builder1.build(), content1);
 
@@ -78,14 +86,17 @@ BOOST_AUTO_TEST_CASE(mustReplaceWhenThereIsAKeyMatch)
 		"<!-- test3 --> <!-- test4 --></body></html>";
 
 	Builder builder2;
-	builder2.setForm(form2);
+	builder2.setContent(form2);
+	builder2.setHttpHeader(HttpHeader()
+	                       .setContentType(MediaType::TEXT_HTML)
+	                       .addContentLanguage(Language::ENGLISH_US));
 	builder2["test1"] = "This is a test.";
 	builder2["test3"] = "Another test.";
 	builder2["test4"] = "Guess what? One more test!";
 
-	string content2 = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 97" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL +
+	string content2 = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 97" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL +
 		"<html><body>This is a test. <!-- test2 --> Another test. "
 		"Guess what? One more test!</body></html>";
 	BOOST_CHECK_EQUAL(builder2.build(), content2);
@@ -96,20 +107,24 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 	string form = "<html><body>Test</body></html>";
 
 	Builder builder;
-	builder.setForm(form);
+	builder.setContent(form);
+	builder.setHttpHeader(HttpHeader()
+	                      .setContentType(MediaType::TEXT_HTML)
+	                      .addContentLanguage(Language::ENGLISH_US)
+	                      .addCookie(Cookie()
+	                                 .setKey("key")
+	                                 .setValue("value")
+	                                 .setDomain("test.com.br")
+	                                 .setPath("/")
+	                                 .setSecure(true)
+	                                 .setHttpOnly(true)));
+		
 
-	builder("key")
-		.setValue("value")
-		.setDomain("test.com.br")
-		.setPath("/")
-		.setSecure(true)
-		.setHttpOnly(true);
-
-	string content = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 30" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL +
+	string content = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 30" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL +
 		"Set-Cookie: key=value; Domain=test.com.br; Path=/; Secure; httponly; " + 
-		Builder::EOL + Builder::EOL +
+		HttpHeader::EOL + HttpHeader::EOL +
 		"<html><body>Test</body></html>";
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
@@ -121,12 +136,15 @@ BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 	templateFile.close();
 
 	Builder builder;
-	builder.setFormFile("template-file.tmp");
+	builder.setTemplateFile("template-file.tmp");
+	builder.setHttpHeader(HttpHeader()
+	                      .setContentType(MediaType::TEXT_HTML)
+	                      .addContentLanguage(Language::ENGLISH_US));
 	builder["test"] = "test";
 
-	string content = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 14" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL +
+	string content = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 14" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL +
 		"This is a test";
 	BOOST_CHECK_EQUAL(builder.build(), content);
 
@@ -136,13 +154,16 @@ BOOST_AUTO_TEST_CASE(mustLoadATemplateFileCorrectly)
 BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
 {
 	Builder builder;
-	builder.setForm("Any form example");
-	builder.setFormFile("idontexist.tmp");
+	builder.setContent("Any form example");
+	builder.setTemplateFile("idontexist.tmp");
+	builder.setHttpHeader(HttpHeader()
+	                      .setContentType(MediaType::TEXT_HTML)
+	                      .addContentLanguage(Language::ENGLISH_US));
 	builder["test"] = "test";
 
-	string content = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 0" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL;
+	string content = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 0" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
 
@@ -154,14 +175,17 @@ BOOST_AUTO_TEST_CASE(mustNotFlushOldDataWhenReused)
 	Builder builder;
 	builder["test1"] = "This is a test.";
 
-	builder.setForm(form);
+	builder.setContent(form);
+	builder.setHttpHeader(HttpHeader()
+	                      .setContentType(MediaType::TEXT_HTML)
+	                      .addContentLanguage(Language::ENGLISH_US));
 	builder["test2"] = "This is a test.";
 	builder["test3"] = "Another test.";
 	builder["test4"] = "Guess what? One more test!";
 
-	string content = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 98" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL +
+	string content = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 98" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL +
 		"<html><body>This is a test. This is a test. Another test. "
 		"Guess what? One more test!</body></html>";
 
@@ -170,7 +194,7 @@ BOOST_AUTO_TEST_CASE(mustNotFlushOldDataWhenReused)
 	std::ofstream templateFile("template-file.tmp");
 	templateFile << form;
 	templateFile.close();
-	builder.setFormFile("template-file.tmp");
+	builder.setTemplateFile("template-file.tmp");
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
 
@@ -180,21 +204,26 @@ BOOST_AUTO_TEST_CASE(mustNotFlushOldDataWhenReused)
 BOOST_AUTO_TEST_CASE(mustBuildRedirectCorrectly)
 {
 	string redirection = 
-		"Location: http://127.0.0.1" + Builder::EOL + Builder::EOL;
+		"Location: http://127.0.0.1" + HttpHeader::EOL + HttpHeader::EOL;
 
 	Builder builder;
-	BOOST_CHECK_EQUAL(builder.redirect("http://127.0.0.1"), redirection);
+	BOOST_CHECK_EQUAL(builder
+	                  .setHttpHeader(HttpHeader().setLocation("http://127.0.0.1"))
+	                  .build(), redirection);
 }
 
 BOOST_AUTO_TEST_CASE(mustBuildStatusCorrectly)
 {
 	Builder builder;
-	builder.setStatus(Builder::Status::OK, "Test");
+	builder.setHttpHeader(HttpHeader()
+	                      .setStatus(HttpHeader::Status::OK, "Test")
+	                      .setContentType(MediaType::TEXT_HTML)
+	                      .addContentLanguage(Language::ENGLISH_US));
 
-	string content = "Status: 200 Test" + Builder::EOL +
-		"Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 0" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL;
+	string content = "Status: 200 Test" + HttpHeader::EOL +
+		"Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 0" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
@@ -202,11 +231,13 @@ BOOST_AUTO_TEST_CASE(mustBuildStatusCorrectly)
 BOOST_AUTO_TEST_CASE(mustChangeFormat)
 {
 	Builder builder;
-	builder.setFormat(MediaType::APPLICATION_JSON);
+	builder.setHttpHeader(HttpHeader()
+	                      .setContentType(MediaType::APPLICATION_JSON)
+	                      .addContentLanguage(Language::ENGLISH_US));
 
-	string content = "Content-Type: application/json" + Builder::EOL +
-		"Content-Length: 0" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL;
+	string content = "Content-Type: application/json" + HttpHeader::EOL +
+		"Content-Length: 0" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
@@ -214,11 +245,13 @@ BOOST_AUTO_TEST_CASE(mustChangeFormat)
 BOOST_AUTO_TEST_CASE(mustChangeLanguage)
 {
 	Builder builder;
-	builder.setLanguage(Language::PORTUGUESE_BR);
+	builder.setHttpHeader(HttpHeader()
+	                      .addContentLanguage(Language::PORTUGUESE_BR)
+	                      .setContentType(MediaType::TEXT_HTML));
 
-	string content = "Content-Type: text/html" + Builder::EOL +
-		"Content-Length: 0" + Builder::EOL +
-		"Content-Language: pt-BR" + Builder::EOL + Builder::EOL;
+	string content = "Content-Type: text/html" + HttpHeader::EOL +
+		"Content-Length: 0" + HttpHeader::EOL +
+		"Content-Language: pt-BR" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
@@ -226,11 +259,14 @@ BOOST_AUTO_TEST_CASE(mustChangeLanguage)
 BOOST_AUTO_TEST_CASE(mustSetEncoding)
 {
 	Builder builder;
-	builder.setEncoding(Encoding::UTF8);
+	builder.setHttpHeader(HttpHeader()
+	                      .setContentCharset(Charset::UTF8)
+	                      .setContentType(MediaType::TEXT_HTML)
+	                      .addContentLanguage(Language::ENGLISH_US));
 
-	string content = "Content-Type: text/html; charset=utf-8" + Builder::EOL +
-		"Content-Length: 0" + Builder::EOL +
-		"Content-Language: en-US" + Builder::EOL + Builder::EOL;
+	string content = "Content-Type: text/html; charset=utf-8" + HttpHeader::EOL +
+		"Content-Length: 0" + HttpHeader::EOL +
+		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }

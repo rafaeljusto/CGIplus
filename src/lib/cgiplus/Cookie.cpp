@@ -99,10 +99,20 @@ Cookie& Cookie::setKey(const string &key)
 	return *this;
 }
 
+string Cookie::getKey() const
+{
+	return _key;
+}
+
 Cookie& Cookie::setValue(const string &value)
 {
 	_value = value;
 	return *this;
+}
+
+string Cookie::getValue() const
+{
+	return _value;
 }
 
 Cookie& Cookie::setSecure(const bool secure)
