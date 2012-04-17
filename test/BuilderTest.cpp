@@ -106,15 +106,13 @@ BOOST_AUTO_TEST_CASE(mustDefineCookieCorrectly)
 	Builder builder;
 	builder.setContent(form);
 	builder->setContentType(MediaType::TEXT_HTML)
-		.addContentLanguage(Language::ENGLISH_US)
-		.addCookie(Cookie()
-		           .setKey("key")
-		           .setValue("value")
-		           .setDomain("test.com.br")
-		           .setPath("/")
-		           .setSecure(true)
-		           .setHttpOnly(true));
-		
+		.addContentLanguage(Language::ENGLISH_US);
+	builder("key")
+		.setValue("value")
+		.setDomain("test.com.br")
+		.setPath("/")
+		.setSecure(true)
+		.setHttpOnly(true);
 
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
 		"Content-Length: 30" + HttpHeader::EOL +
@@ -156,7 +154,6 @@ BOOST_AUTO_TEST_CASE(mustFlushTemplateWhenTemplateFileWasNotFound)
 	builder["test"] = "test";
 
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
-		"Content-Length: 0" + HttpHeader::EOL +
 		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 	BOOST_CHECK_EQUAL(builder.build(), content);
 }
@@ -213,7 +210,6 @@ BOOST_AUTO_TEST_CASE(mustBuildStatusCorrectly)
 
 	string content = "Status: 200 Test" + HttpHeader::EOL +
 		"Content-Type: text/html" + HttpHeader::EOL +
-		"Content-Length: 0" + HttpHeader::EOL +
 		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
@@ -226,7 +222,6 @@ BOOST_AUTO_TEST_CASE(mustChangeFormat)
 		.addContentLanguage(Language::ENGLISH_US);
 
 	string content = "Content-Type: application/json" + HttpHeader::EOL +
-		"Content-Length: 0" + HttpHeader::EOL +
 		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
@@ -239,7 +234,6 @@ BOOST_AUTO_TEST_CASE(mustChangeLanguage)
 		.setContentType(MediaType::TEXT_HTML);
 
 	string content = "Content-Type: text/html" + HttpHeader::EOL +
-		"Content-Length: 0" + HttpHeader::EOL +
 		"Content-Language: pt-BR" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);
@@ -253,7 +247,6 @@ BOOST_AUTO_TEST_CASE(mustSetEncoding)
 		.addContentLanguage(Language::ENGLISH_US);
 
 	string content = "Content-Type: text/html; charset=utf-8" + HttpHeader::EOL +
-		"Content-Length: 0" + HttpHeader::EOL +
 		"Content-Language: en-US" + HttpHeader::EOL + HttpHeader::EOL;
 
 	BOOST_CHECK_EQUAL(builder.build(), content);

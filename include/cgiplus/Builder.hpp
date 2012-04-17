@@ -53,6 +53,13 @@ public:
 	 */
 	string& operator[](const string &key);
 
+	/*! Sets a cookie to be defined in client's browser.
+	 *
+	 * @param key Key that will represent the cookie
+	 * @return Cookie object by reference (same way as std::map does)
+	 */
+	Cookie& operator()(const string &key);
+
 	/*! Add content to form that will be print in output
 	 *
 	 * @param content Form content

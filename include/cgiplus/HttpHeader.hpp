@@ -26,6 +26,8 @@
 #include <utility>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include "Cgiplus.hpp"
 #include "Cookie.hpp"
 #include "Charset.hpp"
@@ -189,7 +191,9 @@ public:
 	 */
 	HttpHeader& setContentType(const MediaType::Value type);
 
-	/*!
+	/*! Returns content type.
+	 *
+	 * @return Content type
 	 */
 	MediaType::Value getContentType() const;
 
@@ -207,11 +211,16 @@ public:
 	 */
 	Charset::Value getContentCharset() const;
 
-	/*!
+	/*! Set boundary for file uploads.
+	 *
+	 * @param boundary Delimeter for file uploads
+	 * @return Reference to the current object, allowing easy usability
 	 */
 	HttpHeader& setContentBoundary(const string &boundary);
 
-	/*!
+	/*! Returns boundary.
+	 *
+	 * @return Delimeter for file upload
 	 */
 	string getContentBoundary() const;
 
@@ -229,7 +238,10 @@ public:
 	 */
 	std::set<Language::Value> getContentLanguages() const;
 
-	/*!
+	/*! Add response desired format.
+	 *
+	 * @param accept Desired format
+	 * @return Reference to the current object, allowing easy usability
 	 */
 	HttpHeader& addAccept(const MediaType::Value accept);
 
@@ -239,7 +251,10 @@ public:
 	 */
 	std::set<MediaType::Value> getAccepts() const;
 
-	/*!
+	/*! Add response desired language.
+	 *
+	 * @param language Desired language
+	 * @return Reference to the current object, allowing easy usability
 	 */
 	HttpHeader& addAcceptLanguage(const Language::Value language);
 
@@ -250,7 +265,10 @@ public:
 	 */
 	std::vector<Language::Value> getAcceptLanguages() const;
 
-	/*!
+	/*! Add response desired enconding.
+	 *
+	 * @param charset Desired enconding
+	 * @return Reference to the current object, allowing easy usability
 	 */
 	HttpHeader& addAcceptCharset(const Charset::Value charset);
 
@@ -261,23 +279,50 @@ public:
 	 */
 	std::vector<Charset::Value> getAcceptCharsets() const;
 
-	/*!
+	/*! Add a new cookie to HTTP header.
+	 *
+	 * @param cookie Cookie to add
+	 * @return Reference to the current object, allowing easy usability
 	 */
 	HttpHeader& addCookie(const Cookie &cookie);
 
-	/*!
+	/*! Return cookie by reference.
+	 *
+	 * @param key Cookie's key tha you are looking for
+	 * @return Cookie by reference
 	 */
-	HttpHeader& setCookies(const std::map<string, Cookie> &cookies);
+	Cookie& getCookie(const string &key);
 
-	/*!
+	/*! Return read only cookie if exists.
+	 *
+	 * @param key Cookie's key tha you are looking for
+	 * @return Cookie encapsulated in boost::optional structure that
+	 * tells if the cookie exists or not
 	 */
-	std::map<string, Cookie> getCookies() const;
+	boost::optional<Cookie const&> getCookie(const string &key) const;
 
-	/*!
+	/*! Return read only cookies.
+	 *
+	 * @return List of cookies
+	 */
+	std::map<string, Cookie> const& getCookies() const;
+
+	/*! Remove all cookies
+	 *
+	 * @return Reference to the current object, allowing easy usability
+	 */
+	HttpHeader& clearCookies();
+
+	/*! Reset all HTTP header fields
+	 *
+	 * @return Reference to the current object, allowing easy usability
 	 */
 	HttpHeader& clear();
 
-	/*!
+	/*! Convert all HTTP header object to text according to RFC 2616.
+	 *
+	 * @param contentSize Size of the content to add in the HTTP header
+	 * @return HTTP in text format
 	 */
 	string toString(const unsigned int contentSize) const;
 

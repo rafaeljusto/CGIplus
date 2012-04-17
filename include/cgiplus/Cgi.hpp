@@ -24,6 +24,7 @@
 #include <string>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
 
 #include "Cgiplus.hpp"
 #include "HttpHeader.hpp"
@@ -115,10 +116,9 @@ public:
 			}
 
 		} else if (source == Source::COOKIE) {
-			const std::map<string, Cookie> cookies = _httpHeader.getCookies();
-			auto cookie = cookies.find(key);
-			if (cookie != cookies.end()) {
-				value = converter(cookie->second.getValue());
+			auto cookie = _httpHeader.getCookie(key);
+			if (cookie) {
+				value = converter(cookie->getValue());
 			}
 
 		} else if (source == Source::FILE) {
@@ -151,7 +151,7 @@ public:
 		case Source::COOKIE:
 			{
 				std::map<string, string> cookies;
-				for (std::pair<string, Cookie> cookie : _httpHeader.getCookies()) {
+				for (const std::pair<string, Cookie> &cookie : _httpHeader.getCookies()) {
 					cookies[cookie.first] = cookie.second.getValue();
 				}
 				return converter(cookies);

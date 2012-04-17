@@ -152,15 +152,39 @@ HttpHeader& HttpHeader::addCookie(const Cookie &cookie)
 	return *this;
 }
 
-HttpHeader& HttpHeader::setCookies(const std::map<string, Cookie> &cookies)
+Cookie& HttpHeader::getCookie(const string &key)
 {
-	_cookies = cookies;
-	return *this;
+	auto cookieIt = _cookies.find(key);
+	if (cookieIt != _cookies.end()) {
+		return cookieIt->second;
+	}
+
+	Cookie cookie;
+	cookie.setKey(key);
+	_cookies[key] = cookie;
+
+	return _cookies[key];
 }
 
-std::map<string, Cookie> HttpHeader::getCookies() const
+boost::optional<Cookie const&> HttpHeader::getCookie(const string &key) const
+{
+	auto cookieIt = _cookies.find(key);
+	if (cookieIt == _cookies.end()) {
+		return boost::optional<Cookie const&>();
+	}
+
+	return boost::optional<Cookie const&>(cookieIt->second);
+}
+
+std::map<string, Cookie> const& HttpHeader::getCookies() const
 {
 	return _cookies;
+}
+
+HttpHeader& HttpHeader::clearCookies()
+{
+	_cookies.clear();
+	return *this;
 }
 
 HttpHeader& HttpHeader::clear()
@@ -206,7 +230,7 @@ string HttpHeader::toString(const unsigned int contentSize) const
 		header += EOL;
 	}
 	
-	if (_location.empty()) {
+	if (contentSize > 0) {
 		header += "Content-Length: " + 
 			boost::lexical_cast<string>(contentSize) + EOL;
 	}

@@ -40,6 +40,11 @@ string& Builder::operator[](const string &key)
 	return _fields[key];
 }
 
+Cookie& Builder::operator()(const string &key)
+{
+	return _httpHeader.getCookie(key);
+}
+
 Builder& Builder::operator<<(const string &content)
 {
 	_content += content;
@@ -108,7 +113,7 @@ Builder& Builder::clearFields()
 
 Builder& Builder::clearCookies()
 {
-	_httpHeader.getCookies().clear();
+	_httpHeader.clearCookies();
 	return *this;
 }
 
