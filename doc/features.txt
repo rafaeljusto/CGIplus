@@ -45,10 +45,16 @@ How It Works?
  | Browser | ---------------> |  Apache  | ----------------------> | CGIplus |
  |         |                  |          |  CONTENT_LENGTH         |         |
   ---------                    ----------   CONTENT_TYPE            ---------
+                                            CONTENT_LANGUAGE
                                             QUERY_STRING
+                                            HTTP_ACCEPT
+                                            HTTP_ACCEPT_LANGUAGE
+                                            HTTP_ACCEPT_CHARSET
                                             HTTP_COOKIE
+                                            PATH_INFO
                                             REMOTE_ADDR
                                             REQUEST_METHOD
+                                            SCRIPT_NAME
 
 Features
 --------
@@ -69,12 +75,12 @@ Features
      * If in the request you find more than one field with the same
        name, the tool is going to store the last value.
 
-     * The tool supports GET, POST, Cookie and file upload in CGI
-       requests. To get field's values use the [] operator, and for a
-       cookie's values you can use the () operator. When there's a
-       file upload use the "get" method to retrieve the file path
-       where you can find the file. The uploaded files are removed
-       when the CGI class loses scope.
+     * The tool supports GET, POST, PUT, DELETE, Cookie and file
+       upload in CGI requests. To get field's values use the []
+       operator, and for a cookie's values you can use the ()
+       operator. When there's a file upload use the "get" method to
+       retrieve the file path where you can find the file. The
+       uploaded files are removed when the CGI class loses scope.
 
      * There's also support to convert the data (field or cookie
        value) into a desired type using "get" method. For complex
@@ -115,8 +121,8 @@ Features
        just call the method setTags and inform the beginning part
        ("<!-- ") and the end part (" -->").
 
-     * You can also set the output format (TEXT or HTML) that will be
-       described in the html header. By default is HTML.
+     * You can also set the output format in the HTTP header using the
+       operator ->.
 
      * Finally to parse your tags with the given template just call
        the show method. This method will return a screen that you can

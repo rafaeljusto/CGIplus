@@ -120,13 +120,16 @@ Examples
 
     #include <cgiplus/Builder.hpp>
     #include <cgiplus/Cgi.hpp>
+    #include <cgiplus/HttpHeader.hpp>
 
     int main()
     {
       cgiplus::Cgi cgi;
       cgiplus::Builder builder;
 
-      builder.setFormFile("template.html");
+      builder.setTemplateFile("template.html");
+      builder->setStatus(cgiplus::HttpHeader::OK)
+        .setContentType(cgiplus::HttpHeader::TEXT_HTML);
       builder["test1"] = cgi["test1"];
       builder["test2"] = cgi["test2"];
       builder.show();
@@ -139,13 +142,16 @@ Examples
     #include <cgiplus/Builder.hpp>
     #include <cgiplus/Cookie.hpp>
     #include <cgiplus/Cgi.hpp>
+    #include <cgiplus/HttpHeader.hpp>
 
     int main()
     {
       cgiplus::Cgi cgi;
       cgiplus::Builder builder;
 
-      builder.setFormFile("template.html");
+      builder.setTemplateFile("template.html");
+      builder->setStatus(cgiplus::HttpHeader::OK)
+        .setContentType(cgiplus::HttpHeader::TEXT_HTML);
       builder["test1"] = cgi["test1"];
       builder["test2"] = cgi["test2"];
 
