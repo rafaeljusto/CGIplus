@@ -67,14 +67,14 @@ public:
 	/*! Faster whay to check if the language is english, any language value
 	 * defaults to english.
 	 *
-	 * @param values language from Language::Value
+	 * @param value language from Language::Value
 	 * @return True if value is english or false otherwise
 	 */
 	static bool isEnglish(const Value value);
 
 	/*! Faster whay to check if the language is portuguese.
 	 *
-	 * @param values language from Language::Value
+	 * @param value language from Language::Value
 	 * @return True if value is portuguese or false otherwise
 	 */
 	static bool isPortuguese(const Value value);
