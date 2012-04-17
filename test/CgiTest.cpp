@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_CASE(mustParseEncoding) {
 }
 
 BOOST_AUTO_TEST_CASE(mustParseResponseEncoding) {
-	setenv("HTTP_ACCEPT_ENCODING", "utf-8, iso-8859-1", 1);
+	setenv("HTTP_ACCEPT_CHARSET", "utf-8, iso-8859-1", 1);
 
 	Cgi cgi;
 
@@ -348,7 +348,7 @@ BOOST_AUTO_TEST_CASE(mustParseResponseEncoding) {
 }
 
 BOOST_AUTO_TEST_CASE(mustRespectResponseEncodingQuality) {
-	setenv("HTTP_ACCEPT_ENCODING", "utf-8;q=0.6,iso-8859-1;q=0.9,utf-16;q=0.5",1);
+	setenv("HTTP_ACCEPT_CHARSET", "utf-8;q=0.6,iso-8859-1;q=0.9,utf-16;q=0.5",1);
 
 	Cgi cgi;
 

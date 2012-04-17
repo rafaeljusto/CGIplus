@@ -325,7 +325,7 @@ void Cgi::readAcceptLanguages()
 
 void Cgi::readAcceptCharsets()
 {
-	const char *encodingsPtr = getenv("HTTP_ACCEPT_ENCODING");
+	const char *encodingsPtr = getenv("HTTP_ACCEPT_CHARSET");
 	if (encodingsPtr == NULL) {
 		return;
 	}
