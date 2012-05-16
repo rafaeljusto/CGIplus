@@ -90,22 +90,61 @@ public:
 	HttpHeader const* operator->() const;
 
 	/*! Access all data types retrieved by the CGI. You can also convert
-	 * the data using a callback function.
+	 * the data using boost::lexical_cast.
 	 *
 	 * @tparam T Type of the data that is going to be returned.
 	 * @param key Data key
 	 * @param source Possible data sources (Check Cgi::Source for
 	 *               possible values).
-	 * @param converter callback function to convert the data value into
-	 *                  the type that you want.
 	 * @return Data value (in the desired format, by default is string),
 	 *         when the data is not found an empty type is going to be
 	 *         returned.
 	 */
 	template<class T = string>
 	T get(const string &key,
-	      const Source::Value source = Source::FIELD,
-	      T (*converter)(const string&) = boost::lexical_cast<T>) const
+	      const Source::Value source = Source::FIELD) const
+	{
+		T value;
+
+		if (source == Source::FIELD) {
+			auto input = _inputs.find(key);
+			if (input != _inputs.end()) {
+				value = boost::lexical_cast<T>(input->second);
+			}
+
+		} else if (source == Source::COOKIE) {
+			auto cookie = _httpHeader.getCookie(key);
+			if (cookie) {
+				value = boost::lexical_cast<T>(cookie->getValue());
+			}
+
+		} else if (source == Source::FILE) {
+			auto file = _files.find(key);
+			if (file != _files.end()) {
+				value = boost::lexical_cast<T>(file->second);
+			}
+		}
+
+		return value;
+	}
+
+	/*! Access all data types retrieved by the CGI. You can also convert
+	 * the data using a callback function.
+	 *
+	 * @tparam T Type of the data that is going to be returned.
+	 * @tparam F Function that convert the data into the desired value.
+	 * @param key Data key
+	 * @param converter callback function to convert the data value into
+	 *                  the type that you want.
+	 * @param source Possible data sources (Check Cgi::Source for
+	 *               possible values).
+	 * @return Data value (in the desired format, by default is string),
+	 *         when the data is not found an empty type is going to be
+	 *         returned.
+	 */
+	template<class T = string, class F>
+	T get(const string &key, F converter,
+	      const Source::Value source = Source::FIELD) const
 	{
 		T value;
 
@@ -135,15 +174,15 @@ public:
 	 * callback function.
 	 *
 	 * @tparam T Type of the data that is going to be returned.
+	 * @tparam F Function that convert the data into the desired object.
 	 * @param source Possible data sources (Check Cgi::Source for
 	 *               possible values).
 	 * @param converter callback function to convert the data value into
 	 *                  the type that you want.
 	 * @return Data value (in the desired format).
 	 */
-	template<class T>
-	T get(const Source::Value source,
-	      T (*converter)(std::map<string, string>)) const
+	template<class T, class F>
+	T get(const Source::Value source, F converter) const
 	{
 		switch(source) {
 		case Source::FIELD:
